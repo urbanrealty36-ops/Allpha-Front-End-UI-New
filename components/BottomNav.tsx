@@ -26,7 +26,8 @@ export type TabType =
   | 'PROFILE'
   | 'POST_DETAIL'
   | 'TAKEOVER_CONTROL'
-  | 'ASK_AI_VIEW';
+  | 'ASK_AI_VIEW'
+  | 'FILM_AI';
 
 interface BottomNavProps {
   activeTab: TabType;
@@ -55,10 +56,10 @@ export default function BottomNav({
 
   const navItems: NavItem[] = [
     { id: 'FEED', label: 'Beranda', icon: Home },
-    { id: 'EXPLORE', label: 'Jelajahi', icon: Compass },
+    { id: 'FILM_AI', label: 'Film AI', icon: Film, badge: 'VIP' },
     { id: 'CREATE', label: 'Tambah', icon: PlusCircle, isAction: true },
     { id: 'WORLD3D', label: 'Dunia 3D', icon: Box, highlight: true },
-    { id: 'MESSAGES', label: 'Pesan', icon: MessageSquare },
+    { id: 'EXPLORE', label: 'Allpha Hub', icon: Compass },
     { id: 'PROFILE', label: 'My Agent', icon: User },
   ];
 

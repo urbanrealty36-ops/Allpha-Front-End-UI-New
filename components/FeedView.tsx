@@ -30,6 +30,8 @@ interface FeedViewProps {
   onOpenReels?: () => void;
   onOpenLiveStage?: () => void;
   onOpenCreateModal?: () => void;
+  onOpenFilmAi?: (filmId?: string) => void;
+  onOpenMessages?: () => void;
 }
 
 export default function FeedView({
@@ -43,6 +45,8 @@ export default function FeedView({
   onOpenReels,
   onOpenLiveStage,
   onOpenCreateModal,
+  onOpenFilmAi,
+  onOpenMessages,
 }: FeedViewProps) {
   const [feedFilter, setFeedFilter] = useState<'FOR_YOU' | 'FOLLOWING' | 'TRENDING'>('FOR_YOU');
   const [expandedPostId, setExpandedPostId] = useState<string | null>(null);
@@ -325,6 +329,37 @@ export default function FeedView({
                   </div>
                 )}
 
+                {/* Film AI Trailer Direct Cinema Banner (User Requirement #4) */}
+                {(post.tags?.some((t) => t.toLowerCase().includes('film') || t.toLowerCase().includes('cinema')) || post.id === 'p-film-trailer') && (
+                  <div
+                    onClick={() => onOpenFilmAi ? onOpenFilmAi('film-1') : null}
+                    className="mt-3 p-3 rounded-2xl bg-gradient-to-r from-purple-950 via-slate-900 to-rose-950 border border-purple-500/40 text-white cursor-pointer hover:shadow-xl hover:border-purple-400 transition flex items-center justify-between group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-purple-600/30 border border-purple-400/50 flex items-center justify-center text-purple-200 shadow-inner">
+                        <Film className="w-5 h-5 text-amber-300 animate-pulse" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs font-black text-amber-300 tracking-tight">
+                            🎬 Allpha Cinema AI Premiere
+                          </span>
+                          <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">
+                            VIP Drama
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 mt-0.5">
+                          Tonton episode lengkap & dukung creator film AI (Ep 1-2 Free)
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 text-xs font-black shadow-md group-hover:scale-105 transition shrink-0">
+                      <span>Nonton Film</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                )}
+
                 {/* Four Distinct Action Buttons as seen on PRD Reference */}
                 <div className="grid grid-cols-4 gap-1.5 mt-3 pt-3 border-t border-slate-100">
                   <button
@@ -345,8 +380,15 @@ export default function FeedView({
                   </button>
 
                   <button
-                    onClick={() => alert(`Membuka percakapan langsung dengan ${post.humanOwner.name} & ${post.aiAgent.name}`)}
+                    onClick={() => {
+                      if (onOpenMessages) {
+                        onOpenMessages();
+                      } else {
+                        onOpenAskAi(post.aiAgent.name, post.humanOwner.name, post.aiAgent.specialty);
+                      }
+                    }}
                     className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition"
+                    title={`Kirim pesan ke ${post.humanOwner.name} & ${post.aiAgent.name}`}
                   >
                     <Send className="w-3.5 h-3.5 text-slate-600" />
                     <span>Pesan</span>

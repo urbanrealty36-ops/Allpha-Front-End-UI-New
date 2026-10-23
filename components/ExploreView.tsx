@@ -64,6 +64,7 @@ import {
   PostItem,
   INITIAL_POSTS
 } from '@/lib/store';
+import AllphaHubView from '@/components/AllphaHubView';
 
 export interface SocialAccountItem {
   id: string;
@@ -214,6 +215,9 @@ interface ExploreViewProps {
   onOpenWorld3D: () => void;
   onOpenCreditsHub?: () => void;
   onOpenLiveStage?: () => void;
+  onOpenFilmAi?: (filmId?: string) => void;
+  userCredits?: number;
+  agentCredits?: number;
   onLikePost?: (postId: string) => void;
 }
 
@@ -226,6 +230,9 @@ export default function ExploreView({
   onOpenWorld3D,
   onOpenCreditsHub,
   onOpenLiveStage,
+  onOpenFilmAi,
+  userCredits = 250,
+  agentCredits = 480,
   onLikePost,
 }: ExploreViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -454,7 +461,7 @@ export default function ExploreView({
             { id: 'ACCOUNTS' as SearchTab, label: 'Akun (Human & AI)', count: filteredAccounts.length },
             { id: 'POSTS' as SearchTab, label: 'Postingan & Caption', count: filteredPosts.length },
             { id: 'HASHTAGS' as SearchTab, label: 'Hashtags (#)', count: filteredHashtags.length },
-            { id: 'PRD_HUB' as SearchTab, label: 'Master PRD Hub', badge: '82 Domain' },
+            { id: 'PRD_HUB' as SearchTab, label: 'Allpha Hub', badge: 'Ecosystem' },
           ].map((tab) => {
             const isActive = activeSearchTab === tab.id;
             return (
@@ -796,21 +803,21 @@ export default function ExploreView({
         {/* ======================================================== */}
         {/* SECTION D: MASTER PRD FEATURES & DOMAINS HUB */}
         {/* (Accessible directly via tab 'PRD_HUB' or at bottom of ALL) */}
-        {/* ======================================================== */}
         {(activeSearchTab === 'ALL' || activeSearchTab === 'PRD_HUB') && (
-          <div className="space-y-6 pt-2 border-t border-slate-200">
-            <div className="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-3xl p-4 text-white shadow-lg space-y-2">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-cyan-300" />
-                <h2 className="text-sm font-black">
-                  Ekosistem Master PRD Allpha Universe
-                </h2>
-              </div>
-              <p className="text-xs text-blue-100 leading-relaxed">
-                Jelajahi seluruh domain dari Dokumen Master PRD v3.0.0: 500 AI Skill Blueprints, Otomasi n8n DAG, Videotron Ads 3D, Quests Reward, dan Settlement Ledger.
-              </p>
-            </div>
+          <div className="pt-2 border-t border-slate-200">
+            <AllphaHubView
+              onOpenWorld3D={() => onOpenWorld3D()}
+              onOpenFilmAi={onOpenFilmAi}
+              onOpenLiveExperienceStage={onOpenLiveStage}
+              userCredits={userCredits}
+              agentCredits={agentCredits}
+            />
+          </div>
+        )}
 
+        {/* Legacy PRD content disabled in favor of dedicated AllphaHubView */}
+        {false && (
+          <div className="hidden">
             {/* 1. 500 AI AGENT SKILL BLUEPRINTS */}
             <section className="space-y-3">
               <div className="flex items-center justify-between">

@@ -7,10 +7,9 @@ import {
   Coins, 
   Sparkles, 
   Download, 
-  UserCheck, 
-  Bot, 
   SlidersHorizontal,
-  Compass
+  Compass,
+  MessageCircle
 } from 'lucide-react';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 
@@ -21,6 +20,9 @@ interface NavbarProps {
   onOpenTakeoverModal: () => void;
   onOpenCreditsHub: () => void;
   onOpenOnboarding?: () => void;
+  onOpenMessages?: () => void;
+  isMessagesActive?: boolean;
+  unreadMessagesCount?: number;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   isHidden?: boolean;
@@ -33,6 +35,9 @@ export default function Navbar({
   onOpenTakeoverModal,
   onOpenCreditsHub,
   onOpenOnboarding,
+  onOpenMessages,
+  isMessagesActive = false,
+  unreadMessagesCount = 2,
   searchQuery,
   setSearchQuery,
   isHidden = false,
@@ -87,29 +92,6 @@ export default function Navbar({
             <span className="text-[10px] text-amber-800 font-normal hidden sm:inline">Cr</span>
           </button>
 
-          {/* Takeover Mode Toggle Pill */}
-          <button
-            onClick={onOpenTakeoverModal}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium border transition ${
-              isTakeoverActive
-                ? 'bg-amber-50 border-amber-300 text-amber-800'
-                : 'bg-emerald-50 border-emerald-300 text-emerald-800'
-            }`}
-            title="Pengaturan Mode Balas: AI Auto-Reply vs Human Takeover"
-          >
-            {isTakeoverActive ? (
-              <>
-                <UserCheck className="w-3.5 h-3.5 text-amber-600" />
-                <span className="hidden sm:inline">Takeover Human</span>
-              </>
-            ) : (
-              <>
-                <Bot className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="hidden sm:inline">AI Auto-Reply</span>
-              </>
-            )}
-          </button>
-
           {/* PWA Install Button */}
           {isInstallable && (
             <button
@@ -120,6 +102,31 @@ export default function Navbar({
               <span className="hidden sm:inline">Install PWA</span>
             </button>
           )}
+
+          {/* Direct Message (DM / Inbox Pesan) */}
+          <button
+            onClick={onOpenMessages}
+            className={`relative p-2 rounded-full transition ${
+              isMessagesActive
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'hover:bg-slate-100 text-slate-700'
+            }`}
+            title="Pesan Langsung / Direct Message (DM)"
+            aria-label="Direct Messages"
+          >
+            <MessageCircle className="w-4.5 h-4.5" />
+            {unreadMessagesCount > 0 && (
+              <span
+                className={`absolute -top-0.5 -right-0.5 min-w-[17px] h-[17px] px-1 rounded-full text-[9px] font-extrabold flex items-center justify-center ring-2 ${
+                  isMessagesActive
+                    ? 'bg-rose-500 text-white ring-blue-600'
+                    : 'bg-blue-600 text-white ring-white'
+                }`}
+              >
+                {unreadMessagesCount}
+              </span>
+            )}
+          </button>
 
           {/* Notification Bell */}
           <button
@@ -135,11 +142,11 @@ export default function Navbar({
           {onOpenOnboarding && (
             <button
               onClick={onOpenOnboarding}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold shadow-xs transition"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold shadow-xs transition"
               title="Buka Splash Onboarding & Pengaturan Identitas"
             >
               <Sparkles className="w-3.5 h-3.5 text-cyan-200" />
-              <span className="hidden sm:inline">Onboarding</span>
+              <span>Onboarding</span>
             </button>
           )}
         </div>

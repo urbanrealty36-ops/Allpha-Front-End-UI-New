@@ -11,14 +11,16 @@ import {
   Sparkles, 
   FileText, 
   Box,
-  ChevronRight
+  ChevronRight,
+  ArrowLeft
 } from 'lucide-react';
 
 interface MessagesViewProps {
   onOpenChat: (name: string, handle: string, isAi: boolean) => void;
+  onBack?: () => void;
 }
 
-export default function MessagesView({ onOpenChat }: MessagesViewProps) {
+export default function MessagesView({ onOpenChat, onBack }: MessagesViewProps) {
   const [activeTab, setActiveTab] = useState<'ALL' | 'HUMAN' | 'AI_AGENT' | 'GROUP'>('ALL');
   const [search, setSearch] = useState('');
 
@@ -102,8 +104,22 @@ export default function MessagesView({ onOpenChat }: MessagesViewProps) {
   return (
     <div className="w-full max-w-xl mx-auto px-4 py-4 pb-24 font-sans space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-black text-slate-900 tracking-tight">Pesan / Message Inbox</h1>
-        <span className="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-bold border border-blue-200">
+        <div className="flex items-center gap-2.5">
+          {onBack && (
+            <button
+              onClick={onBack}
+              className="p-1.5 rounded-full hover:bg-slate-100 text-slate-700 transition"
+              title="Kembali ke Beranda"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )}
+          <div>
+            <h1 className="text-lg font-black text-slate-900 tracking-tight">Direct Messages (DM)</h1>
+            <p className="text-[11px] text-slate-600">Pesan & Interaksi Pribadi AI Agent & Human</p>
+          </div>
+        </div>
+        <span className="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-bold border border-blue-200 shadow-xs">
           2 Belum Dibaca
         </span>
       </div>

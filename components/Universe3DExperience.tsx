@@ -52,6 +52,8 @@ interface Universe3DExperienceProps {
   userCredits: number;
   agentCredits: number;
   onRewardBonus?: (amount: number, reason: string) => void;
+  onExitToHub?: () => void;
+  initialDistrict?: string;
 }
 
 export default function Universe3DExperience({
@@ -59,6 +61,8 @@ export default function Universe3DExperience({
   userCredits,
   agentCredits,
   onRewardBonus,
+  onExitToHub,
+  initialDistrict = 'Central Hub',
 }: Universe3DExperienceProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const [subView, setSubView] = useState<UniverseSubView>('IN_WORLD');
@@ -66,7 +70,7 @@ export default function Universe3DExperience({
   // Avatar in-world position and controls
   const [avatarPos, setAvatarPos] = useState<{ x: number; z: number }>({ x: 0, z: 0 });
   const [isWalking, setIsWalking] = useState(false);
-  const [currentDistrict, setCurrentDistrict] = useState('Central Hub');
+  const [currentDistrict, setCurrentDistrict] = useState(initialDistrict);
   
   // Nearby encounter state (when near an avatar)
   const [nearbyEncounter, setNearbyEncounter] = useState<{
@@ -79,8 +83,9 @@ export default function Universe3DExperience({
     distance: string;
   } | null>(null);
 
-  // Ref to track explicitly dismissed proximity encounter to prevent re-opening on every tick frame
-  const dismissedEncounterRef = useRef<string | null>(null);
+  // Ref to track permanently dismissed proximity encounters in this session
+  const permanentlyDismissedEncountersRef = useRef<Set<string>>(new Set());
+  const [isEncounterCardMuted, setIsEncounterCardMuted] = useState<boolean>(false);
 
   // Avatar Customizer State
   const [selectedOutfit, setSelectedOutfit] = useState('cyber-suit-blue');
@@ -699,8 +704,8 @@ export default function Universe3DExperience({
       const distToSari = Math.hypot(px - (-4), pz - (-2));
       const distToLuna = Math.hypot(px - 2, pz - 8);
 
-      if (distToSari < 5.0) {
-        if (dismissedEncounterRef.current !== 'Sari Dewi') {
+      if (!isEncounterCardMuted) {
+        if (distToSari < 5.0 && !permanentlyDismissedEncountersRef.current.has('Sari Dewi')) {
           setNearbyEncounter({
             name: 'Sari Dewi',
             handle: '@saridewi',
@@ -709,9 +714,7 @@ export default function Universe3DExperience({
             avatar: 'https://picsum.photos/seed/sari/150/150',
             distance: `${distToSari.toFixed(1)}m`,
           });
-        }
-      } else if (distToLuna < 5.0) {
-        if (dismissedEncounterRef.current !== 'Luna AI') {
+        } else if (distToLuna < 5.0 && !permanentlyDismissedEncountersRef.current.has('Luna AI')) {
           setNearbyEncounter({
             name: 'Luna AI',
             handle: '@luna.ai',
@@ -721,11 +724,10 @@ export default function Universe3DExperience({
             avatar: 'https://picsum.photos/seed/luna-cyber/150/150',
             distance: `${distToLuna.toFixed(1)}m`,
           });
+        } else {
+          setNearbyEncounter(null);
         }
       } else {
-        if (distToSari > 7.0 && distToLuna > 7.0) {
-          dismissedEncounterRef.current = null;
-        }
         setNearbyEncounter(null);
       }
 
@@ -836,6 +838,17 @@ export default function Universe3DExperience({
               <span>Feed</span>
             </button>
 
+            {onExitToHub && (
+              <button
+                onClick={onExitToHub}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-cyan-950/80 hover:bg-cyan-900 border border-cyan-700/60 text-cyan-300 text-xs font-bold transition shrink-0 shadow-xs"
+                title="Kembali ke Universe Hub"
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span>Hub</span>
+              </button>
+            )}
+
             <div className="flex items-center gap-1.5 min-w-0">
               <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0" />
               <h1 className="font-extrabold text-xs sm:text-sm text-white truncate">
@@ -914,7 +927,13 @@ export default function Universe3DExperience({
             👥 Orang di Sekitar
           </button>
           <button
-            onClick={() => setSubView('UNIVERSE_HUB')}
+            onClick={() => {
+              if (onExitToHub) {
+                onExitToHub();
+              } else {
+                setSubView('UNIVERSE_HUB');
+              }
+            }}
             className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition shrink-0 ${
               subView === 'UNIVERSE_HUB' ? 'bg-blue-600 text-white shadow-xs' : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
             }`}
@@ -946,10 +965,10 @@ export default function Universe3DExperience({
             </div>
           </div>
 
-          {/* Floating Proximity Encounter Notification - Docked top-right and fully dismissible */}
-          {nearbyEncounter && (
-            <div className="pointer-events-auto absolute top-24 right-3 sm:right-6 max-w-[280px] sm:max-w-xs w-full p-3 rounded-2xl bg-slate-950/95 border border-purple-500/50 text-white shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-top-2 duration-200 z-30">
-              <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+          {/* Floating Proximity Encounter Notification - Docked top-right and 100% dismissible */}
+          {nearbyEncounter && !isEncounterCardMuted && (
+            <div className="pointer-events-auto absolute top-28 right-3 sm:right-6 max-w-[270px] sm:max-w-xs w-full p-3 rounded-2xl bg-slate-950/95 border border-purple-500/50 text-white shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-top-2 duration-200 z-30">
+              <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
                 <div className="flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
                   <span className="text-[11px] font-bold text-purple-200 truncate">
@@ -959,12 +978,13 @@ export default function Universe3DExperience({
                 <button
                   onClick={() => {
                     if (nearbyEncounter) {
-                      dismissedEncounterRef.current = nearbyEncounter.name;
+                      permanentlyDismissedEncountersRef.current.add(nearbyEncounter.name);
                     }
+                    setIsEncounterCardMuted(true);
                     setNearbyEncounter(null);
                   }}
                   className="px-2 py-0.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-[11px] font-bold transition flex items-center gap-1"
-                  title="Tutup Kartu"
+                  title="Tutup & Jangan Tampilkan Lagi"
                 >
                   <span>Tutup</span>
                   <span>✕</span>
@@ -1009,10 +1029,14 @@ export default function Universe3DExperience({
                   Profil 👤
                 </button>
                 <button
-                  onClick={() => alert(`Undangan bergabung grup dikirim ke ${nearbyEncounter.name}`)}
-                  className="py-1 rounded-lg bg-slate-800 hover:bg-slate-700 font-medium transition text-center"
+                  onClick={() => {
+                    permanentlyDismissedEncountersRef.current.add(nearbyEncounter.name);
+                    setNearbyEncounter(null);
+                  }}
+                  className="py-1 rounded-lg bg-slate-800 hover:bg-rose-900/60 font-bold transition text-center text-rose-300"
+                  title="Hapus notifikasi"
                 >
-                  Undang ➕
+                  ✕ Hapus
                 </button>
               </div>
             </div>
@@ -1102,7 +1126,7 @@ export default function Universe3DExperience({
       {/* 2 & 3. UNIVERSE HUB & PILIH DUNIA (SCREEN 2 & 3)        */}
       {/* ======================================================== */}
       {subView === 'UNIVERSE_HUB' && (
-        <div className="absolute inset-0 top-12 z-30 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white space-y-6">
+        <div className="absolute inset-0 top-[76px] z-40 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white space-y-6 pb-24">
           <div className="max-w-3xl mx-auto space-y-6">
             <div className="p-6 rounded-3xl bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 border border-cyan-500/30 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
@@ -1171,7 +1195,7 @@ export default function Universe3DExperience({
       {/* 5. PETA DISTRICT & TELEPORT (SCREEN 5)                   */}
       {/* ======================================================== */}
       {subView === 'DISTRICT_MAP' && (
-        <div className="absolute inset-0 top-12 z-30 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white">
+        <div className="absolute inset-0 top-[76px] z-40 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white pb-24">
           <div className="max-w-2xl mx-auto space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>
@@ -1225,7 +1249,7 @@ export default function Universe3DExperience({
       {/* 8. AVATAR SAYA & KUSTOMISASI (SCREEN 8)                  */}
       {/* ======================================================== */}
       {subView === 'AVATAR_CUSTOMIZE' && (
-        <div className="absolute inset-0 top-12 z-30 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white">
+        <div className="absolute inset-0 top-[76px] z-40 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white pb-24">
           <div className="max-w-2xl mx-auto space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>
@@ -1317,7 +1341,7 @@ export default function Universe3DExperience({
       {/* 10 & 11. LIVE STAGE & EVENT DETAIL (SCREEN 10 & 11)     */}
       {/* ======================================================== */}
       {subView === 'LIVE_STAGE' && (
-        <div className="absolute inset-0 top-12 z-30 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white">
+        <div className="absolute inset-0 top-[76px] z-40 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white pb-24">
           <div className="max-w-3xl mx-auto space-y-6">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div className="flex items-center gap-2">
@@ -1389,7 +1413,7 @@ export default function Universe3DExperience({
       {/* 12. MARKETPLACE 3D ASSET (SCREEN 12)                    */}
       {/* ======================================================== */}
       {subView === 'MARKETPLACE_3D' && (
-        <div className="absolute inset-0 top-12 z-30 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white">
+        <div className="absolute inset-0 top-[76px] z-40 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white pb-24">
           <div className="max-w-3xl mx-auto space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>
@@ -1439,7 +1463,7 @@ export default function Universe3DExperience({
       {/* 13. QUEST & REWARD (SCREEN 13)                          */}
       {/* ======================================================== */}
       {subView === 'QUEST_REWARD' && (
-        <div className="absolute inset-0 top-12 z-30 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white">
+        <div className="absolute inset-0 top-[76px] z-40 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white pb-24">
           <div className="max-w-2xl mx-auto space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>
@@ -1499,7 +1523,7 @@ export default function Universe3DExperience({
       {/* 14. ORANG DI SEKITAR (SCREEN 14)                         */}
       {/* ======================================================== */}
       {subView === 'NEARBY_PEOPLE' && (
-        <div className="absolute inset-0 top-12 z-30 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white">
+        <div className="absolute inset-0 top-[76px] z-40 bg-slate-950/95 overflow-y-auto p-4 sm:p-6 text-white pb-24">
           <div className="max-w-2xl mx-auto space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-slate-800">
               <div>

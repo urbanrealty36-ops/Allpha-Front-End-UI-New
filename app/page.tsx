@@ -9,6 +9,7 @@ import ExploreView from '@/components/ExploreView';
 import ProfileView from '@/components/ProfileView';
 import ThreeWorldView from '@/components/ThreeWorldView';
 import Universe3DExperience from '@/components/Universe3DExperience';
+import Universe3DHubView from '@/components/Universe3DHubView';
 import LiveExperienceStage from '@/components/LiveExperienceStage';
 import MessagesView from '@/components/MessagesView';
 import MarketplaceView from '@/components/MarketplaceView';
@@ -21,6 +22,7 @@ import AuthOnboardingFlow from '@/components/AuthOnboardingFlow';
 import PostDetailView from '@/components/PostDetailView';
 import TakeoverControlView from '@/components/TakeoverControlView';
 import AskAiView from '@/components/AskAiView';
+import AiCinemaView from '@/components/AiCinemaView';
 import { 
   INITIAL_USER, 
   INITIAL_AGENT, 
@@ -37,6 +39,7 @@ import {
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState<TabType>('FEED');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedFilmId, setSelectedFilmId] = useState<string | null>(null);
 
   // User & Agent Identity state
   const [currentUser, setCurrentUser] = useState<HumanProfile>(INITIAL_USER);
@@ -186,6 +189,9 @@ export default function HomePage() {
         onOpenTakeoverModal={() => setActiveTab('TAKEOVER_CONTROL')}
         onOpenCreditsHub={() => setActiveTab('SKILLS_CREDITS')}
         onOpenOnboarding={() => setIsAuthOnboardingOpen(true)}
+        onOpenMessages={() => setActiveTab('MESSAGES')}
+        isMessagesActive={activeTab === 'MESSAGES'}
+        unreadMessagesCount={2}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         isHidden={activeTab === 'WORLD3D' || activeTab === 'REELS'}
@@ -221,6 +227,11 @@ export default function HomePage() {
             onOpenReels={() => setActiveTab('REELS')}
             onOpenLiveStage={() => setActiveTab('LIVESTAGE')}
             onOpenCreateModal={() => setIsCreateModalOpen(true)}
+            onOpenFilmAi={(filmId) => {
+              if (filmId) setSelectedFilmId(filmId);
+              setActiveTab('FILM_AI');
+            }}
+            onOpenMessages={() => setActiveTab('MESSAGES')}
           />
         )}
 
@@ -308,6 +319,10 @@ export default function HomePage() {
             }}
             onOpenWorld3D={() => setActiveTab('WORLD3D')}
             onOpenCreditsHub={() => setActiveTab('SKILLS_CREDITS')}
+            onOpenFilmAi={(filmId) => {
+              if (filmId) setSelectedFilmId(filmId);
+              setActiveTab('FILM_AI');
+            }}
           />
         )}
 
@@ -330,6 +345,57 @@ export default function HomePage() {
             }}
             onOpenLiveStage={() => setActiveTab('LIVESTAGE')}
             onBackToFeed={() => setActiveTab('FEED')}
+            onOpenFilmAi={(filmId) => {
+              if (filmId) setSelectedFilmId(filmId);
+              setActiveTab('FILM_AI');
+            }}
+          />
+        )}
+
+        {activeTab === 'FILM_AI' && (
+          <AiCinemaView
+            onBackToFeed={() => setActiveTab('FEED')}
+            onOpenAskAi={(agentName, ownerName, specialty) => {
+              setAskAiModalState({
+                isOpen: true,
+                agentName,
+                humanOwner: ownerName,
+                specialty,
+              });
+              setActiveTab('ASK_AI_VIEW');
+            }}
+            userCredits={userCredits}
+            initialSelectedMovieId={selectedFilmId || undefined}
+            onPostTrailerToFeed={(movie) => {
+              const newTrailerPost: PostItem = {
+                id: `p-trailer-${Date.now()}`,
+                humanOwner: {
+                  name: movie.producerHuman.name,
+                  handle: movie.producerHuman.handle,
+                  avatar: movie.producerHuman.avatar,
+                  verified: true,
+                },
+                aiAgent: {
+                  name: movie.aiCoDirector.name,
+                  handle: movie.aiCoDirector.handle,
+                  avatar: movie.aiCoDirector.avatar,
+                  specialty: movie.aiCoDirector.specialty,
+                },
+                takeoverMode: false,
+                timestamp: 'Baru saja',
+                content: `🎬 [TRAILER PREMIERE] "${movie.title}" (${movie.originalTitle || ''})\n\nSerial drama ${movie.genreLabel} (${movie.episodesCount} episode). Tonton trailer dan episode penuhnya di tab Film AI Allpha Universe!`,
+                tags: ['#FilmAI', '#AllphaCinema', '#DramaPendek', '#CreatorEconomy'],
+                image: movie.coverImage,
+                has3DModel: true,
+                modelName: `Film Set: ${movie.title}`,
+                likes: 38,
+                commentsCount: 4,
+                reposts: 12,
+                comments: [],
+              };
+              setPosts((prev) => [newTrailerPost, ...prev]);
+              showToast(`Trailer "${movie.title}" berhasil diposting ke Feed!`);
+            }}
           />
         )}
 
@@ -343,6 +409,7 @@ export default function HomePage() {
 
         {activeTab === 'MESSAGES' && (
           <MessagesView
+            onBack={() => setActiveTab('FEED')}
             onOpenChat={(name, handle, isAi) => {
               setAskAiModalState({
                 isOpen: true,
@@ -370,7 +437,7 @@ export default function HomePage() {
         )}
 
         {activeTab === 'WORLD3D' && (
-          <Universe3DExperience
+          <Universe3DHubView
             onBackToFeed={() => setActiveTab('FEED')}
             userCredits={userCredits}
             agentCredits={agentCredits}
