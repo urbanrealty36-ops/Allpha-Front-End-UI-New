@@ -452,88 +452,92 @@ export default function Universe3DHubView({
       {currentStep === 'HUB' && (
         <div className="relative w-full h-full flex flex-col overflow-y-auto bg-slate-950">
           
-          {/* Header Bar */}
-          <header className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrentStep('SPLASH')}
-                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition"
-                title="Kembali ke Layar Pembuka"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <div>
-                <h2 className="text-sm font-black text-white flex items-center gap-1.5">
-                  <span>Universe Hub</span>
-                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-                </h2>
-                <p className="text-[10px] text-slate-400">Eksplorasi ekosistem dunia spatial</p>
+          {/* Unified Sticky Header Bar - Prevents anything from getting covered or overlapping */}
+          <header className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800/80 shadow-xl shrink-0">
+            {/* Top row: Brand & Hub Title & Navigation Buttons */}
+            <div className="px-4 py-3 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <button
+                  onClick={() => setCurrentStep('SPLASH')}
+                  className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 transition shrink-0"
+                  title="Kembali ke Layar Pembuka"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <div className="min-w-0">
+                  <h2 className="text-sm font-black text-white flex items-center gap-1.5 truncate">
+                    <span>Universe Hub</span>
+                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shrink-0" />
+                  </h2>
+                  <p className="text-[10px] text-slate-400 truncate">Eksplorasi ekosistem dunia spatial</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => setCurrentStep('WORLDS')}
+                  className="px-3 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-300 text-xs font-semibold flex items-center gap-1 transition"
+                >
+                  <Globe2 className="w-3.5 h-3.5" />
+                  <span>Semua Dunia</span>
+                </button>
+
+                <button
+                  onClick={onBackToFeed}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-900 hover:bg-rose-950/50 border border-slate-800 hover:border-rose-800/50 text-slate-300 hover:text-rose-300 text-xs font-bold transition"
+                  title="Kembali ke Beranda Feed"
+                >
+                  <X className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Feed</span>
+                </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrentStep('WORLDS')}
-                className="px-3 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-300 text-xs font-semibold flex items-center gap-1 transition"
-              >
-                <Globe2 className="w-3.5 h-3.5" />
-                <span>Semua Dunia</span>
-              </button>
+            {/* Quick Nav Chips: Galaxy, Worlds, Districts, Events */}
+            <div className="px-4 pb-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar">
+              {[
+                { id: 'Galaxy', icon: '🌌', label: 'Galaxy' },
+                { id: 'Worlds', icon: '🪐', label: 'Worlds' },
+                { id: 'Districts', icon: '🏙️', label: 'Districts' },
+                { id: 'Events', icon: '📅', label: 'Events' },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setHubNavTab(tab.id as any);
+                    if (tab.id === 'Districts') {
+                      setSelectedWorld(WORLDS_DATA[0]);
+                      setCurrentStep('DISTRICT_MAP');
+                    } else if (tab.id === 'Worlds') {
+                      setCurrentStep('WORLDS');
+                    }
+                  }}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
+                    hubNavTab === tab.id
+                      ? 'bg-cyan-600 text-white shadow-xs'
+                      : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
+                  }`}
+                >
+                  <span>{tab.icon}</span>
+                  <span>{tab.label}</span>
+                </button>
+              ))}
+            </div>
 
-              <button
-                onClick={onBackToFeed}
-                className="p-2 rounded-full bg-slate-900 text-slate-400 hover:text-white"
-                title="Kembali ke Feed"
-              >
-                <X className="w-4 h-4" />
-              </button>
+            {/* Search Box integrated cleanly inside sticky header so it never overlaps or covers */}
+            <div className="px-4 pb-3">
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Cari dunia virtual, district, atau live stage..."
+                  className="w-full bg-slate-900/90 border border-slate-800 pl-10 pr-4 py-2.5 rounded-2xl text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-500 transition"
+                />
+              </div>
             </div>
           </header>
-
-          {/* Quick Nav Chips: Galaxy, Worlds, Districts, Events */}
-          <div className="px-4 pt-3 flex items-center gap-2 overflow-x-auto no-scrollbar">
-            {[
-              { id: 'Galaxy', icon: '🌌', label: 'Galaxy' },
-              { id: 'Worlds', icon: '🪐', label: 'Worlds' },
-              { id: 'Districts', icon: '🏙️', label: 'Districts' },
-              { id: 'Events', icon: '📅', label: 'Events' },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setHubNavTab(tab.id as any);
-                  if (tab.id === 'Districts') {
-                    setSelectedWorld(WORLDS_DATA[0]);
-                    setCurrentStep('DISTRICT_MAP');
-                  } else if (tab.id === 'Worlds') {
-                    setCurrentStep('WORLDS');
-                  }
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
-                  hubNavTab === tab.id
-                    ? 'bg-cyan-600 text-white shadow-xs'
-                    : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
-                }`}
-              >
-                <span>{tab.icon}</span>
-                <span>{tab.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Search Box */}
-          <div className="px-4 pt-3">
-            <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari dunia virtual, district, atau live stage..."
-                className="w-full bg-slate-900/90 border border-slate-800 pl-10 pr-4 py-2.5 rounded-2xl text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-500 transition"
-              />
-            </div>
-          </div>
 
           {/* Main Content Area */}
           <div className="p-4 space-y-6 pb-24">
@@ -724,57 +728,69 @@ export default function Universe3DHubView({
       {currentStep === 'WORLDS' && (
         <div className="relative w-full h-full flex flex-col overflow-y-auto bg-slate-950">
           {/* Header */}
-          <header className="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80 px-4 py-3 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => setCurrentStep('HUB')}
-                className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 transition"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </button>
-              <div>
-                <h2 className="text-sm font-black text-white">Pilih Dunia (Worlds Directory)</h2>
-                <p className="text-[10px] text-slate-400">Pilih ekosistem virtual untuk dijelajahi</p>
+          <header className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800/80 shadow-xl shrink-0">
+            <div className="px-4 py-3 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentStep('HUB')}
+                  className="p-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 transition"
+                  title="Kembali ke Universe Hub"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <div>
+                  <h2 className="text-sm font-black text-white">Pilih Dunia (Worlds Directory)</h2>
+                  <p className="text-[10px] text-slate-400">Pilih ekosistem virtual untuk dijelajahi</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentStep('SPLASH')}
+                  className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded-full bg-slate-900 border border-slate-800"
+                >
+                  Onboarding
+                </button>
+                <button
+                  onClick={onBackToFeed}
+                  className="p-1.5 rounded-full bg-slate-900 text-slate-400 hover:text-white"
+                  title="Kembali ke Feed"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
-            <button
-              onClick={() => setCurrentStep('SPLASH')}
-              className="text-xs text-slate-400 hover:text-white"
-            >
-              Onboarding
-            </button>
+            {/* Search & Filter Tabs inside sticky header */}
+            <div className="px-4 pb-3 space-y-2.5">
+              <div className="relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Cari dunia virtual, metaverse atau district..."
+                  className="w-full bg-slate-900/90 border border-slate-800 pl-10 pr-4 py-2.5 rounded-2xl text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
+                {['Semua', 'Populer', 'Terbaru', 'Rekomendasi', 'Metropolitan', 'Cyberpunk', 'Space', 'Nature'].map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategoryFilter(cat)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
+                      activeCategoryFilter === cat
+                        ? 'bg-cyan-600 text-white shadow-xs'
+                        : 'bg-slate-900 border border-slate-800 text-slate-400 hover:bg-slate-800'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
           </header>
-
-          {/* Search & Filter Tabs */}
-          <div className="p-4 space-y-3 border-b border-slate-800">
-            <div className="relative">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cari dunia virtual, metaverse atau district..."
-                className="w-full bg-slate-900 border border-slate-800 pl-10 pr-4 py-2.5 rounded-2xl text-xs text-white placeholder-slate-500 outline-none focus:border-cyan-500"
-              />
-            </div>
-
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
-              {['Semua', 'Populer', 'Terbaru', 'Rekomendasi', 'Metropolitan', 'Cyberpunk', 'Space', 'Nature'].map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategoryFilter(cat)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
-                    activeCategoryFilter === cat
-                      ? 'bg-cyan-600 text-white shadow-xs'
-                      : 'bg-slate-900 text-slate-400 hover:bg-slate-800'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* Worlds Grid */}
           <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-24">

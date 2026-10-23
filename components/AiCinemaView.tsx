@@ -30,7 +30,15 @@ import {
   Radio,
   ChevronRight,
   Flame,
-  MessageCircle
+  MessageCircle,
+  Upload,
+  Video,
+  FileText,
+  ShieldCheck,
+  AlertCircle,
+  Trash2,
+  Plus,
+  ListChecks
 } from 'lucide-react';
 
 export type FilmGenre = 
@@ -41,6 +49,17 @@ export type FilmGenre =
   | 'ROMANCE' 
   | 'THRILLER' 
   | 'ANIMATION_3D';
+
+export interface MovieEpisodePart {
+  id: string;
+  partNumber: number;
+  title: string;
+  duration: string;
+  fileName?: string;
+  fileSize?: string;
+  isFreePreview: boolean;
+  videoUrl?: string;
+}
 
 export interface AiMovieItem {
   id: string;
@@ -71,6 +90,12 @@ export interface AiMovieItem {
   creatorMonthlyEarningsCredits: number;
   isTrending?: boolean;
   isFeatured?: boolean;
+  trailerTitle?: string;
+  trailerDuration?: string;
+  trailerVideoUrl?: string;
+  verificationStatus?: 'VERIFIED' | 'PENDING_VERIFICATION' | 'REJECTED';
+  isUserUploaded?: boolean;
+  parts?: MovieEpisodePart[];
 }
 
 interface AiCinemaViewProps {
@@ -81,6 +106,210 @@ interface AiCinemaViewProps {
   initialSelectedMovieId?: string;
 }
 
+const INITIAL_MOVIES_LIST: AiMovieItem[] = [
+  {
+    id: 'film-1',
+    title: 'The Reborn Cyber Empress',
+    originalTitle: '重生之赛博女帝 (Drama Pendek AI C-Drama)',
+    genre: 'C_DRAMA',
+    genreLabel: 'Drama China AI (C-Drama)',
+    coverImage: '/assets/aistudio/Screenshot_20261023-182318_4e89cb4b.jpg',
+    bannerImage: '/assets/aistudio/Screenshot_20261022-220040_ce194f62.jpg',
+    episodesCount: 15,
+    totalViews: '1.4M',
+    rating: 4.9,
+    durationPerEp: '2–3 menit / ep',
+    releaseYear: '2026',
+    producerHuman: {
+      name: 'Chen Wei',
+      handle: '@chenwei_films',
+      avatar: 'https://picsum.photos/seed/chen-producer/150/150',
+    },
+    aiCoDirector: {
+      name: 'CineGenius AI',
+      handle: '@cinegenius.ai',
+      avatar: 'https://picsum.photos/seed/cinegenius/150/150',
+      specialty: 'C-Drama Fast-Paced Directing & Neural Voice',
+    },
+    synopsis: 'Dikhianati oleh keluarga konglomerat di Shanghai 2099, Lin Yue terlahir kembali dengan memori masa depan dan AI Agent taktis untuk membalas dendam dan merebut kembali tahta bisnis teknologi terkuat.',
+    aiTechStack: 'Kling 1.5 + Midjourney v6 + ElevenLabs Neural Voice + Wan2.1 Video',
+    creatorMonthlyEarningsCredits: 14850,
+    isTrending: true,
+    isFeatured: true,
+    verificationStatus: 'VERIFIED',
+    trailerTitle: 'Official Premiere Trailer 4K',
+    trailerDuration: '00:45',
+    parts: [
+      { id: 'p1', partNumber: 1, title: 'Episode 1: Kebangkitan Sang Ratu', duration: '02:30', isFreePreview: true },
+      { id: 'p2', partNumber: 2, title: 'Episode 2: Pertemuan di Menara Kristal', duration: '02:45', isFreePreview: true },
+      { id: 'p3', partNumber: 3, title: 'Episode 3: Menghapus Jejak Musuh', duration: '03:10', isFreePreview: false },
+      { id: 'p4', partNumber: 4, title: 'Episode 4: Protokol Aliansi Rahasia', duration: '02:50', isFreePreview: false },
+      { id: 'p5', partNumber: 5, title: 'Episode 5: Tahta yang Direbut Kembali', duration: '03:20', isFreePreview: false },
+    ],
+  },
+  {
+    id: 'film-2',
+    title: 'Neo-Seoul: Destined Neural Hearts',
+    originalTitle: '운명의 뉴럴 하트 (K-Drama AI Rom-Com)',
+    genre: 'K_DRAMA',
+    genreLabel: 'Drama Korea AI (K-Drama)',
+    coverImage: '/assets/aistudio/Screenshot_20261023-182405_d765b801.jpg',
+    bannerImage: '/assets/aistudio/Screenshot_20261023-182405_d765b801.jpg',
+    episodesCount: 12,
+    totalViews: '980K',
+    rating: 4.8,
+    durationPerEp: '3 menit / ep',
+    releaseYear: '2026',
+    producerHuman: {
+      name: 'Park Ji-hoon',
+      handle: '@jihoon_media',
+      avatar: 'https://picsum.photos/seed/jihoon/150/150',
+    },
+    aiCoDirector: {
+      name: 'Luna AI',
+      handle: '@luna.ai',
+      avatar: 'https://picsum.photos/seed/luna-cyber/150/150',
+      specialty: 'K-Drama Romance Lighting & Spatial Sound',
+    },
+    synopsis: 'Kisah cinta manis dan penuh intrik antara seorang desainer spatial muda dan CEO android misterius di tengah gemerlap kota futuristik Neo-Seoul.',
+    aiTechStack: 'Luma Dream Machine + ElevenLabs Korean Voice + Stable Diffusion 3',
+    creatorMonthlyEarningsCredits: 9640,
+    isTrending: true,
+    verificationStatus: 'VERIFIED',
+    trailerTitle: 'Teaser Romantis Neo-Seoul',
+    trailerDuration: '00:50',
+    parts: [
+      { id: 'p1', partNumber: 1, title: 'Episode 1: Tatapan di Halte Kereta Cepat', duration: '03:00', isFreePreview: true },
+      { id: 'p2', partNumber: 2, title: 'Episode 2: Rahasia Kode Sumber', duration: '02:55', isFreePreview: true },
+      { id: 'p3', partNumber: 3, title: 'Episode 3: Kencan Hologram Pertama', duration: '03:15', isFreePreview: false },
+    ],
+  },
+  {
+    id: 'film-3',
+    title: "CEO's Secret Android Bride",
+    originalTitle: '总裁的秘密仿生新娘 (Drama Pendek AI Modern)',
+    genre: 'C_DRAMA',
+    genreLabel: 'Drama China AI (C-Drama)',
+    coverImage: '/assets/aistudio/file_00000000d1c08207a6952642d1a26363_df39e383.png',
+    bannerImage: '/assets/aistudio/file_00000000d1c08207a6952642d1a26363_df39e383.png',
+    episodesCount: 18,
+    totalViews: '2.1M',
+    rating: 4.95,
+    durationPerEp: '2 menit / ep',
+    releaseYear: '2026',
+    producerHuman: {
+      name: 'Alex Tamara',
+      handle: '@alextamara',
+      avatar: 'https://picsum.photos/seed/alex-tamara/150/150',
+    },
+    aiCoDirector: {
+      name: 'Luna AI',
+      handle: '@luna.ai',
+      avatar: 'https://picsum.photos/seed/luna-cyber/150/150',
+      specialty: '3D Spatial Wardrobe & Emissive Lighting',
+    },
+    synopsis: 'Demi menyelamatkan perusahaannya, pewaris konglomerat terpaksa menikahi wanita misterius yang ternyata adalah android bio-sintetik dengan misi rahasia menyelamatkan Allpha Universe.',
+    aiTechStack: 'Kling AI + Runway Gen-3 + Suno AI Music + ElevenLabs',
+    creatorMonthlyEarningsCredits: 22400,
+    isTrending: true,
+    verificationStatus: 'VERIFIED',
+    trailerTitle: 'Main Drama Trailer',
+    trailerDuration: '00:40',
+    parts: [
+      { id: 'p1', partNumber: 1, title: 'Episode 1: Pernikahan Kontrak', duration: '02:10', isFreePreview: true },
+      { id: 'p2', partNumber: 2, title: 'Episode 2: Identitas yang Terkuak', duration: '02:05', isFreePreview: true },
+      { id: 'p3', partNumber: 3, title: 'Episode 3: Perlindungan Sang CEO', duration: '02:20', isFreePreview: false },
+    ],
+  },
+  {
+    id: 'film-4',
+    title: 'Shadow Protocol: Shanghai 2099',
+    originalTitle: '暗影协议 2099 (Action Thriller AI)',
+    genre: 'THRILLER',
+    genreLabel: 'Thriller & Action AI',
+    coverImage: '/assets/aistudio/Screenshot_20261022-214044_2d568e43.jpg',
+    bannerImage: '/assets/aistudio/Screenshot_20261022-214044_2d568e43.jpg',
+    episodesCount: 8,
+    totalViews: '640K',
+    rating: 4.7,
+    durationPerEp: '4 menit / ep',
+    releaseYear: '2026',
+    producerHuman: {
+      name: 'Rizky Pratama',
+      handle: '@rizky_action',
+      avatar: 'https://picsum.photos/seed/rizky/150/150',
+    },
+    aiCoDirector: {
+      name: 'Aegis AI',
+      handle: '@aegis.ai',
+      avatar: 'https://picsum.photos/seed/aegis/150/150',
+      specialty: 'Tactical Choreography & Hyper-real Combat VFX',
+    },
+    synopsis: 'Agen rahasia siber menyusup ke markas korporasi nakal untuk membatalkan virus penghapus identitas manusia di Metaverse.',
+    aiTechStack: 'Midjourney + Wan2.1 + Sora Spatial Synth',
+    creatorMonthlyEarningsCredits: 7120,
+    verificationStatus: 'VERIFIED',
+  },
+  {
+    id: 'film-5',
+    title: 'The Immortal Sword Sovereign',
+    originalTitle: '逆天剑尊 (Wuxia Cultivation AI)',
+    genre: 'C_DRAMA',
+    genreLabel: 'Drama China AI (C-Drama)',
+    coverImage: '/assets/aistudio/Screenshot_20261020-224657_48336231.jpg',
+    bannerImage: '/assets/aistudio/Screenshot_20261020-224657_48336231.jpg',
+    episodesCount: 20,
+    totalViews: '1.6M',
+    rating: 4.85,
+    durationPerEp: '2.5 menit / ep',
+    releaseYear: '2026',
+    producerHuman: {
+      name: 'Liang Studios',
+      handle: '@liang_studios',
+      avatar: 'https://picsum.photos/seed/liang/150/150',
+    },
+    aiCoDirector: {
+      name: 'WuxiaMaster AI',
+      handle: '@wuxiamaster.ai',
+      avatar: 'https://picsum.photos/seed/wuxia/150/150',
+      specialty: 'Flying Swords Physics & Traditional Chinese Scoring',
+    },
+    synopsis: 'Pendekar muda yang kehilangan dantian-nya membangkitkan pedang purba berjiwa AI di puncak Gunung Kristal, menuntut keadilan lintas sembilan alam.',
+    aiTechStack: 'Kling 1.5 + ComfyUI AnimateDiff + AudioCraft',
+    creatorMonthlyEarningsCredits: 16200,
+    verificationStatus: 'VERIFIED',
+  },
+  {
+    id: 'film-6',
+    title: 'Chronicles of Mars: The Bio-Awakening',
+    originalTitle: 'Mars Bio-Colony Origins',
+    genre: 'SCIFI',
+    genreLabel: 'Sci-Fi Spatial 3D',
+    coverImage: '/assets/aistudio/file_00000000560c820baca9cd747fc97471_b104badb.png',
+    bannerImage: '/assets/aistudio/file_00000000560c820baca9cd747fc97471_b104badb.png',
+    episodesCount: 10,
+    totalViews: '510K',
+    rating: 4.65,
+    durationPerEp: '3.5 menit / ep',
+    releaseYear: '2026',
+    producerHuman: {
+      name: 'Dr. Sarah Novak',
+      handle: '@dr_sarah',
+      avatar: 'https://picsum.photos/seed/sarah/150/150',
+    },
+    aiCoDirector: {
+      name: 'CosmoAI',
+      handle: '@cosmo.ai',
+      avatar: 'https://picsum.photos/seed/cosmo/150/150',
+      specialty: 'Astrophysics Simulation & Robotic Voice Synthesis',
+    },
+    synopsis: 'Peneliti terraforming menemukan mikroorganisme purba di kedalaman tanah Mars yang mampu berinteraksi langsung dengan AI neural network.',
+    aiTechStack: 'Three.js Spatial Engine + Runway Gen-3 + Udio Music',
+    creatorMonthlyEarningsCredits: 5800,
+    verificationStatus: 'VERIFIED',
+  },
+];
+
 export default function AiCinemaView({
   onBackToFeed,
   onOpenAskAi,
@@ -88,221 +317,247 @@ export default function AiCinemaView({
   onPostTrailerToFeed,
   initialSelectedMovieId,
 }: AiCinemaViewProps) {
+  // Movie catalog state (supports dynamic user submissions)
+  const [moviesList, setMoviesList] = useState<AiMovieItem[]>(INITIAL_MOVIES_LIST);
+
   // VIP Monthly Subscription State
   const [isVipSubscribed, setIsVipSubscribed] = useState<boolean>(false);
   const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState<boolean>(false);
 
+  // View Mode: 'CATALOG' | 'MY_STUDIO'
+  const [cinemaViewMode, setCinemaViewMode] = useState<'CATALOG' | 'MY_STUDIO'>('CATALOG');
+
   // Genre filter
   const [activeGenre, setActiveGenre] = useState<FilmGenre>('ALL');
 
-  // Submit new AI Film Modal
-  const [isSubmitFilmModalOpen, setIsSubmitFilmModalOpen] = useState<boolean>(false);
-  const [newFilmTitle, setNewFilmTitle] = useState('');
-  const [newFilmGenre, setNewFilmGenre] = useState<FilmGenre>('C_DRAMA');
-  const [newFilmSynopsis, setNewFilmSynopsis] = useState('');
+  // "Create Film AI" Dedicated Studio Modal / Screen
+  const [isCreateStudioOpen, setIsCreateStudioOpen] = useState<boolean>(false);
+
+  // Create Film AI Form Fields
+  const [newTitle, setNewTitle] = useState('');
+  const [newOriginalTitle, setNewOriginalTitle] = useState('');
+  const [newGenre, setNewGenre] = useState<FilmGenre>('C_DRAMA');
+  const [newDurationPerPart, setNewDurationPerPart] = useState('2–3 menit / part');
+  const [newTechStack, setNewTechStack] = useState('Kling 1.5 + Runway Gen-3 + ElevenLabs + Suno Music');
+  const [newSynopsis, setNewSynopsis] = useState('');
+  const [newProducerName, setNewProducerName] = useState('Alex Tamara');
+  const [newAiCoDirector, setNewAiCoDirector] = useState('Luna AI');
+
+  // Trailer Upload State
+  const [trailerFileName, setTrailerFileName] = useState('trailer_official_4k_cut.mp4');
+  const [trailerDuration, setTrailerDuration] = useState('00:45');
+  const [isTrailerUploaded, setIsTrailerUploaded] = useState(true);
+  const [isPreviewingTrailer, setIsPreviewingTrailer] = useState(false);
+  const [selectedPosterPreset, setSelectedPosterPreset] = useState<string>(
+    '/assets/aistudio/Screenshot_20261023-182318_4e89cb4b.jpg'
+  );
+
+  // Video Parts State (Multi-Part Upload)
+  const [videoParts, setVideoParts] = useState<MovieEpisodePart[]>([
+    {
+      id: 'p-1',
+      partNumber: 1,
+      title: 'Part 1: Awal Mula Sang Ratu',
+      duration: '02:30',
+      fileName: 'part1_scene_rendered.mp4',
+      fileSize: '48 MB',
+      isFreePreview: true,
+    },
+    {
+      id: 'p-2',
+      partNumber: 2,
+      title: 'Part 2: Pertemuan Rahasia di Neo-Shanghai',
+      duration: '02:45',
+      fileName: 'part2_cyber_tower.mp4',
+      fileSize: '54 MB',
+      isFreePreview: false,
+    },
+    {
+      id: 'p-3',
+      partNumber: 3,
+      title: 'Part 3: Serangan Protokol Siber',
+      duration: '03:10',
+      fileName: 'part3_climax_battle.mp4',
+      fileSize: '62 MB',
+      isFreePreview: false,
+    },
+  ]);
+
+  // Verification review modal after publishing
+  const [reviewModalData, setReviewModalData] = useState<{
+    isOpen: boolean;
+    movie: AiMovieItem | null;
+  }>({
+    isOpen: false,
+    movie: null,
+  });
+
+  // Active playing movie in theater modal
+  const [activeTheaterMovie, setActiveTheaterMovie] = useState<AiMovieItem | null>(() => {
+    if (initialSelectedMovieId) {
+      return INITIAL_MOVIES_LIST.find((m) => m.id === initialSelectedMovieId) || INITIAL_MOVIES_LIST[0];
+    }
+    return null;
+  });
+
+  // Selected episode / part inside theater modal
+  const [activeEpisodeNumber, setActiveEpisodeNumber] = useState<number>(1);
+  const [isViewingTrailerInTheater, setIsViewingTrailerInTheater] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(true);
+  const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
 
   // Toast notification
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const showToast = (msg: string) => {
     setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3500);
+    setTimeout(() => setToastMsg(null), 4000);
   };
 
-  // Movie dataset (Rich AI-produced short dramas and films)
-  const moviesList: AiMovieItem[] = [
-    {
-      id: 'film-1',
-      title: 'The Reborn Cyber Empress',
-      originalTitle: '重生之赛博女帝 (Drama Pendek AI C-Drama)',
-      genre: 'C_DRAMA',
-      genreLabel: 'Drama China AI (C-Drama)',
-      coverImage: '/assets/aistudio/Screenshot_20261023-182318_4e89cb4b.jpg',
-      bannerImage: '/assets/aistudio/Screenshot_20261022-220040_ce194f62.jpg',
-      episodesCount: 15,
-      totalViews: '1.4M',
-      rating: 4.9,
-      durationPerEp: '2–3 menit / ep',
-      releaseYear: '2026',
-      producerHuman: {
-        name: 'Chen Wei',
-        handle: '@chenwei_films',
-        avatar: 'https://picsum.photos/seed/chen-producer/150/150',
-      },
-      aiCoDirector: {
-        name: 'CineGenius AI',
-        handle: '@cinegenius.ai',
-        avatar: 'https://picsum.photos/seed/cinegenius/150/150',
-        specialty: 'C-Drama Fast-Paced Directing & Neural Voice',
-      },
-      synopsis: 'Dikhianati oleh keluarga konglomerat di Shanghai 2099, Lin Yue terlahir kembali dengan memori masa depan dan AI Agent taktis untuk membalas dendam dan merebut kembali tahta bisnis teknologi terkuat.',
-      aiTechStack: 'Kling 1.5 + Midjourney v6 + ElevenLabs Neural Voice + Wan2.1 Video',
-      creatorMonthlyEarningsCredits: 14850,
-      isTrending: true,
-      isFeatured: true,
-    },
-    {
-      id: 'film-2',
-      title: 'Neo-Seoul: Destined Neural Hearts',
-      originalTitle: '운명의 뉴럴 하트 (K-Drama AI Rom-Com)',
-      genre: 'K_DRAMA',
-      genreLabel: 'Drama Korea AI (K-Drama)',
-      coverImage: '/assets/aistudio/Screenshot_20261023-182405_d765b801.jpg',
-      bannerImage: '/assets/aistudio/Screenshot_20261023-182405_d765b801.jpg',
-      episodesCount: 12,
-      totalViews: '980K',
-      rating: 4.8,
-      durationPerEp: '3 menit / ep',
-      releaseYear: '2026',
-      producerHuman: {
-        name: 'Park Ji-hoon',
-        handle: '@jihoon_media',
-        avatar: 'https://picsum.photos/seed/jihoon/150/150',
-      },
-      aiCoDirector: {
-        name: 'Luna AI',
-        handle: '@luna.ai',
-        avatar: 'https://picsum.photos/seed/luna-cyber/150/150',
-        specialty: 'K-Drama Romance Lighting & Spatial Sound',
-      },
-      synopsis: 'Kisah cinta manis dan penuh intrik antara seorang desainer spatial muda dan CEO android misterius di tengah gemerlap kota futuristik Neo-Seoul.',
-      aiTechStack: 'Luma Dream Machine + ElevenLabs Korean Voice + Stable Diffusion 3',
-      creatorMonthlyEarningsCredits: 9640,
-      isTrending: true,
-    },
-    {
-      id: 'film-3',
-      title: "CEO's Secret Android Bride",
-      originalTitle: '总裁的秘密仿生新娘 (Drama Pendek AI Modern)',
-      genre: 'C_DRAMA',
-      genreLabel: 'Drama China AI (C-Drama)',
-      coverImage: '/assets/aistudio/file_00000000d1c08207a6952642d1a26363_df39e383.png',
-      bannerImage: '/assets/aistudio/file_00000000d1c08207a6952642d1a26363_df39e383.png',
-      episodesCount: 18,
-      totalViews: '2.1M',
-      rating: 4.95,
-      durationPerEp: '2 menit / ep',
-      releaseYear: '2026',
-      producerHuman: {
-        name: 'Alex Tamara',
-        handle: '@alextamara',
-        avatar: 'https://picsum.photos/seed/alex-tamara/150/150',
-      },
-      aiCoDirector: {
-        name: 'Luna AI',
-        handle: '@luna.ai',
-        avatar: 'https://picsum.photos/seed/luna-cyber/150/150',
-        specialty: '3D Spatial Wardrobe & Emissive Lighting',
-      },
-      synopsis: 'Demi menyelamatkan perusahaannya, pewaris konglomerat terpaksa menikahi wanita misterius yang ternyata adalah android bio-sintetik dengan misi rahasia menyelamatkan Allpha Universe.',
-      aiTechStack: 'Kling AI + Runway Gen-3 + Suno AI Music + ElevenLabs',
-      creatorMonthlyEarningsCredits: 22400,
-      isTrending: true,
-    },
-    {
-      id: 'film-4',
-      title: 'Shadow Protocol: Shanghai 2099',
-      originalTitle: '暗影协议 2099 (Action Thriller AI)',
-      genre: 'THRILLER',
-      genreLabel: 'Thriller & Action AI',
-      coverImage: '/assets/aistudio/Screenshot_20261022-214044_2d568e43.jpg',
-      bannerImage: '/assets/aistudio/Screenshot_20261022-214044_2d568e43.jpg',
-      episodesCount: 8,
-      totalViews: '640K',
-      rating: 4.7,
-      durationPerEp: '4 menit / ep',
-      releaseYear: '2026',
-      producerHuman: {
-        name: 'Rizky Pratama',
-        handle: '@rizky_action',
-        avatar: 'https://picsum.photos/seed/rizky/150/150',
-      },
-      aiCoDirector: {
-        name: 'Aegis AI',
-        handle: '@aegis.ai',
-        avatar: 'https://picsum.photos/seed/aegis/150/150',
-        specialty: 'Tactical Choreography & Hyper-real Combat VFX',
-      },
-      synopsis: 'Agen rahasia siber menyusup ke markas korporasi nakal untuk membatalkan virus penghapus identitas manusia di Metaverse.',
-      aiTechStack: 'Midjourney + Wan2.1 + Sora Spatial Synth',
-      creatorMonthlyEarningsCredits: 7120,
-    },
-    {
-      id: 'film-5',
-      title: 'The Immortal Sword Sovereign',
-      originalTitle: '逆天剑尊 (Wuxia Cultivation AI)',
-      genre: 'C_DRAMA',
-      genreLabel: 'Drama China AI (C-Drama)',
-      coverImage: '/assets/aistudio/Screenshot_20261020-224657_48336231.jpg',
-      bannerImage: '/assets/aistudio/Screenshot_20261020-224657_48336231.jpg',
-      episodesCount: 20,
-      totalViews: '1.6M',
-      rating: 4.85,
-      durationPerEp: '2.5 menit / ep',
-      releaseYear: '2026',
-      producerHuman: {
-        name: 'Liang Studios',
-        handle: '@liang_studios',
-        avatar: 'https://picsum.photos/seed/liang/150/150',
-      },
-      aiCoDirector: {
-        name: 'WuxiaMaster AI',
-        handle: '@wuxiamaster.ai',
-        avatar: 'https://picsum.photos/seed/wuxia/150/150',
-        specialty: 'Flying Swords Physics & Traditional Chinese Scoring',
-      },
-      synopsis: 'Pendekar muda yang kehilangan dantian-nya membangkitkan pedang purba berjiwa AI di puncak Gunung Kristal, menuntut keadilan lintas sembilan alam.',
-      aiTechStack: 'Kling 1.5 + ComfyUI AnimateDiff + AudioCraft',
-      creatorMonthlyEarningsCredits: 16200,
-    },
-    {
-      id: 'film-6',
-      title: 'Chronicles of Mars: The Bio-Awakening',
-      originalTitle: 'Mars Bio-Colony Origins',
-      genre: 'SCIFI',
-      genreLabel: 'Sci-Fi Spatial 3D',
-      coverImage: '/assets/aistudio/file_00000000560c820baca9cd747fc97471_b104badb.png',
-      bannerImage: '/assets/aistudio/file_00000000560c820baca9cd747fc97471_b104badb.png',
-      episodesCount: 10,
-      totalViews: '510K',
-      rating: 4.65,
-      durationPerEp: '3.5 menit / ep',
-      releaseYear: '2026',
-      producerHuman: {
-        name: 'Dr. Sarah Novak',
-        handle: '@dr_sarah',
-        avatar: 'https://picsum.photos/seed/sarah/150/150',
-      },
-      aiCoDirector: {
-        name: 'CosmoAI',
-        handle: '@cosmo.ai',
-        avatar: 'https://picsum.photos/seed/cosmo/150/150',
-        specialty: 'Astrophysics Simulation & Robotic Voice Synthesis',
-      },
-      synopsis: 'Peneliti terraforming menemukan mikroorganisme purba di kedalaman tanah Mars yang mampu berinteraksi langsung dengan AI neural network.',
-      aiTechStack: 'Three.js Spatial Engine + Runway Gen-3 + Udio Music',
-      creatorMonthlyEarningsCredits: 5800,
-    },
-  ];
-
-  // Active playing movie in theater modal
-  const [activeTheaterMovie, setActiveTheaterMovie] = useState<AiMovieItem | null>(() => {
-    if (initialSelectedMovieId) {
-      return moviesList.find((m) => m.id === initialSelectedMovieId) || moviesList[0];
-    }
-    return null;
-  });
-
-  // Selected episode inside theater modal
-  const [activeEpisodeNumber, setActiveEpisodeNumber] = useState<number>(1);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [isAudioMuted, setIsAudioMuted] = useState<boolean>(false);
-  const [playbackSeconds, setPlaybackSeconds] = useState<number>(45);
+  const genreLabels: Record<FilmGenre, string> = {
+    ALL: 'Semua Kategori',
+    C_DRAMA: 'Drama China AI (C-Drama)',
+    K_DRAMA: 'Drama Korea AI (K-Drama)',
+    SCIFI: 'Sci-Fi Spatial 3D',
+    THRILLER: 'Thriller & Misteri',
+    ROMANCE: 'Romance & Time Travel',
+    ANIMATION_3D: 'Animasi 3D & Wuxia',
+  };
 
   const filteredMovies = activeGenre === 'ALL'
     ? moviesList
     : moviesList.filter((m) => m.genre === activeGenre);
 
+  const myUploadedFilms = moviesList.filter((m) => m.isUserUploaded || m.producerHuman.name === 'Alex Tamara');
   const featuredMovie = moviesList[0];
+
+  // Add Part Handler
+  const handleAddVideoPart = () => {
+    const nextNum = videoParts.length + 1;
+    const newPart: MovieEpisodePart = {
+      id: `p-${Date.now()}`,
+      partNumber: nextNum,
+      title: `Part ${nextNum}: Episode Lanjutan ${nextNum}`,
+      duration: '02:40',
+      fileName: `part${nextNum}_video_render.mp4`,
+      fileSize: '52 MB',
+      isFreePreview: false,
+    };
+    setVideoParts([...videoParts, newPart]);
+    showToast(`Part ${nextNum} berhasil ditambahkan ke draf film!`);
+  };
+
+  // Remove Part Handler
+  const handleRemoveVideoPart = (partId: string) => {
+    if (videoParts.length <= 1) {
+      showToast('Minimal harus ada 1 part video film.');
+      return;
+    }
+    const filtered = videoParts.filter((p) => p.id !== partId);
+    // Renumber parts
+    const renumbered = filtered.map((p, idx) => ({
+      ...p,
+      partNumber: idx + 1,
+    }));
+    setVideoParts(renumbered);
+  };
+
+  // Update Part title or duration
+  const handleUpdatePart = (id: string, updates: Partial<MovieEpisodePart>) => {
+    setVideoParts(videoParts.map((p) => (p.id === id ? { ...p, ...updates } : p)));
+  };
+
+  // Submit and Publish Film for Verification by Team Allpha
+  const handlePublishForVerification = () => {
+    if (!newTitle.trim()) {
+      showToast('Harap masukkan Judul Film AI Anda.');
+      return;
+    }
+    if (!newSynopsis.trim()) {
+      showToast('Harap masukkan Deskripsi & Sinopsis Film.');
+      return;
+    }
+
+    const createdMovie: AiMovieItem = {
+      id: `film-${Date.now()}`,
+      title: newTitle.trim(),
+      originalTitle: newOriginalTitle.trim() || undefined,
+      genre: newGenre,
+      genreLabel: genreLabels[newGenre] || 'Film AI Allpha',
+      coverImage: selectedPosterPreset,
+      bannerImage: selectedPosterPreset,
+      episodesCount: videoParts.length,
+      totalViews: '0',
+      rating: 5.0,
+      durationPerEp: newDurationPerPart,
+      releaseYear: '2026',
+      producerHuman: {
+        name: newProducerName || 'Alex Tamara',
+        handle: `@${(newProducerName || 'Alex Tamara').toLowerCase().replace(/\s+/g, '')}`,
+        avatar: 'https://picsum.photos/seed/alex-producer/150/150',
+      },
+      aiCoDirector: {
+        name: newAiCoDirector || 'Luna AI',
+        handle: `@${(newAiCoDirector || 'Luna AI').toLowerCase().replace(/\s+/g, '')}`,
+        avatar: 'https://picsum.photos/seed/luna-cyber/150/150',
+        specialty: '3D Directing & Spatial Sound Synthesis',
+      },
+      synopsis: newSynopsis.trim(),
+      aiTechStack: newTechStack || 'Kling 1.5 + Runway Gen-3 + ElevenLabs',
+      creatorMonthlyEarningsCredits: 0,
+      isTrending: true,
+      trailerTitle: 'Official Trailer 4K',
+      trailerDuration: trailerDuration || '00:45',
+      verificationStatus: 'PENDING_VERIFICATION',
+      isUserUploaded: true,
+      parts: videoParts,
+    };
+
+    // Add to movies list
+    setMoviesList([createdMovie, ...moviesList]);
+    setIsCreateStudioOpen(false);
+
+    // Open review & verification dialog
+    setReviewModalData({
+      isOpen: true,
+      movie: createdMovie,
+    });
+
+    showToast(`Film "${createdMovie.title}" berhasil di-publish & dikirim ke antrean Verifikasi Team Allpha!`);
+  };
+
+  // Simulate Instant Verification by Team Allpha
+  const handleApproveByTeamAllpha = (movieId: string) => {
+    setMoviesList((prev) =>
+      prev.map((m) => {
+        if (m.id === movieId) {
+          return {
+            ...m,
+            verificationStatus: 'VERIFIED',
+            totalViews: '1.2K',
+            creatorMonthlyEarningsCredits: 1200,
+          };
+        }
+        return m;
+      })
+    );
+
+    if (reviewModalData.movie?.id === movieId) {
+      setReviewModalData((prev) => ({
+        ...prev,
+        movie: prev.movie ? { ...prev.movie, verificationStatus: 'VERIFIED' } : null,
+      }));
+    }
+
+    showToast('🎉 Selamat! Film AI Anda TELAH TERVERIFIKASI oleh Team Allpha dan kini tayang publik!');
+  };
+
+  // Handler for opening a movie in theater modal
+  const handleOpenTheater = (movie: AiMovieItem, episodeNum = 1, showTrailer = false) => {
+    setActiveTheaterMovie(movie);
+    setActiveEpisodeNumber(episodeNum);
+    setIsViewingTrailerInTheater(showTrailer);
+    setIsPlaying(true);
+  };
 
   // Handler for subscribing VIP
   const handleConfirmVipSubscription = () => {
@@ -311,31 +566,11 @@ export default function AiCinemaView({
     showToast('Selamat! Langganan VIP Allpha Cinema Aktif. Semua episode terbuka tanpa batas!');
   };
 
-  // Handler for opening a movie in theater modal
-  const handleOpenTheater = (movie: AiMovieItem, episodeNum = 1) => {
-    setActiveTheaterMovie(movie);
-    setActiveEpisodeNumber(episodeNum);
-    setIsPlaying(true);
-    setPlaybackSeconds(0);
-  };
-
-  // Handler for clicking an episode
-  const handleSelectEpisode = (epNum: number) => {
-    if (epNum > 2 && !isVipSubscribed) {
-      setIsSubscriptionModalOpen(true);
-      return;
-    }
-    setActiveEpisodeNumber(epNum);
-    setIsPlaying(true);
-    setPlaybackSeconds(0);
-    showToast(`Memutar Episode ${epNum}: "${activeTheaterMovie?.title}"`);
-  };
-
   return (
-    <div className="max-w-4xl mx-auto px-4 py-4 space-y-6 pb-24 text-slate-900">
+    <div className="max-w-4xl mx-auto px-4 py-4 space-y-6 pb-28 text-slate-900 font-sans">
       {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed top-16 right-4 z-50 px-4 py-2.5 rounded-2xl bg-slate-900 text-white border border-rose-500/50 shadow-2xl text-xs font-semibold flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+        <div className="fixed top-16 right-4 z-50 px-4 py-3 rounded-2xl bg-slate-950 text-white border border-rose-500/60 shadow-2xl text-xs font-semibold flex items-center gap-2.5 animate-in fade-in slide-in-from-top-3 max-w-sm">
           <CheckCircle2 className="w-4 h-4 text-rose-400 shrink-0" />
           <span>{toastMsg}</span>
         </div>
@@ -364,7 +599,7 @@ export default function AiCinemaView({
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
             {isVipSubscribed ? (
               <span className="px-3.5 py-1.5 rounded-2xl bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 font-black text-xs shadow-md flex items-center gap-1.5">
                 <Crown className="w-3.5 h-3.5 fill-slate-950" />
@@ -373,7 +608,7 @@ export default function AiCinemaView({
             ) : (
               <button
                 onClick={() => setIsSubscriptionModalOpen(true)}
-                className="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-rose-600 via-purple-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-black text-xs shadow-lg shadow-rose-500/25 transition flex items-center gap-1.5 animate-pulse"
+                className="px-3.5 py-2 rounded-2xl bg-gradient-to-r from-rose-600 via-purple-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-black text-xs shadow-lg shadow-rose-500/25 transition flex items-center gap-1.5"
               >
                 <Crown className="w-3.5 h-3.5" />
                 <span>Langganan VIP (150 Cr / Bln)</span>
@@ -381,12 +616,11 @@ export default function AiCinemaView({
             )}
 
             <button
-              onClick={() => setIsSubmitFilmModalOpen(true)}
-              className="px-3 py-2 rounded-2xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs font-bold transition flex items-center gap-1.5 border border-slate-700"
-              title="Ajukan Film AI Baru"
+              onClick={() => setIsCreateStudioOpen(true)}
+              className="px-4 py-2 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-black shadow-md shadow-rose-600/30 transition flex items-center gap-1.5"
             >
-              <PlusCircle className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden sm:inline">Daftarkan Film AI</span>
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Create Film AI</span>
             </button>
           </div>
         </div>
@@ -405,8 +639,70 @@ export default function AiCinemaView({
         </div>
       </div>
 
+      {/* ========================================================================= */}
+      {/* 1. CREATOR / PRODUCER CALLOUT BANNER (Sesuai Permintaan User)             */}
+      {/* ========================================================================= */}
+      <div className="relative rounded-3xl overflow-hidden p-5 sm:p-6 bg-gradient-to-br from-slate-950 via-purple-950/80 to-rose-950/90 border-2 border-rose-500/50 shadow-2xl text-white space-y-4">
+        {/* Glow elements */}
+        <div className="absolute top-0 right-0 w-80 h-80 rounded-full bg-rose-600/20 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-60 h-60 rounded-full bg-purple-600/20 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+          <div className="space-y-2 max-w-xl">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 border border-rose-400/40 text-rose-300 text-[11px] font-bold uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 text-rose-400" />
+              <span>Program Resmi Kreator & Produser Allpha</span>
+            </div>
+
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug">
+              Ingin menjadi Creator/Produser Film AI di Allpha?
+            </h2>
+
+            <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+              Agar Karyamu ditonton orang banyak serta mendapatkan keuntungan dan pendapatan dari Film AI kamu, yuk registrasi dan upload film kamu! Klik tombol <strong>&quot;Create Film AI&quot;</strong> di bawah untuk mengunggah trailer, mengisi judul dan deskripsi, upload video per part film, lalu ajukan verifikasi resmi oleh Team Allpha.
+            </p>
+
+            {/* Benefit Highlights */}
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+              <span className="px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 font-semibold flex items-center gap-1.5">
+                <Coins className="w-3.5 h-3.5 text-emerald-400" />
+                Bagi Hasil 70% Royalti Kreator
+              </span>
+              <span className="px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-500/40 text-cyan-300 font-semibold flex items-center gap-1.5">
+                <Tv className="w-3.5 h-3.5 text-cyan-400" />
+                Tayang di Feed, Reels & 3D Cinema
+              </span>
+              <span className="px-3 py-1 rounded-full bg-purple-950/80 border border-purple-500/40 text-purple-300 font-semibold flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+                Verifikasi Resmi Team Allpha
+              </span>
+            </div>
+          </div>
+
+          {/* Action CTA Buttons */}
+          <div className="relative z-10 flex flex-col sm:flex-row md:flex-col gap-2.5 shrink-0">
+            <button
+              onClick={() => setIsCreateStudioOpen(true)}
+              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-600 to-purple-600 hover:from-rose-400 hover:to-purple-500 text-white font-black text-sm shadow-[0_0_30px_rgba(244,63,94,0.45)] hover:shadow-[0_0_35px_rgba(244,63,94,0.65)] transition transform active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <PlusCircle className="w-4 h-4 fill-white text-rose-600" />
+              <span>Create Film AI</span>
+              <ChevronRight className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => setCinemaViewMode(cinemaViewMode === 'MY_STUDIO' ? 'CATALOG' : 'MY_STUDIO')}
+              className="px-4 py-2.5 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-bold transition flex items-center justify-center gap-1.5"
+            >
+              <Film className="w-3.5 h-3.5 text-rose-400" />
+              <span>{cinemaViewMode === 'MY_STUDIO' ? 'Lihat Semua Katalog Film' : `Status Film Saya (${myUploadedFilms.length})`}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Featured Blockbuster Banner */}
-      {featuredMovie && (
+      {featuredMovie && cinemaViewMode === 'CATALOG' && (
         <div className="relative rounded-3xl overflow-hidden bg-slate-950 text-white border border-slate-800 shadow-xl group">
           <div className="relative h-64 sm:h-80 w-full overflow-hidden">
             <img
@@ -451,7 +747,7 @@ export default function AiCinemaView({
                   className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-rose-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg shadow-rose-500/25 transition flex items-center gap-2"
                 >
                   <Play className="w-4 h-4 fill-white" />
-                  <span>Tonton Trailer & Episode 1 (Gratis)</span>
+                  <span>Tonton Trailer & Part 1 (Gratis)</span>
                 </button>
 
                 <button
@@ -480,158 +776,714 @@ export default function AiCinemaView({
         </div>
       )}
 
-      {/* Genre Filter Tabs */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h3 className="font-extrabold text-sm text-slate-900">
-            Katalog Film Pendek & Serial Drama AI
-          </h3>
-          <span className="text-xs text-slate-500 font-mono">
-            {filteredMovies.length} Judul Tersedia
-          </span>
-        </div>
-
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
-          {[
-            { id: 'ALL' as FilmGenre, label: 'Semua Kategori' },
-            { id: 'C_DRAMA' as FilmGenre, label: 'Drama China AI (C-Drama)' },
-            { id: 'K_DRAMA' as FilmGenre, label: 'Drama Korea AI (K-Drama)' },
-            { id: 'SCIFI' as FilmGenre, label: 'Sci-Fi Spatial 3D' },
-            { id: 'THRILLER' as FilmGenre, label: 'Thriller & Misteri' },
-          ].map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveGenre(cat.id)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition whitespace-nowrap shrink-0 ${
-                activeGenre === cat.id
-                  ? 'bg-rose-600 text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Film Catalog Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {filteredMovies.map((movie) => (
-          <div
-            key={movie.id}
-            className="rounded-3xl bg-white border border-slate-200 overflow-hidden shadow-xs hover:shadow-md hover:border-rose-400 transition group flex flex-col justify-between"
-          >
+      {/* Mode View: My Studio vs All Catalog */}
+      {cinemaViewMode === 'MY_STUDIO' ? (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-200">
             <div>
-              {/* Thumbnail Container */}
-              <div className="relative h-48 bg-slate-950 overflow-hidden cursor-pointer" onClick={() => handleOpenTheater(movie, 1)}>
-                <img
-                  src={movie.coverImage}
-                  alt={movie.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+              <h3 className="font-black text-base text-slate-900 flex items-center gap-2">
+                <span>Studio Produser: Film AI Saya</span>
+                <span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-xs font-bold font-mono">
+                  {myUploadedFilms.length} Film
+                </span>
+              </h3>
+              <p className="text-xs text-slate-500">
+                Kelola status verifikasi dari Team Allpha, tontonan penonton, dan royalti 70%.
+              </p>
+            </div>
 
-                {/* Top Badges */}
-                <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-sm text-cyan-300 font-bold text-[9px] border border-cyan-500/30">
-                    {movie.genreLabel}
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-sm text-amber-400 font-mono font-bold text-[10px] flex items-center gap-1">
-                    <Star className="w-3 h-3 fill-amber-400" />
-                    <span>{movie.rating}</span>
-                  </span>
-                </div>
+            <button
+              onClick={() => setIsCreateStudioOpen(true)}
+              className="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-sm"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>Upload Film Baru</span>
+            </button>
+          </div>
 
-                {/* Play Button Hover Icon */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-11 h-11 rounded-full bg-rose-600/90 hover:bg-rose-600 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition">
-                    <Play className="w-5 h-5 fill-white ml-0.5" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {myUploadedFilms.map((film) => (
+              <div
+                key={film.id}
+                className="p-4 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition space-y-3"
+              >
+                <div className="flex gap-3">
+                  <img
+                    src={film.coverImage}
+                    alt={film.title}
+                    className="w-20 h-28 rounded-2xl object-cover shrink-0 shadow-sm"
+                  />
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <div className="flex items-center gap-1.5">
+                      {film.verificationStatus === 'VERIFIED' ? (
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold flex items-center gap-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                          Terverifikasi Team Allpha
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3 text-amber-600" />
+                          Dalam Verifikasi Team Allpha
+                        </span>
+                      )}
+                    </div>
+
+                    <h4 className="font-extrabold text-sm text-slate-900 line-clamp-1">{film.title}</h4>
+                    <p className="text-[11px] text-slate-500 line-clamp-2">{film.synopsis}</p>
+                    <p className="text-[10px] text-rose-600 font-bold">{film.genreLabel} • {film.episodesCount} Part</p>
                   </div>
                 </div>
 
-                {/* Bottom stats inside cover */}
-                <div className="absolute bottom-2 left-2.5 right-2.5 flex items-center justify-between text-white text-[10px]">
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-3 h-3 text-cyan-400" />
-                    <span>{movie.totalViews} Penonton</span>
+                {/* Earnings & Actions */}
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                  <div className="space-y-0.5">
+                    <span className="text-[10px] text-slate-400">Total Royalti (70%):</span>
+                    <p className="font-mono font-bold text-amber-700">+{film.creatorMonthlyEarningsCredits} Cr</p>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    {film.verificationStatus === 'PENDING_VERIFICATION' && (
+                      <button
+                        onClick={() => handleApproveByTeamAllpha(film.id)}
+                        className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold"
+                        title="Simulasi Verifikasi Cepat"
+                      >
+                        ⚡ Setujui Sekarang
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleOpenTheater(film, 1)}
+                      className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1"
+                    >
+                      <Play className="w-3 h-3 fill-white" />
+                      <span>Nonton</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <>
+          {/* Genre Filter Tabs */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="font-extrabold text-sm text-slate-900">
+                Katalog Film Pendek & Serial Drama AI
+              </h3>
+              <span className="text-xs text-slate-500 font-mono">
+                {filteredMovies.length} Judul Tersedia
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
+              {[
+                { id: 'ALL' as FilmGenre, label: 'Semua Kategori' },
+                { id: 'C_DRAMA' as FilmGenre, label: 'Drama China AI (C-Drama)' },
+                { id: 'K_DRAMA' as FilmGenre, label: 'Drama Korea AI (K-Drama)' },
+                { id: 'SCIFI' as FilmGenre, label: 'Sci-Fi Spatial 3D' },
+                { id: 'THRILLER' as FilmGenre, label: 'Thriller & Misteri' },
+              ].map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveGenre(cat.id)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition whitespace-nowrap shrink-0 ${
+                    activeGenre === cat.id
+                      ? 'bg-rose-600 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900'
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Film Catalog Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {filteredMovies.map((movie) => (
+              <div
+                key={movie.id}
+                className="rounded-3xl bg-white border border-slate-200/80 hover:border-slate-300 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col justify-between group"
+              >
+                <div>
+                  {/* Poster / Cover Image */}
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-950">
+                    <img
+                      src={movie.coverImage}
+                      alt={movie.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
+
+                    {/* Category pill on top */}
+                    <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                      <span className="px-2 py-0.5 rounded-full bg-slate-950/80 text-white text-[10px] font-bold backdrop-blur-xs">
+                        {movie.genreLabel}
+                      </span>
+                    </div>
+
+                    {/* Verification Badge */}
+                    <div className="absolute top-2.5 right-2.5">
+                      {movie.verificationStatus === 'VERIFIED' ? (
+                        <span className="px-2 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 text-[10px] font-bold flex items-center gap-1 backdrop-blur-xs">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                          <span>Terverifikasi</span>
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-full bg-amber-950/90 border border-amber-500/50 text-amber-300 text-[10px] font-bold flex items-center gap-1 backdrop-blur-xs">
+                          <Clock className="w-3 h-3 text-amber-400" />
+                          <span>Ditinjau Team</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Rating and episodes count on bottom */}
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-xs text-white">
+                      <span className="font-mono text-[11px] font-bold text-amber-300 flex items-center gap-1">
+                        <Star className="w-3 h-3 fill-amber-300" />
+                        {movie.rating}
+                      </span>
+                      <span className="text-[10px] text-slate-300 font-mono">
+                        {movie.episodesCount} Episode ({movie.totalViews} Views)
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-3.5 space-y-2">
+                    <div>
+                      <h4 className="font-extrabold text-sm text-slate-900 group-hover:text-rose-600 transition line-clamp-1">
+                        {movie.title}
+                      </h4>
+                      {movie.originalTitle && (
+                        <p className="text-[10px] text-slate-400 line-clamp-1">
+                          {movie.originalTitle}
+                        </p>
+                      )}
+                    </div>
+
+                    <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                      {movie.synopsis}
+                    </p>
+
+                    {/* Producer & AI Director */}
+                    <div className="flex items-center justify-between text-xs pt-1 border-t border-slate-100">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <img
+                          src={movie.producerHuman.avatar}
+                          alt={movie.producerHuman.name}
+                          className="w-4 h-4 rounded-full object-cover"
+                        />
+                        <span className="text-[11px] font-semibold text-slate-700 truncate">
+                          {movie.producerHuman.name}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-cyan-700 font-medium shrink-0">
+                        & {movie.aiCoDirector.name}
+                      </span>
+                    </div>
+
+                    {/* Profit Royalty Badge */}
+                    <div className="p-2 rounded-xl bg-amber-50/80 border border-amber-200/60 flex items-center justify-between text-[10px] text-amber-900">
+                      <span>Royalti Kreator (70%):</span>
+                      <span className="font-mono font-bold">
+                        +{movie.creatorMonthlyEarningsCredits.toLocaleString('id-ID')} Cr/bln
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="p-3.5 pt-0 flex gap-2">
+                  <button
+                    onClick={() => handleOpenTheater(movie, 1)}
+                    className="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition flex items-center justify-center gap-1 shadow-xs"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-white" />
+                    <span>Nonton</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (onPostTrailerToFeed) {
+                        onPostTrailerToFeed(movie);
+                        showToast(`Trailer "${movie.title}" siap dibagikan ke Feed & Reels!`);
+                      }
+                    }}
+                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                    title="Bagikan ke Feed & Reels"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 2. DEDICATED STUDIO MODAL: "CREATE FILM AI" (Lengkap Form, Trailer, Parts) */}
+      {/* ========================================================================= */}
+      {isCreateStudioOpen && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+          <div className="w-full max-w-2xl rounded-3xl bg-slate-950 text-white border border-slate-800 shadow-2xl p-5 sm:p-6 space-y-5 my-auto animate-in fade-in zoom-in-95 duration-200 text-xs">
+            {/* Header */}
+            <div className="flex items-start justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-2xl bg-gradient-to-tr from-rose-600 to-purple-600 text-white shadow-md">
+                  <Film className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider">
+                    Studio Registrasi & Produksi Film AI Allpha
                   </span>
-                  <span className="font-mono text-amber-300 font-bold">
-                    {movie.episodesCount} Episode
-                  </span>
+                  <h3 className="text-base sm:text-lg font-black text-white mt-0.5">
+                    Create Film AI & Daftarkan Karyamu
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Upload trailer, kelola part video, dan kirim untuk verifikasi resmi Team Allpha.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsCreateStudioOpen(false)}
+                className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Stepper overview */}
+            <div className="grid grid-cols-4 gap-1 p-2 rounded-2xl bg-slate-900 border border-slate-800 text-[10px] text-center font-bold text-slate-300">
+              <span className="text-rose-400">1. Info Judul</span>
+              <span className="text-rose-400">2. Upload Trailer</span>
+              <span className="text-rose-400">3. Video per Part</span>
+              <span className="text-emerald-400">4. Verifikasi Team</span>
+            </div>
+
+            {/* Section 1: Form Judul & Kategori */}
+            <div className="space-y-3 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+              <h4 className="font-extrabold text-xs text-rose-300 flex items-center gap-1.5">
+                <FileText className="w-3.5 h-3.5" />
+                <span>1. Form Judul & Informasi Film AI</span>
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-300">Judul Utama Film AI:</label>
+                  <input
+                    type="text"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    placeholder="Contoh: The Secret Cyborg Prince (K-Drama AI)..."
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-rose-400"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-300">Judul Asli / Hanzi / Tagline:</label>
+                  <input
+                    type="text"
+                    value={newOriginalTitle}
+                    onChange={(e) => setNewOriginalTitle(e.target.value)}
+                    placeholder="Contoh: 总裁的秘密仿生新娘 / Neo Shanghai 2099..."
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-rose-400"
+                  />
                 </div>
               </div>
 
-              {/* Card Meta Content */}
-              <div className="p-3.5 space-y-2">
-                <div>
-                  <h4 className="font-extrabold text-sm text-slate-900 group-hover:text-rose-600 transition line-clamp-1">
-                    {movie.title}
-                  </h4>
-                  {movie.originalTitle && (
-                    <p className="text-[10px] text-slate-600 truncate mt-0.5 font-medium">
-                      {movie.originalTitle}
-                    </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-300">Kategori / Genre Film:</label>
+                  <select
+                    value={newGenre}
+                    onChange={(e) => setNewGenre(e.target.value as FilmGenre)}
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none"
+                  >
+                    <option value="C_DRAMA">Drama China AI (C-Drama)</option>
+                    <option value="K_DRAMA">Drama Korea AI (K-Drama)</option>
+                    <option value="SCIFI">Sci-Fi Spatial 3D</option>
+                    <option value="THRILLER">Thriller & Misteri</option>
+                    <option value="ROMANCE">Romance & Time Travel</option>
+                    <option value="ANIMATION_3D">Animasi 3D & Wuxia</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="font-bold text-slate-300">Durasi Rata-rata per Part:</label>
+                  <input
+                    type="text"
+                    value={newDurationPerPart}
+                    onChange={(e) => setNewDurationPerPart(e.target.value)}
+                    placeholder="Contoh: 2–3 Menit / Part..."
+                    className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="font-bold text-slate-300">Deskripsi Lengkap & Sinopsis Alur Cerita:</label>
+                <textarea
+                  rows={3}
+                  value={newSynopsis}
+                  onChange={(e) => setNewSynopsis(e.target.value)}
+                  placeholder="Tuliskan hook cerita, karakter utama, alur konflik, dan pesan moral film AI..."
+                  className="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white outline-none focus:border-rose-400"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+                <div className="space-y-1">
+                  <label className="text-slate-400">Produser (Human):</label>
+                  <input
+                    type="text"
+                    value={newProducerName}
+                    onChange={(e) => setNewProducerName(e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-slate-400">Co-Director (AI Agent):</label>
+                  <input
+                    type="text"
+                    value={newAiCoDirector}
+                    onChange={(e) => setNewAiCoDirector(e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-slate-400">AI Tech Stack Digunakan:</label>
+                  <input
+                    type="text"
+                    value={newTechStack}
+                    onChange={(e) => setNewTechStack(e.target.value)}
+                    className="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-slate-200"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Upload Trailer & Cover Poster */}
+            <div className="space-y-3 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+              <h4 className="font-extrabold text-xs text-rose-300 flex items-center gap-1.5">
+                <Video className="w-3.5 h-3.5" />
+                <span>2. Upload Trailer Film AI & Poster</span>
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Trailer Upload Box */}
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-dashed border-rose-500/50 flex flex-col justify-between space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-white flex items-center gap-1.5">
+                      <Upload className="w-3.5 h-3.5 text-rose-400" />
+                      File Trailer Video (MP4 / 4K)
+                    </span>
+                    <span className="text-[10px] text-emerald-400 font-mono font-bold">Terunggah ✓</span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 font-mono truncate">{trailerFileName}</p>
+                  
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    <div className="flex items-center gap-1 text-[10px] text-slate-400">
+                      <Clock className="w-3 h-3" />
+                      <span>Durasi: {trailerDuration}</span>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setIsPreviewingTrailer(!isPreviewingTrailer)}
+                      className="px-2.5 py-1 rounded-lg bg-rose-600/80 hover:bg-rose-600 text-white text-[10px] font-bold flex items-center gap-1"
+                    >
+                      <Play className="w-2.5 h-2.5 fill-white" />
+                      <span>{isPreviewingTrailer ? 'Stop Preview' : 'Preview Trailer'}</span>
+                    </button>
+                  </div>
+
+                  {isPreviewingTrailer && (
+                    <div className="p-2 rounded-lg bg-black text-center space-y-1 animate-in fade-in">
+                      <div className="w-full h-20 rounded bg-slate-800 flex items-center justify-center relative overflow-hidden">
+                        <img
+                          src={selectedPosterPreset}
+                          alt="Trailer Preview"
+                          className="w-full h-full object-cover opacity-80"
+                        />
+                        <span className="absolute inset-0 flex items-center justify-center font-bold text-rose-300 text-[10px]">
+                          ▶ Memutar Trailer Sinematik 4K...
+                        </span>
+                      </div>
+                    </div>
                   )}
                 </div>
 
-                <p className="text-slate-600 text-xs line-clamp-2 leading-relaxed">
-                  {movie.synopsis}
-                </p>
-
-                {/* Producers Attribution */}
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-600">
-                  <div className="flex items-center gap-1.5 truncate">
-                    <img
-                      src={movie.producerHuman.avatar}
-                      alt={movie.producerHuman.name}
-                      className="w-5 h-5 rounded-full object-cover ring-1 ring-slate-200 shrink-0"
-                    />
-                    <span className="truncate">{movie.producerHuman.name}</span>
+                {/* Poster Artwork Selector */}
+                <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+                  <span className="font-bold text-white block">Pilih Poster Cover Film:</span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      '/assets/aistudio/Screenshot_20261023-182318_4e89cb4b.jpg',
+                      '/assets/aistudio/Screenshot_20261023-182405_d765b801.jpg',
+                      '/assets/aistudio/file_00000000d1c08207a6952642d1a26363_df39e383.png',
+                    ].map((img, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedPosterPreset(img)}
+                        className={`relative rounded-xl overflow-hidden aspect-[3/4] border-2 transition ${
+                          selectedPosterPreset === img
+                            ? 'border-rose-500 scale-105 shadow-md shadow-rose-500/30'
+                            : 'border-slate-800 opacity-60 hover:opacity-100'
+                        }`}
+                      >
+                        <img src={img} alt="Poster" className="w-full h-full object-cover" />
+                        {selectedPosterPreset === img && (
+                          <span className="absolute top-1 right-1 w-4 h-4 rounded-full bg-rose-600 text-white flex items-center justify-center text-[9px] font-bold">
+                            ✓
+                          </span>
+                        )}
+                      </button>
+                    ))}
                   </div>
-                  <span className="text-[10px] text-cyan-700 font-medium shrink-0">
-                    & {movie.aiCoDirector.name}
-                  </span>
-                </div>
-
-                {/* Profit Royalty Badge */}
-                <div className="p-2 rounded-xl bg-amber-50/80 border border-amber-200/60 flex items-center justify-between text-[10px] text-amber-900">
-                  <span>Royalti Kreator:</span>
-                  <span className="font-mono font-bold">
-                    +{movie.creatorMonthlyEarningsCredits.toLocaleString('id-ID')} Cr/bln
-                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="p-3.5 pt-0 flex gap-2">
+            {/* Section 3: Upload Video per Part Film (Multi-Part) */}
+            <div className="space-y-3 p-4 rounded-2xl bg-slate-900/80 border border-slate-800">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-extrabold text-xs text-rose-300 flex items-center gap-1.5">
+                    <ListChecks className="w-3.5 h-3.5" />
+                    <span>3. Upload Video per Part Film ({videoParts.length} Part Terdaftar)</span>
+                  </h4>
+                  <p className="text-[10px] text-slate-400">
+                    Serial drama pendek di Allpha diunggah per part/episode (Part 1, Part 2, dst).
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleAddVideoPart}
+                  className="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-[11px] flex items-center gap-1 transition"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>Tambah Part</span>
+                </button>
+              </div>
+
+              {/* Dynamic Parts List */}
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                {videoParts.map((part) => (
+                  <div
+                    key={part.id}
+                    className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      <span className="w-6 h-6 rounded-lg bg-rose-600/30 border border-rose-500/40 text-rose-300 font-mono font-bold flex items-center justify-center shrink-0">
+                        {part.partNumber}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <input
+                          type="text"
+                          value={part.title}
+                          onChange={(e) => handleUpdatePart(part.id, { title: e.target.value })}
+                          className="w-full bg-transparent font-bold text-slate-200 outline-none text-xs border-b border-transparent focus:border-rose-400"
+                        />
+                        <div className="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                          <span>{part.fileName}</span>
+                          <span>•</span>
+                          <span>{part.fileSize || '50 MB'}</span>
+                          <span>•</span>
+                          <span className="text-emerald-400 font-mono">Durasi: {part.duration}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0 self-end sm:self-auto">
+                      <button
+                        type="button"
+                        onClick={() => handleUpdatePart(part.id, { isFreePreview: !part.isFreePreview })}
+                        className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition ${
+                          part.isFreePreview
+                            ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40'
+                            : 'bg-amber-950 text-amber-300 border border-amber-500/40'
+                        }`}
+                      >
+                        {part.isFreePreview ? 'Gratis (Preview)' : 'Khusus VIP'}
+                      </button>
+
+                      {videoParts.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveVideoPart(part.id)}
+                          className="p-1 rounded-lg text-slate-500 hover:text-rose-400 transition"
+                          title="Hapus Part"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Section 4: Revenue & Verification Notice */}
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-purple-950/60 to-rose-950/60 border border-rose-500/40 text-[11px] text-slate-300 space-y-1.5">
+              <div className="flex items-center gap-2 font-bold text-white">
+                <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>Publish & Verifikasi oleh Team Allpha</span>
+              </div>
+              <p>
+                Setelah menekan tombol di bawah, film AI Anda akan masuk ke antrean verifikasi Team Allpha. Setelah terverifikasi, film akan otomatis tampil di katalog dan dapat ditonton oleh seluruh pengguna Allpha, serta mendatangkan <strong>70% royalti AI Credits</strong> langsung ke dompet kreator Anda.
+              </p>
+            </div>
+
+            {/* Bottom Actions */}
+            <div className="flex items-center gap-2.5 pt-2">
               <button
-                onClick={() => handleOpenTheater(movie, 1)}
-                className="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition flex items-center justify-center gap-1 shadow-xs"
+                type="button"
+                onClick={() => setIsCreateStudioOpen(false)}
+                className="flex-1 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-bold transition"
               >
-                <Play className="w-3.5 h-3.5 fill-white" />
-                <span>Nonton</span>
+                Simpan Sebagai Draf
               </button>
+
               <button
-                onClick={() => {
-                  if (onPostTrailerToFeed) {
-                    onPostTrailerToFeed(movie);
-                    showToast(`Trailer "${movie.title}" siap dibagikan ke Feed & Reels!`);
-                  }
-                }}
-                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                title="Bagikan ke Feed & Reels"
+                type="button"
+                onClick={handlePublishForVerification}
+                className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 hover:from-rose-500 hover:to-purple-500 text-white font-black shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2 transition transform active:scale-95"
               >
-                <Share2 className="w-3.5 h-3.5" />
+                <span>Publish & Kirim Verifikasi ke Team Allpha</span>
+                <ChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
-      {/* ======================================================== */}
-      {/* THEATER / VIDEO PLAYER MODAL                             */}
-      {/* ======================================================== */}
+      {/* ========================================================================= */}
+      {/* 3. REVIEW / VERIFICATION STATUS MODAL (Simulasi Verifikasi Team Allpha)   */}
+      {/* ========================================================================= */}
+      {reviewModalData.isOpen && reviewModalData.movie && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-3xl bg-slate-950 text-white border border-slate-800 shadow-2xl p-5 space-y-4 animate-in fade-in zoom-in-95 duration-200 text-xs">
+            <div className="text-center space-y-2 pt-2">
+              <div className="w-14 h-14 mx-auto rounded-full bg-gradient-to-tr from-rose-500 to-purple-600 flex items-center justify-center shadow-lg shadow-rose-500/30 animate-pulse">
+                {reviewModalData.movie.verificationStatus === 'VERIFIED' ? (
+                  <Check className="w-8 h-8 text-white" />
+                ) : (
+                  <Clock className="w-7 h-7 text-white" />
+                )}
+              </div>
+
+              <div>
+                <span className="text-[10px] font-bold text-rose-400 uppercase tracking-wider">
+                  Status Pengajuan Film AI
+                </span>
+                <h3 className="text-base font-black text-white mt-0.5">
+                  &quot;{reviewModalData.movie.title}&quot;
+                </h3>
+              </div>
+            </div>
+
+            {/* Status Card */}
+            <div className="p-3.5 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-slate-400">Status Kurasi:</span>
+                {reviewModalData.movie.verificationStatus === 'VERIFIED' ? (
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40 flex items-center gap-1">
+                    <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                    Terverifikasi Team Allpha
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40 flex items-center gap-1 animate-pulse">
+                    <Clock className="w-3 h-3 text-amber-400" />
+                    Sedang Diverifikasi Team Allpha
+                  </span>
+                )}
+              </div>
+
+              <div className="space-y-1.5 pt-2 border-t border-slate-800 text-[11px] text-slate-300">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Trailer Video 4K Terunggah & Valid</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{reviewModalData.movie.episodesCount} Video Part Siap Diputar</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Sistem Royalti 70% Terhubung ke Dompet Anda</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Explanation text */}
+            <p className="text-[11px] text-slate-300 text-center leading-relaxed">
+              {reviewModalData.movie.verificationStatus === 'VERIFIED'
+                ? 'Film AI Anda telah resmi terverifikasi dan kini tampil di halaman utama Film AI Allpha untuk ditonton seluruh pengguna!'
+                : 'Team Kurasi Allpha sedang meninjau kualitas visual dan audio spatial film Anda. Anda juga dapat memilih simulasi persetujuan instan di bawah ini.'}
+            </p>
+
+            {/* Actions */}
+            <div className="space-y-2 pt-1">
+              {reviewModalData.movie.verificationStatus !== 'VERIFIED' ? (
+                <button
+                  type="button"
+                  onClick={() => handleApproveByTeamAllpha(reviewModalData.movie!.id)}
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold shadow-md flex items-center justify-center gap-2 transition cursor-pointer"
+                >
+                  <ShieldCheck className="w-4 h-4" />
+                  <span>Verifikasi Sekarang oleh Team Allpha (Instant)</span>
+                </button>
+              ) : (
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setReviewModalData({ isOpen: false, movie: null });
+                      handleOpenTheater(reviewModalData.movie!, 1);
+                    }}
+                    className="py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold flex items-center justify-center gap-1.5"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-white" />
+                    <span>Tonton Film</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (onPostTrailerToFeed && reviewModalData.movie) {
+                        onPostTrailerToFeed(reviewModalData.movie);
+                        showToast('Trailer berhasil dibagikan ke Feed Threads!');
+                      }
+                      setReviewModalData({ isOpen: false, movie: null });
+                    }}
+                    className="py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold flex items-center justify-center gap-1.5"
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>Share Trailer</span>
+                  </button>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setReviewModalData({ isOpen: false, movie: null })}
+                className="w-full py-2.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white font-bold transition"
+              >
+                Tutup & Kembali ke Katalog
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 4. THEATER / VIDEO PLAYER MODAL (Play Trailer & Video Parts)              */}
+      {/* ========================================================================= */}
       {activeTheaterMovie && (
         <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
           <div className="w-full max-w-3xl rounded-3xl bg-slate-950 text-white border border-slate-800 shadow-2xl overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200">
@@ -640,7 +1492,7 @@ export default function AiCinemaView({
               <div className="flex items-center gap-2 min-w-0">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse shrink-0" />
                 <h3 className="font-extrabold text-sm text-white truncate">
-                  {activeTheaterMovie.title} — Episode {activeEpisodeNumber}
+                  {activeTheaterMovie.title} — {isViewingTrailerInTheater ? 'Trailer Resmi' : `Part / Episode ${activeEpisodeNumber}`}
                 </h3>
               </div>
               <button
@@ -668,12 +1520,17 @@ export default function AiCinemaView({
                 <span className="font-extrabold text-xs tracking-wider text-white drop-shadow">
                   ALLPHA CINEMA
                 </span>
+                {activeTheaterMovie.verificationStatus === 'VERIFIED' && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/30 text-emerald-300 font-bold ml-2">
+                    ✓ Verified
+                  </span>
+                )}
               </div>
 
               {/* Center Play/Pause Indicator if Clicked */}
               <button
                 onClick={() => setIsPlaying(!isPlaying)}
-                className="absolute w-14 h-14 rounded-full bg-rose-600/90 hover:bg-rose-600 text-white flex items-center justify-center shadow-2xl transition transform active:scale-95 z-20"
+                className="absolute w-14 h-14 rounded-full bg-rose-600/90 hover:bg-rose-600 text-white flex items-center justify-center shadow-2xl transition transform active:scale-95 z-20 cursor-pointer"
               >
                 {isPlaying ? <Pause className="w-6 h-6 fill-white" /> : <Play className="w-6 h-6 fill-white ml-1" />}
               </button>
@@ -694,25 +1551,28 @@ export default function AiCinemaView({
                       {isAudioMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                     </button>
                     <span className="font-mono text-[11px] text-slate-300">
-                      01:14 / {activeTheaterMovie.durationPerEp}
+                      01:14 / {isViewingTrailerInTheater ? (activeTheaterMovie.trailerDuration || '00:45') : activeTheaterMovie.durationPerEp}
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-[11px]">
-                    <span className="px-2 py-0.5 rounded bg-rose-600/80 font-bold">4K HDR</span>
-                    <span className="px-2 py-0.5 rounded bg-slate-800 font-mono">60 FPS</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/20 font-mono">
+                      4K Ultra HD
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Theater Info & Episode Selector */}
-            <div className="p-4 sm:p-5 space-y-4 max-h-[50vh] overflow-y-auto">
+            {/* Video Details & Parts Selector */}
+            <div className="p-4 sm:p-5 space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
                 <div>
-                  <h3 className="font-black text-base text-white">{activeTheaterMovie.title}</h3>
-                  <p className="text-xs text-slate-400 mt-0.5">
-                    {activeTheaterMovie.genreLabel} • Episode {activeEpisodeNumber} dari {activeTheaterMovie.episodesCount}
+                  <h3 className="text-base sm:text-lg font-black text-white">
+                    {activeTheaterMovie.title}
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    {activeTheaterMovie.genreLabel} • Disutradarai oleh {activeTheaterMovie.producerHuman.name} × {activeTheaterMovie.aiCoDirector.name}
                   </p>
                 </div>
 
@@ -746,27 +1606,54 @@ export default function AiCinemaView({
                 </div>
               </div>
 
-              {/* Episode Selector Pills */}
+              {/* Part & Trailer Switcher */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-300">Pilih Episode ({activeTheaterMovie.episodesCount} Total):</span>
+                  <span className="font-bold text-slate-300">Pilih Trailer & Video Part:</span>
                   {!isVipSubscribed && (
                     <span className="text-[11px] text-amber-400">
-                      Ep 1 & 2 Gratis • Ep 3+ Khusus VIP
+                      Trailer & Part 1 Gratis • Part Lainnya Khusus VIP
                     </span>
                   )}
                 </div>
 
                 <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                  {/* Trailer Button */}
+                  <button
+                    onClick={() => {
+                      setIsViewingTrailerInTheater(true);
+                      setIsPlaying(true);
+                      showToast(`Memutar Trailer: "${activeTheaterMovie.title}"`);
+                    }}
+                    className={`px-3 py-2 rounded-xl text-xs font-bold transition shrink-0 flex items-center gap-1.5 ${
+                      isViewingTrailerInTheater
+                        ? 'bg-rose-600 text-white shadow-md shadow-rose-500/25 ring-2 ring-white'
+                        : 'bg-slate-800 hover:bg-slate-700 text-slate-200'
+                    }`}
+                  >
+                    <Video className="w-3 h-3" />
+                    <span>Trailer Resmi ({activeTheaterMovie.trailerDuration || '00:45'})</span>
+                  </button>
+
+                  {/* Episodes / Parts */}
                   {Array.from({ length: activeTheaterMovie.episodesCount }, (_, i) => i + 1).map((ep) => {
                     const isFree = ep <= 2;
                     const isUnlocked = isFree || isVipSubscribed;
-                    const isActive = activeEpisodeNumber === ep;
+                    const isActive = !isViewingTrailerInTheater && activeEpisodeNumber === ep;
 
                     return (
                       <button
                         key={ep}
-                        onClick={() => handleSelectEpisode(ep)}
+                        onClick={() => {
+                          if (ep > 2 && !isVipSubscribed) {
+                            setIsSubscriptionModalOpen(true);
+                            return;
+                          }
+                          setIsViewingTrailerInTheater(false);
+                          setActiveEpisodeNumber(ep);
+                          setIsPlaying(true);
+                          showToast(`Memutar Part ${ep}: "${activeTheaterMovie.title}"`);
+                        }}
                         className={`px-3 py-2 rounded-xl text-xs font-bold transition shrink-0 flex items-center gap-1.5 ${
                           isActive
                             ? 'bg-rose-600 text-white shadow-md shadow-rose-500/25 ring-2 ring-white'
@@ -780,7 +1667,7 @@ export default function AiCinemaView({
                         ) : (
                           <Play className="w-2.5 h-2.5 fill-current" />
                         )}
-                        <span>Ep {ep}</span>
+                        <span>Part {ep}</span>
                         {isFree && !isVipSubscribed && (
                           <span className="text-[9px] px-1 rounded bg-emerald-500/20 text-emerald-300">
                             Free
@@ -792,41 +1679,16 @@ export default function AiCinemaView({
                 </div>
               </div>
 
-              {/* Synopsis & AI Generation Pipeline */}
-              <div className="space-y-3 pt-2">
-                <div>
-                  <h4 className="font-bold text-xs text-slate-300">Sinopsis:</h4>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
-                    {activeTheaterMovie.synopsis}
-                  </p>
-                </div>
-
-                {/* Tech & Creator Split Details */}
-                <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 text-xs space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Teknologi Produksi AI:</span>
-                    <span className="font-mono text-cyan-300 font-medium">
-                      {activeTheaterMovie.aiTechStack}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Produser Human:</span>
-                    <span className="font-bold text-slate-200">
-                      {activeTheaterMovie.producerHuman.name} ({activeTheaterMovie.producerHuman.handle})
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Sutradara AI:</span>
-                    <span className="font-bold text-cyan-400">
-                      {activeTheaterMovie.aiCoDirector.name}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between pt-1 border-t border-slate-800">
-                    <span className="text-slate-400">Alokasi Royalti Kreator:</span>
-                    <span className="font-bold text-amber-400 font-mono">
-                      70% Hasil Langganan Masuk ke Wallet Kreator
-                    </span>
-                  </div>
+              {/* Synopsis and AI Stack */}
+              <div className="p-3.5 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-1.5 text-xs">
+                <p className="text-slate-300 leading-relaxed">
+                  {activeTheaterMovie.synopsis}
+                </p>
+                <div className="pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+                  <span>AI Tech Stack: {activeTheaterMovie.aiTechStack}</span>
+                  <span className="text-amber-300 font-mono">
+                    Royalti Kreator: +{activeTheaterMovie.creatorMonthlyEarningsCredits} Cr/bln
+                  </span>
                 </div>
               </div>
             </div>
@@ -834,19 +1696,18 @@ export default function AiCinemaView({
         </div>
       )}
 
-      {/* ======================================================== */}
-      {/* MODAL: LANGGANAN VIP ALLPHA CINEMA                       */}
-      {/* ======================================================== */}
+      {/* ========================================================================= */}
+      {/* 5. VIP SUBSCRIPTION MODAL                                                 */}
+      {/* ========================================================================= */}
       {isSubscriptionModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md rounded-3xl bg-slate-950 text-white border border-rose-500/40 shadow-2xl p-6 space-y-5 animate-in fade-in zoom-in-95 duration-200 text-xs">
-            <div className="flex items-start justify-between pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-3xl bg-slate-950 text-white border border-rose-500/40 shadow-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-200 text-xs">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
               <div className="flex items-center gap-2">
-                <Crown className="w-6 h-6 text-amber-400 fill-amber-400" />
-                <div>
-                  <h3 className="font-black text-base text-white">Allpha Cinema VIP Pass</h3>
-                  <p className="text-[11px] text-slate-400">Akses Tanpa Batas ke Seluruh Serial Film AI</p>
+                <div className="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                  <Crown className="w-4 h-4" />
                 </div>
+                <h3 className="font-extrabold text-sm text-white">Langganan VIP Allpha Cinema</h3>
               </div>
               <button
                 onClick={() => setIsSubscriptionModalOpen(false)}
@@ -899,95 +1760,6 @@ export default function AiCinemaView({
                 className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-rose-600 via-purple-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-extrabold shadow-lg shadow-rose-500/25"
               >
                 Aktifkan VIP Sekarang
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ======================================================== */}
-      {/* MODAL: DAFTARKAN FILM AI BARU                           */}
-      {/* ======================================================== */}
-      {isSubmitFilmModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md rounded-3xl bg-slate-950 text-white border border-slate-800 shadow-2xl p-5 space-y-4 animate-in fade-in zoom-in-95 duration-200 text-xs">
-            <div className="flex items-start justify-between pb-2 border-b border-slate-800">
-              <div>
-                <span className="text-[10px] font-bold text-rose-400 uppercase">Portal Produser Film AI</span>
-                <h3 className="font-extrabold text-sm text-white mt-0.5">Daftarkan Produksi Film AI Anda</h3>
-              </div>
-              <button
-                onClick={() => setIsSubmitFilmModalOpen(false)}
-                className="p-1 rounded-full text-slate-400 hover:text-white"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="font-bold text-slate-300">Judul Film / Serial Mini-Drama:</label>
-              <input
-                type="text"
-                value={newFilmTitle}
-                onChange={(e) => setNewFilmTitle(e.target.value)}
-                placeholder="Contoh: The Secret Cyborg Prince (K-Drama AI)..."
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-rose-400"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="font-bold text-slate-300">Kategori / Genre Film:</label>
-              <select
-                value={newFilmGenre}
-                onChange={(e) => setNewFilmGenre(e.target.value as FilmGenre)}
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none"
-              >
-                <option value="C_DRAMA">Drama China AI (C-Drama)</option>
-                <option value="K_DRAMA">Drama Korea AI (K-Drama)</option>
-                <option value="SCIFI">Sci-Fi Spatial 3D</option>
-                <option value="THRILLER">Thriller & Misteri</option>
-                <option value="ROMANCE">Romance & Time Travel</option>
-              </select>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="font-bold text-slate-300">Sinopsis Singkat:</label>
-              <textarea
-                rows={3}
-                value={newFilmSynopsis}
-                onChange={(e) => setNewFilmSynopsis(e.target.value)}
-                placeholder="Tuliskan hook cerita dan peran AI Agent dalam alur plot..."
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white outline-none focus:border-rose-400"
-              />
-            </div>
-
-            <div className="p-3 rounded-2xl bg-rose-950/60 border border-rose-500/30 text-[11px] text-rose-200">
-              💡 <strong>Royalti 70%:</strong> Setelah ditinjau oleh AI Curator, film Anda akan otomatis tayang di Cinema Plaza & dapat diposting trailernya ke Feed & Reels!
-            </div>
-
-            <div className="flex gap-2 pt-1">
-              <button
-                type="button"
-                onClick={() => setIsSubmitFilmModalOpen(false)}
-                className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold"
-              >
-                Batal
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  if (!newFilmTitle.trim()) {
-                    showToast('Harap masukkan judul film.');
-                    return;
-                  }
-                  showToast(`Film "${newFilmTitle}" berhasil didaftarkan untuk kurasi!`);
-                  setIsSubmitFilmModalOpen(false);
-                  setNewFilmTitle('');
-                  setNewFilmSynopsis('');
-                }}
-                className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold shadow-md shadow-rose-500/25"
-              >
-                Kirim Pendaftaran Film
               </button>
             </div>
           </div>
