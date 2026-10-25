@@ -115,93 +115,93 @@ export default function AskAiView({
 
   return (
     <div className="w-full max-w-xl mx-auto bg-white min-h-screen border-x border-slate-200 flex flex-col pb-24">
-      {/* Top Header Bar */}
-      <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-slate-100 px-4 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      {/* Top Header */}
+      <header className="sticky top-0 z-30 bg-white border-b-2 border-slate-900 px-4 h-15 flex items-center justify-between shadow-xs">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={onBack}
-            className="p-1.5 -ml-1 rounded-full text-slate-700 hover:bg-slate-100 transition"
+            className="w-9 h-9 rounded-2xl bg-white hover:bg-slate-50 border-2 border-slate-900 flex items-center justify-center text-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
             aria-label="Kembali"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-4.5 h-4.5 stroke-[2.5px]" />
           </button>
           <div className="flex items-center gap-2">
-            <h1 className="font-bold text-base text-slate-900">Tanya AI Agent</h1>
+            <h1 className="font-black text-base text-slate-900">Tanya AI Agent</h1>
           </div>
         </div>
 
-        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+        <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-purple-200 border-2 border-slate-900 text-purple-950 shadow-2xs">
           Gemini 2.5 Flash
         </span>
       </header>
 
-      {/* Agent Identity Profile Card (Screen 4 Reference) */}
-      <div className="p-4 bg-slate-50 border-b border-slate-100 space-y-3">
+      {/* Agent Identity Profile Card (Neo-Brutalist Soft Pastel) */}
+      <div className="p-4 m-3.5 rounded-3xl bg-sky-50 border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] space-y-3">
         <div className="flex items-start gap-3">
-          <div className="relative">
-            <div className="w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-cyan-400 via-blue-600 to-purple-600 shadow-md">
+          <div className="relative shrink-0">
+            <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a]">
               <img
                 src="https://picsum.photos/seed/luna-cyber/200/200"
                 alt={agentName}
-                className="w-full h-full rounded-full object-cover border-2 border-white"
+                className="w-full h-full object-cover"
               />
             </div>
-            <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 ring-2 ring-white" />
+            <span className="absolute -bottom-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-slate-900" />
           </div>
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1.5 flex-wrap">
-              <h2 className="font-extrabold text-base text-slate-900">{agentName}</h2>
-              <CheckCircle2 className="w-4 h-4 text-blue-600 fill-blue-600 text-white" />
-              <span className="text-[10px] px-2 py-0.2 rounded-full bg-purple-100 text-purple-700 font-bold">
+              <h2 className="font-black text-base text-slate-900">{agentName}</h2>
+              <CheckCircle2 className="w-4 h-4 text-sky-600 fill-sky-200" />
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-200 border border-slate-900 text-purple-950 font-black">
                 {specialty}
               </span>
             </div>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Online · Milik <strong className="text-slate-800">{humanOwner}</strong>
+            <p className="text-xs text-slate-600 font-semibold mt-0.5">
+              Online · Milik <strong className="text-slate-900">{humanOwner}</strong>
             </p>
-            <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+            <p className="text-xs font-medium text-slate-700 mt-1 leading-relaxed">
               Spesialis {specialty}, siap membantu analisis, pembuatan konten, dan eksplorasi spatial.
             </p>
           </div>
         </div>
 
-        {/* Four Core Action Pills (Exact Match with Screen 4) */}
-        <div className="grid grid-cols-4 gap-2 pt-1">
+        {/* Four Core Action Pills */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
           <button
             onClick={() => handleSendMessage('Tolong jelaskan secara mendalam tentang bidang keahlian Anda')}
-            className="p-2.5 rounded-2xl bg-white border border-slate-200/80 hover:border-blue-400 hover:bg-blue-50/50 text-left transition flex flex-col justify-between shadow-xs"
+            className="p-3 rounded-2xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 text-left transition flex flex-col justify-between cursor-pointer"
           >
-            <HelpCircle className="w-4 h-4 text-blue-600 mb-1" />
-            <span className="text-xs font-bold text-slate-900">Tanya</span>
-            <span className="text-[10px] text-slate-500">Ajukan ide/topik</span>
+            <HelpCircle className="w-4 h-4 text-sky-600 mb-1 stroke-[2.5px]" />
+            <span className="text-xs font-black text-slate-900">Tanya</span>
+            <span className="text-[10px] text-slate-600 font-semibold">Ajukan topik</span>
           </button>
 
           <button
             onClick={() => handleSendMessage('Buatkan draf prompt atau template konten untuk brand saya')}
-            className="p-2.5 rounded-2xl bg-white border border-slate-200/80 hover:border-purple-400 hover:bg-purple-50/50 text-left transition flex flex-col justify-between shadow-xs"
+            className="p-3 rounded-2xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 text-left transition flex flex-col justify-between cursor-pointer"
           >
-            <Sparkles className="w-4 h-4 text-purple-600 mb-1" />
-            <span className="text-xs font-bold text-slate-900">Generate</span>
-            <span className="text-[10px] text-slate-500">Buat teks/media</span>
+            <Sparkles className="w-4 h-4 text-purple-600 mb-1 stroke-[2.5px]" />
+            <span className="text-xs font-black text-slate-900">Generate</span>
+            <span className="text-[10px] text-slate-600 font-semibold">Buat konten</span>
           </button>
 
           <button
             onClick={() => handleSendMessage('Tolong analisis performa strategi konten di Allpha Universe')}
-            className="p-2.5 rounded-2xl bg-white border border-slate-200/80 hover:border-cyan-400 hover:bg-cyan-50/50 text-left transition flex flex-col justify-between shadow-xs"
+            className="p-3 rounded-2xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 text-left transition flex flex-col justify-between cursor-pointer"
           >
-            <TrendingUp className="w-4 h-4 text-cyan-600 mb-1" />
-            <span className="text-xs font-bold text-slate-900">Analisis</span>
-            <span className="text-[10px] text-slate-500">Evaluasi insight</span>
+            <TrendingUp className="w-4 h-4 text-emerald-600 mb-1 stroke-[2.5px]" />
+            <span className="text-xs font-black text-slate-900">Analisis</span>
+            <span className="text-[10px] text-slate-600 font-semibold">Evaluasi insight</span>
           </button>
 
           <button
             onClick={() => handleSendMessage('Berikan rekomendasi tools terbaik untuk workflow saya')}
-            className="p-2.5 rounded-2xl bg-white border border-slate-200/80 hover:border-amber-400 hover:bg-amber-50/50 text-left transition flex flex-col justify-between shadow-xs"
+            className="p-3 rounded-2xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 text-left transition flex flex-col justify-between cursor-pointer"
           >
-            <Lightbulb className="w-4 h-4 text-amber-600 mb-1" />
-            <span className="text-xs font-bold text-slate-900">Rekomendasi</span>
-            <span className="text-[10px] text-slate-500">Saran praktis</span>
+            <Lightbulb className="w-4 h-4 text-amber-600 mb-1 stroke-[2.5px]" />
+            <span className="text-xs font-black text-slate-900">Rekomendasi</span>
+            <span className="text-[10px] text-slate-600 font-semibold">Saran praktis</span>
           </button>
         </div>
       </div>
@@ -214,29 +214,29 @@ export default function AskAiView({
             className={`flex items-start gap-2.5 ${m.isAi ? '' : 'flex-row-reverse'}`}
           >
             {m.isAi ? (
-              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-purple-600 text-white flex items-center justify-center shrink-0 shadow-sm text-xs font-bold">
+              <div className="w-8 h-8 rounded-xl bg-sky-300 border-2 border-slate-900 text-slate-950 flex items-center justify-center shrink-0 shadow-[1.5px_1.5px_0px_#0f172a] text-xs font-black">
                 AI
               </div>
             ) : (
               <img
                 src={currentUser.avatar}
                 alt={currentUser.name}
-                className="w-8 h-8 rounded-full object-cover shrink-0 ring-2 ring-slate-100"
+                className="w-8 h-8 rounded-xl object-cover shrink-0 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a]"
               />
             )}
 
             <div
-              className={`max-w-[80%] rounded-2xl p-3.5 text-xs leading-relaxed ${
+              className={`max-w-[80%] rounded-2xl p-3.5 text-xs leading-relaxed border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] ${
                 m.isAi
-                  ? 'bg-slate-100/90 text-slate-800 border border-slate-200/60 rounded-tl-none'
-                  : 'bg-blue-600 text-white rounded-tr-none shadow-md shadow-blue-500/20'
+                  ? 'bg-white text-slate-900 rounded-tl-none font-medium'
+                  : 'bg-sky-400 text-slate-950 rounded-tr-none font-bold'
               }`}
             >
               <div className="flex items-center justify-between gap-2 mb-1">
-                <span className={`font-bold ${m.isAi ? 'text-blue-900' : 'text-blue-100'}`}>
+                <span className="font-black text-slate-950">
                   {m.sender}
                 </span>
-                <span className={`text-[10px] ${m.isAi ? 'text-slate-400' : 'text-blue-200'}`}>
+                <span className="text-[10px] text-slate-600 font-mono font-bold">
                   {m.timestamp}
                 </span>
               </div>
@@ -246,21 +246,21 @@ export default function AskAiView({
         ))}
 
         {isLoading && (
-          <div className="flex items-center gap-2 text-xs text-slate-400 p-2">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
+          <div className="flex items-center gap-2 text-xs font-bold text-slate-800 p-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-sky-500 border border-slate-900 animate-ping" />
             <span>{agentName} sedang berpikir dan menyusun respons...</span>
           </div>
         )}
       </div>
 
-      {/* Suggested Prompt Chips (Screen 4 Reference) */}
-      <div className="px-4 py-2 bg-slate-50/80 border-t border-slate-100 overflow-x-auto no-scrollbar flex items-center gap-2">
-        <span className="text-[11px] font-bold text-slate-500 shrink-0">Contoh:</span>
+      {/* Suggested Prompt Chips */}
+      <div className="px-4 py-2 bg-white border-t-2 border-slate-900/10 overflow-x-auto no-scrollbar flex items-center gap-2">
+        <span className="text-[11px] font-black text-slate-700 shrink-0">Contoh:</span>
         {exampleQueries.map((eq) => (
           <button
             key={eq}
             onClick={() => handleSendMessage(eq)}
-            className="px-3 py-1 rounded-full bg-white border border-slate-200 text-[11px] text-slate-700 hover:border-blue-400 hover:text-blue-600 whitespace-nowrap transition shadow-xs"
+            className="px-3 py-1 rounded-2xl bg-amber-50 border-2 border-slate-900 text-[11px] font-bold text-slate-900 hover:bg-amber-100 whitespace-nowrap transition shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
           >
             🔍 {eq}
           </button>
@@ -268,7 +268,7 @@ export default function AskAiView({
       </div>
 
       {/* Sticky Bottom Input Bar */}
-      <div className="sticky bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t border-slate-200 p-3">
+      <div className="sticky bottom-0 left-0 right-0 bg-white/95 backdrop-blur border-t-2 border-slate-900 p-3">
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -276,27 +276,27 @@ export default function AskAiView({
           }}
           className="flex items-center gap-2"
         >
-          <div className="flex-1 flex items-center gap-2 bg-slate-100 rounded-2xl px-3.5 py-2 border border-slate-200/60">
+          <div className="flex-1 flex items-center gap-2 bg-slate-50 rounded-2xl px-3.5 py-2 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a]">
             <input
               type="text"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={`Tanya ${agentName} tentang ${specialty}...`}
-              className="flex-1 bg-transparent text-xs text-slate-900 outline-none placeholder:text-slate-400"
+              className="flex-1 bg-transparent text-xs font-bold text-slate-900 outline-none placeholder:text-slate-500"
             />
-            <button type="button" className="text-slate-400 hover:text-slate-600">
+            <button type="button" className="text-slate-500 hover:text-slate-900">
               <Mic className="w-4 h-4" />
             </button>
-            <button type="button" className="text-slate-400 hover:text-slate-600">
+            <button type="button" className="text-slate-500 hover:text-slate-900">
               <Paperclip className="w-4 h-4" />
             </button>
           </div>
           <button
             type="submit"
             disabled={!inputValue.trim() || isLoading}
-            className="p-2.5 rounded-2xl bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white transition shadow-md shadow-blue-500/20"
+            className="p-2.5 rounded-2xl bg-sky-400 hover:bg-sky-500 disabled:bg-slate-200 text-slate-950 font-black border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 stroke-[2.5px]" />
           </button>
         </form>
       </div>

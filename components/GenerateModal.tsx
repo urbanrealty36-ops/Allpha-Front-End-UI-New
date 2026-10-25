@@ -191,89 +191,89 @@ export default function GenerateModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
-      <div className="w-full max-w-lg rounded-3xl bg-white shadow-2xl border border-slate-200 p-5 max-h-[92vh] overflow-y-auto space-y-4">
+      <div className="w-full max-w-lg rounded-3xl bg-white shadow-[6px_6px_0px_#0f172a] border-2 border-slate-900 p-5 max-h-[92vh] overflow-y-auto space-y-4">
         {/* Modal Top Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="flex items-center justify-between pb-3.5 border-b-2 border-slate-900">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shadow-md">
-              <Wand2 className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-2xl bg-purple-300 border-2 border-slate-900 text-slate-950 flex items-center justify-center shadow-[1.5px_1.5px_0px_#0f172a]">
+              <Wand2 className="w-5 h-5 stroke-[2.5px]" />
             </div>
             <div>
-              <h2 className="text-sm font-black text-slate-900">
+              <h2 className="text-sm font-black text-slate-900 tracking-tight">
                 AI Content & Reels Studio
               </h2>
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] font-semibold text-slate-600">
                 Didukung oleh {contextPost?.aiAgent.name || 'Luna AI'} (Milik @{contextPost?.humanOwner.handle || 'alextamara'})
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+            className="w-8 h-8 rounded-xl bg-white border-2 border-slate-900 text-slate-900 flex items-center justify-center shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4 stroke-[2.5px]" />
           </button>
         </div>
 
         {/* Target Content Type Segmented Tabs */}
-        <div className="space-y-1">
-          <label className="text-[11px] font-bold text-slate-700">Pilih Jenis Konten yang Ingin Digenerate:</label>
-          <div className="grid grid-cols-2 gap-1.5 p-1 rounded-2xl bg-slate-100 text-xs font-semibold">
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-black text-slate-800 uppercase tracking-wider">Pilih Jenis Konten yang Ingin Digenerate:</label>
+          <div className="grid grid-cols-2 gap-2 p-1.5 rounded-2xl bg-slate-100 border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] text-xs font-black">
             <button
               onClick={() => setContentType('REELS_BRAND')}
-              className={`py-2 px-2 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
+              className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-center cursor-pointer ${
                 contentType === 'REELS_BRAND'
-                  ? 'bg-purple-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-purple-300 text-slate-950 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a]'
+                  : 'text-slate-700 hover:text-slate-950'
               }`}
             >
-              <Film className="w-3.5 h-3.5 shrink-0" />
+              <Film className="w-3.5 h-3.5 shrink-0 stroke-[2.5px]" />
               <span className="truncate">Reels Dengan Brand</span>
             </button>
             <button
               onClick={() => setContentType('FEED_POST')}
-              className={`py-2 px-2 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
+              className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-center cursor-pointer ${
                 contentType === 'FEED_POST'
-                  ? 'bg-purple-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-purple-300 text-slate-950 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a]'
+                  : 'text-slate-700 hover:text-slate-950'
               }`}
             >
-              <Sparkles className="w-3.5 h-3.5 shrink-0" />
+              <Sparkles className="w-3.5 h-3.5 shrink-0 stroke-[2.5px]" />
               <span className="truncate">Draf Feed & 3D</span>
             </button>
             <button
               onClick={() => setContentType('DOCUMENT_PROPOSAL')}
-              className={`py-2 px-2 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
+              className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-center cursor-pointer ${
                 contentType === 'DOCUMENT_PROPOSAL'
-                  ? 'bg-purple-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-purple-300 text-slate-950 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a]'
+                  : 'text-slate-700 hover:text-slate-950'
               }`}
             >
-              <FileText className="w-3.5 h-3.5 shrink-0" />
+              <FileText className="w-3.5 h-3.5 shrink-0 stroke-[2.5px]" />
               <span className="truncate">Dokumen & Proposal</span>
             </button>
             <button
               onClick={() => setContentType('CAMPAIGN_SUITE')}
-              className={`py-2 px-2 rounded-xl transition flex items-center justify-center gap-1.5 text-center ${
+              className={`py-2 px-2.5 rounded-xl transition flex items-center justify-center gap-1.5 text-center cursor-pointer ${
                 contentType === 'CAMPAIGN_SUITE'
-                  ? 'bg-purple-600 text-white shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-purple-300 text-slate-950 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a]'
+                  : 'text-slate-700 hover:text-slate-950'
               }`}
             >
-              <Layers className="w-3.5 h-3.5 shrink-0" />
+              <Layers className="w-3.5 h-3.5 shrink-0 stroke-[2.5px]" />
               <span className="truncate">Campaign Suite</span>
             </button>
           </div>
         </div>
 
         {/* Challenge & AI Credit Notice */}
-        <div className="p-3.5 rounded-2xl bg-purple-50 border border-purple-200 text-purple-900 text-xs leading-relaxed space-y-1">
-          <p className="font-bold flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+        <div className="p-3.5 rounded-2xl bg-purple-50 border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] text-slate-900 text-xs leading-relaxed space-y-1">
+          <p className="font-black flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-purple-700 stroke-[2.5px]" />
             <span>Mekanisme Challenge & Transfer Kredit:</span>
           </p>
-          <p className="text-[11px] text-purple-700">
-            AI Agent akan mempelajari Nama Brand, Logo, dan Aset Produk yang Anda unggah, lalu menghasilkan skrip video reels, draf postingan, atau proposal yang selaras dengan identitas brand Anda. Sesi ini memotong 15 AI Credits Anda dan mentransfernya ke pemilik AI Agent.
+          <p className="text-[11px] font-medium text-slate-700">
+            AI Agent mempelajari Nama Brand, Logo, dan Aset Produk yang Anda unggah untuk membuat konten yang selaras. Sesi ini memotong 15 AI Credits Anda dan mentransfernya ke pemilik AI Agent.
           </p>
         </div>
 

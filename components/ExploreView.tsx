@@ -411,77 +411,77 @@ export default function ExploreView({
         </div>
       )}
 
-      {/* STICKY TOP SEARCH HEADER (Instagram & Threads Style) */}
-      <div className="sticky top-15 z-30 bg-white/95 backdrop-blur border-b border-slate-200 px-4 pt-3 pb-2.5 space-y-2.5">
+      {/* STICKY TOP SEARCH HEADER (Playful Neo-Brutalist Soft Pastel Style) */}
+      <div className="sticky top-15 z-30 bg-[#F4F7FB]/95 backdrop-blur border-b-2 border-slate-900 px-4 pt-3 pb-3 space-y-3 shadow-xs">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-base font-black tracking-tight text-slate-900 flex items-center gap-1.5">
               <span>Jelajahi & Cari</span>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 font-bold">
-                Social Hub
+              <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-sky-200 border-2 border-slate-900 text-sky-950 uppercase shadow-2xs">
+                SOCIAL HUB
               </span>
             </h1>
-            <p className="text-[11px] text-slate-500">
-              Cari akun Human, AI Agent, konten, caption, hashtag & ekosistem Allpha
+            <p className="text-[11px] font-semibold text-slate-700">
+              Cari akun Human, AI Agent, konten, caption, #hashtag & ekosistem Allpha
             </p>
           </div>
           <button
             onClick={onOpenWorld3D}
-            className="px-3 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition flex items-center gap-1 shadow-xs"
+            className="px-3.5 py-1.5 rounded-2xl bg-amber-300 hover:bg-amber-400 text-slate-950 text-xs font-black border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition flex items-center gap-1.5 cursor-pointer"
           >
-            <Box className="w-3.5 h-3.5 text-cyan-400" />
+            <Box className="w-3.5 h-3.5 text-slate-900 stroke-[2.5px]" />
             <span>3D World</span>
           </button>
         </div>
 
         {/* Realtime Search Input Bar */}
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari nama akun, @handle, caption, #hashtag, atau fitur..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-9 py-2 text-xs bg-slate-100 hover:bg-slate-100/80 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl transition outline-none"
+            className="w-full pl-10 pr-9 py-2.5 text-xs font-bold bg-white border-2 border-slate-900 rounded-2xl shadow-[2px_2px_0px_#0f172a] focus:bg-sky-50 transition outline-none text-slate-900"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-800"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4 stroke-[2.5px]" />
             </button>
           )}
         </div>
 
         {/* Filter Navigation Tabs */}
-        <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
           {[
             { id: 'ALL' as SearchTab, label: 'Semua', count: isSearching ? (filteredAccounts.length + filteredPosts.length + filteredHashtags.length) : undefined },
-            { id: 'ACCOUNTS' as SearchTab, label: 'Akun (Human & AI)', count: filteredAccounts.length },
-            { id: 'POSTS' as SearchTab, label: 'Postingan & Caption', count: filteredPosts.length },
-            { id: 'HASHTAGS' as SearchTab, label: 'Hashtags (#)', count: filteredHashtags.length },
-            { id: 'PRD_HUB' as SearchTab, label: 'Allpha Hub', badge: 'Ecosystem' },
+            { id: 'ACCOUNTS' as SearchTab, label: '👥 Akun (Human & AI)', count: filteredAccounts.length },
+            { id: 'POSTS' as SearchTab, label: '📝 Postingan & Caption', count: filteredPosts.length },
+            { id: 'HASHTAGS' as SearchTab, label: '# Hashtags', count: filteredHashtags.length },
+            { id: 'PRD_HUB' as SearchTab, label: '🌐 Allpha Hub', badge: 'Ecosystem' },
           ].map((tab) => {
             const isActive = activeSearchTab === tab.id;
             return (
               <button
                 key={tab.id}
                 onClick={() => setActiveSearchTab(tab.id)}
-                className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+                className={`shrink-0 px-3.5 py-1.5 rounded-2xl text-xs font-black border-2 border-slate-900 transition flex items-center gap-1.5 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer ${
                   isActive
-                    ? 'bg-blue-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                    ? 'bg-sky-400 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                    : 'bg-white text-slate-800 hover:bg-slate-100 shadow-[1.5px_1.5px_0px_#0f172a]'
                 }`}
               >
                 <span>{tab.label}</span>
                 {tab.count !== undefined && (
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${isActive ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                  <span className={`text-[9.5px] px-1.5 py-0.2 rounded-full font-mono font-black border ${isActive ? 'bg-white text-slate-950 border-slate-900' : 'bg-slate-200 text-slate-800 border-slate-400'}`}>
                     {tab.count}
                   </span>
                 )}
                 {tab.badge && (
-                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold ${isActive ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-700'}`}>
+                  <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-black border border-slate-900 ${isActive ? 'bg-amber-200 text-amber-950' : 'bg-emerald-200 text-emerald-950'}`}>
                     {tab.badge}
                   </span>
                 )}
@@ -493,17 +493,17 @@ export default function ExploreView({
 
       <div className="p-4 space-y-6">
         {/* ======================================================== */}
-        {/* SECTION A: TRENDING HASHTAGS CAROUSEL (When not filtered or when on HASHTAGS) */}
+        {/* SECTION A: TRENDING HASHTAGS CAROUSEL */}
         {/* ======================================================== */}
         {(activeSearchTab === 'ALL' || activeSearchTab === 'HASHTAGS') && (
-          <section className="space-y-2.5">
+          <section className="space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <Hash className="w-3.5 h-3.5 text-blue-600" />
+              <h2 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                <Hash className="w-4 h-4 text-sky-600 stroke-[2.5px]" />
                 <span>Hashtag Populer & Trending</span>
               </h2>
               {isSearching && (
-                <span className="text-[11px] text-slate-400 font-mono">
+                <span className="text-[11px] text-slate-800 font-mono font-black">
                   {filteredHashtags.length} Hasil
                 </span>
               )}
@@ -514,19 +514,19 @@ export default function ExploreView({
                 <button
                   key={h.tag}
                   onClick={() => setSearchQuery(h.tag)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-2xl text-xs font-black border-2 border-slate-900 transition flex items-center gap-1.5 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer ${
                     searchQuery === h.tag
-                      ? 'bg-blue-600 text-white border-blue-600 shadow-xs'
-                      : 'bg-white text-slate-800 border-slate-200 hover:border-blue-300 hover:bg-blue-50/50'
+                      ? 'bg-sky-400 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                      : 'bg-white text-slate-900 hover:bg-sky-50 shadow-[1.5px_1.5px_0px_#0f172a]'
                   }`}
                 >
-                  <span className="text-blue-600">{h.tag}</span>
-                  <span className="text-[10px] text-slate-400 font-mono font-normal">
+                  <span className="text-sky-700">{h.tag}</span>
+                  <span className="text-[10px] text-slate-600 font-mono font-bold">
                     {h.count}
                   </span>
                   {h.trending && (
-                    <span className="text-[9px] px-1 py-0.2 rounded bg-rose-50 text-rose-600 font-bold flex items-center gap-0.5">
-                      <Flame className="w-2.5 h-2.5 fill-rose-500 text-rose-500" />
+                    <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-rose-200 border border-slate-900 text-rose-950 font-black flex items-center gap-0.5">
+                      <Flame className="w-2.5 h-2.5 fill-rose-600 text-rose-600" />
                       Tren
                     </span>
                   )}
@@ -542,28 +542,32 @@ export default function ExploreView({
         {(activeSearchTab === 'ALL' || activeSearchTab === 'ACCOUNTS') && (
           <section className="space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
-                <Users className="w-3.5 h-3.5 text-purple-600" />
+              <h2 className="text-xs font-black uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                <Users className="w-4 h-4 text-purple-600 stroke-[2.5px]" />
                 <span>Akun Human & AI Agent ({filteredAccounts.length})</span>
               </h2>
               {!isSearching && (
-                <span className="text-[10px] text-blue-600 font-bold">Disarankan</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-200 border-2 border-slate-900 text-amber-950 font-black">
+                  ⭐ Disarankan
+                </span>
               )}
             </div>
 
             {filteredAccounts.length === 0 ? (
-              <div className="p-6 text-center bg-white rounded-2xl border border-slate-200 text-slate-500 text-xs">
+              <div className="p-6 text-center bg-white rounded-3xl border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] text-slate-600 text-xs font-bold">
                 Tidak ada akun yang cocok dengan kata kunci &quot;{searchQuery}&quot;
               </div>
             ) : (
-              <div className="space-y-2.5">
-                {filteredAccounts.map((acc) => {
+              <div className="space-y-3">
+                {filteredAccounts.map((acc, idx) => {
                   const isFollowed = followedAccounts[acc.handle] || false;
+                  const bgColors = ['bg-white', 'bg-sky-50/50', 'bg-emerald-50/50', 'bg-amber-50/50', 'bg-purple-50/50'];
+                  const cardBg = bgColors[idx % bgColors.length];
 
                   return (
                     <div
                       key={acc.id}
-                      className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-300 hover:shadow-xs transition space-y-2.5"
+                      className={`p-4 rounded-3xl ${cardBg} border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] space-y-3 transition`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-3">
@@ -572,7 +576,7 @@ export default function ExploreView({
                             {acc.isLive ? (
                               <div 
                                 onClick={onOpenLiveStage}
-                                className="cursor-pointer p-0.5 rounded-full bg-gradient-to-tr from-rose-500 via-purple-600 to-amber-500 animate-pulse"
+                                className="cursor-pointer p-0.5 rounded-full bg-gradient-to-tr from-rose-500 via-purple-600 to-amber-500 border-2 border-slate-900 animate-pulse"
                               >
                                 <img
                                   src={acc.avatar}
@@ -584,14 +588,14 @@ export default function ExploreView({
                               <img
                                 src={acc.avatar}
                                 alt={acc.name}
-                                className="w-12 h-12 rounded-full object-cover border border-slate-200"
+                                className="w-12 h-12 rounded-full object-cover border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a]"
                               />
                             )}
 
                             {acc.isLive && (
                               <span 
                                 onClick={onOpenLiveStage}
-                                className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.2 rounded-full bg-rose-600 text-white font-mono font-bold text-[8px] flex items-center gap-0.5 shadow-xs cursor-pointer animate-pulse"
+                                className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-1.5 py-0.2 rounded-full bg-rose-600 border border-slate-900 text-white font-mono font-black text-[8px] flex items-center gap-0.5 shadow-xs cursor-pointer animate-pulse"
                               >
                                 <Radio className="w-2 h-2 text-white animate-spin" />
                                 LIVE
@@ -602,31 +606,31 @@ export default function ExploreView({
                           {/* Profile Details */}
                           <div className="space-y-0.5">
                             <div className="flex items-center gap-1.5 flex-wrap">
-                              <h3 className="text-xs font-black text-slate-900">{acc.name}</h3>
+                              <h3 className="text-xs sm:text-sm font-black text-slate-900">{acc.name}</h3>
                               {acc.verified && (
-                                <span className="w-3.5 h-3.5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[8px] font-bold">
+                                <span className="w-4 h-4 rounded-full bg-sky-500 border border-slate-900 text-white flex items-center justify-center text-[8px] font-black shadow-2xs">
                                   ✓
                                 </span>
                               )}
-                              <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold ${
+                              <span className={`text-[9px] px-2 py-0.5 rounded-full font-black border-2 border-slate-900 ${
                                 acc.isAi 
-                                  ? 'bg-purple-100 text-purple-700 border border-purple-200' 
-                                  : 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                                  ? 'bg-purple-200 text-purple-950' 
+                                  : 'bg-emerald-200 text-emerald-950'
                               }`}>
                                 {acc.isAi ? '🤖 AI Agent' : '👤 Human Owner'}
                               </span>
                             </div>
 
-                            <p className="text-[11px] text-slate-500 font-mono">
+                            <p className="text-[11px] text-slate-700 font-mono font-bold">
                               {acc.handle}
                               {acc.ownerName && (
-                                <span className="text-slate-400 font-sans ml-1">
+                                <span className="text-slate-600 font-sans ml-1">
                                   • Milik <strong>{acc.ownerName}</strong>
                                 </span>
                               )}
                             </p>
 
-                            <p className="text-[11px] text-slate-700 font-medium line-clamp-2 pt-0.5">
+                            <p className="text-[11px] text-slate-800 font-semibold line-clamp-2 pt-0.5 leading-snug">
                               {acc.bio}
                             </p>
                           </div>
@@ -635,20 +639,20 @@ export default function ExploreView({
                         {/* Follow Button */}
                         <button
                           onClick={() => toggleFollow(acc.handle)}
-                          className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
+                          className={`shrink-0 px-3.5 py-1.5 rounded-2xl text-xs font-black border-2 border-slate-900 transition flex items-center gap-1 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer ${
                             isFollowed
-                              ? 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
-                              : 'bg-blue-600 text-white hover:bg-blue-700 shadow-xs'
+                              ? 'bg-slate-200 text-slate-800 shadow-[1.5px_1.5px_0px_#0f172a]'
+                              : 'bg-amber-300 hover:bg-amber-400 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
                           }`}
                         >
                           {isFollowed ? (
                             <>
-                              <Check className="w-3.5 h-3.5 text-emerald-600" />
+                              <Check className="w-3.5 h-3.5 text-emerald-800 stroke-[3px]" />
                               <span>Mengikuti</span>
                             </>
                           ) : (
                             <>
-                              <UserPlus className="w-3.5 h-3.5" />
+                              <UserPlus className="w-3.5 h-3.5 stroke-[2.5px]" />
                               <span>Ikuti</span>
                             </>
                           )}
@@ -656,14 +660,14 @@ export default function ExploreView({
                       </div>
 
                       {/* Bottom action bar */}
-                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                        <div className="flex items-center gap-2 text-slate-500">
-                          <span className="font-semibold text-slate-700">
+                      <div className="pt-2.5 border-t-2 border-slate-900/10 flex items-center justify-between text-[11px]">
+                        <div className="flex items-center gap-2 text-slate-700 font-bold">
+                          <span className="font-mono text-slate-900">
                             {acc.followers.toLocaleString()}
                           </span>
                           <span>pengikut</span>
                           <span>•</span>
-                          <span className="text-blue-600 truncate max-w-[140px]">
+                          <span className="text-sky-700 font-extrabold truncate max-w-[140px]">
                             {acc.specialty}
                           </span>
                         </div>
@@ -672,18 +676,18 @@ export default function ExploreView({
                           {acc.isAi && (
                             <button
                               onClick={() => onOpenAskAi(acc.name, acc.ownerName || 'Alex Tamara', acc.specialty)}
-                              className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 text-[10px] font-bold transition flex items-center gap-1"
+                              className="px-2.5 py-1 rounded-xl bg-sky-200 hover:bg-sky-300 text-sky-950 text-[10.5px] font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition flex items-center gap-1 cursor-pointer"
                             >
-                              <Bot className="w-3 h-3 text-blue-600" />
+                              <Bot className="w-3 h-3 text-sky-900 stroke-[2.5px]" />
                               <span>Tanya AI</span>
                             </button>
                           )}
                           {acc.isLive && onOpenLiveStage && (
                             <button
                               onClick={onOpenLiveStage}
-                              className="px-2.5 py-1 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 text-[10px] font-bold transition flex items-center gap-1"
+                              className="px-2.5 py-1 rounded-xl bg-rose-200 hover:bg-rose-300 text-rose-950 text-[10.5px] font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition flex items-center gap-1 cursor-pointer"
                             >
-                              <Radio className="w-3 h-3 text-rose-600" />
+                              <Radio className="w-3 h-3 text-rose-900 stroke-[2.5px]" />
                               <span>Tonton Live</span>
                             </button>
                           )}
@@ -719,7 +723,7 @@ export default function ExploreView({
                   <div
                     key={post.id}
                     onClick={() => onSelectPost && onSelectPost(post)}
-                    className="p-3.5 rounded-2xl bg-white border border-slate-200 hover:border-blue-400 hover:shadow-xs transition space-y-2 cursor-pointer"
+                    className="p-4 rounded-3xl bg-white border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] hover:-translate-y-0.5 transition space-y-2.5 cursor-pointer"
                   >
                     {/* Author Bar */}
                     <div className="flex items-center justify-between">
@@ -727,38 +731,38 @@ export default function ExploreView({
                         <img
                           src={post.humanOwner.avatar}
                           alt={post.humanOwner.name}
-                          className="w-7 h-7 rounded-full object-cover border border-slate-200"
+                          className="w-8 h-8 rounded-full object-cover border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a]"
                         />
                         <div>
-                          <div className="flex items-center gap-1">
-                            <span className="text-xs font-bold text-slate-900">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs font-black text-slate-900">
                               {post.humanOwner.name}
                             </span>
-                            <span className="text-[10px] text-slate-400 font-mono">
+                            <span className="text-[10px] text-slate-600 font-mono font-bold">
                               × {post.aiAgent.name}
                             </span>
                           </div>
-                          <span className="text-[10px] text-slate-400 font-mono">
+                          <span className="text-[10px] text-slate-500 font-mono font-semibold">
                             {post.timestamp}
                           </span>
                         </div>
                       </div>
 
                       {post.has3DModel && (
-                        <span className="text-[9px] px-2 py-0.5 rounded-full bg-cyan-50 text-cyan-800 font-bold border border-cyan-200 flex items-center gap-1">
-                          <Box className="w-3 h-3 text-cyan-600" />
+                        <span className="text-[9.5px] px-2.5 py-0.5 rounded-full bg-cyan-200 text-cyan-950 font-black border-2 border-slate-900 flex items-center gap-1 shadow-2xs">
+                          <Box className="w-3 h-3 text-cyan-900 stroke-[2.5px]" />
                           3D Model
                         </span>
                       )}
                     </div>
 
                     {/* Caption snippet */}
-                    <p className="text-xs text-slate-800 leading-relaxed line-clamp-3">
+                    <p className="text-xs font-medium text-slate-800 leading-relaxed line-clamp-3">
                       {post.content}
                     </p>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1.5">
                       {post.tags.map((t) => (
                         <span
                           key={t}
@@ -766,7 +770,7 @@ export default function ExploreView({
                             e.stopPropagation();
                             setSearchQuery(t);
                           }}
-                          className="text-[10px] font-mono text-blue-600 hover:underline cursor-pointer"
+                          className="text-[10.5px] font-mono font-black text-sky-700 px-2 py-0.5 rounded-xl bg-sky-50 border border-slate-300 hover:bg-sky-100 cursor-pointer"
                         >
                           {t}
                         </span>
@@ -774,23 +778,23 @@ export default function ExploreView({
                     </div>
 
                     {/* Engagement Counts */}
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+                    <div className="pt-2.5 border-t-2 border-slate-900/10 flex items-center justify-between text-[11px] text-slate-700 font-bold">
                       <div className="flex items-center gap-3">
                         <span className="flex items-center gap-1">
-                          <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-50" />
+                          <Heart className="w-3.5 h-3.5 text-rose-600 fill-rose-200 stroke-[2.2px]" />
                           {post.likes}
                         </span>
                         <span className="flex items-center gap-1">
-                          <MessageCircle className="w-3.5 h-3.5 text-blue-500" />
+                          <MessageCircle className="w-3.5 h-3.5 text-sky-600 stroke-[2.2px]" />
                           {post.commentsCount}
                         </span>
                         <span className="flex items-center gap-1">
-                          <Repeat2 className="w-3.5 h-3.5 text-emerald-500" />
+                          <Repeat2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.2px]" />
                           {post.reposts}
                         </span>
                       </div>
-                      <span className="text-[10px] text-blue-600 font-bold hover:underline">
-                        Lihat Postingan →
+                      <span className="text-[10.5px] text-slate-900 font-black flex items-center gap-0.5 hover:underline">
+                        Lihat Detail →
                       </span>
                     </div>
                   </div>

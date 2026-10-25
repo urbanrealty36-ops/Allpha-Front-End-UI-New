@@ -541,35 +541,35 @@ export default function AllphaHubView({
         </div>
       )}
 
-      {/* Main Allpha Hub Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white p-5 sm:p-6 border border-blue-500/30 shadow-xl">
-        <div className="relative z-10 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-                <Sparkles className="w-5 h-5 text-white" />
+      {/* Main Allpha Hub Banner (Playful Neo-Brutalist Soft Pastel) */}
+      <div className="relative overflow-hidden rounded-3xl bg-sky-50 text-slate-950 p-5 sm:p-6 border-2 border-slate-900 shadow-[4px_4px_0px_#0f172a]">
+        <div className="relative z-10 space-y-3.5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-sky-300 border-2 border-slate-900 flex items-center justify-center shadow-[2px_2px_0px_#0f172a] shrink-0">
+                <Sparkles className="w-5 h-5 text-slate-950 stroke-[2.5px]" />
               </div>
               <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-lg sm:text-xl font-black tracking-tight text-white">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h1 className="text-lg sm:text-xl font-black tracking-tight text-slate-950">
                     ALLPHA HUB
                   </h1>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 uppercase tracking-wider">
-                    Ecosystem Center
+                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-200 border-2 border-slate-900 text-amber-950 uppercase tracking-wider shadow-2xs">
+                    ECOSYSTEM CENTER
                   </span>
                 </div>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  Pusat Operasional Terpadu: Event Stage Live, Dunia 3D, Videotron, Quests, & Settlement Kreator
+                <p className="text-xs font-semibold text-slate-700 mt-0.5">
+                  Pusat Operasional: Event Stage Live, Dunia 3D, Videotron, Quests, & Settlement Kreator
                 </p>
               </div>
             </div>
 
             {/* Quick Balance Status */}
-            <div className="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-2xl border border-slate-700/80 backdrop-blur-sm">
-              <Coins className="w-4 h-4 text-amber-400" />
+            <div className="flex items-center gap-2 bg-amber-100 px-3.5 py-1.5 rounded-2xl border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a]">
+              <span className="text-sm">🪙</span>
               <div className="text-right">
-                <span className="text-[10px] text-slate-400 block leading-none">Saldo Akun</span>
-                <span className="text-xs font-mono font-bold text-amber-300">
+                <span className="text-[10px] text-amber-900 font-extrabold block leading-none">Saldo Akun</span>
+                <span className="text-xs font-mono font-black text-amber-950">
                   {userCredits + agentCredits} Cr
                 </span>
               </div>
@@ -577,7 +577,7 @@ export default function AllphaHubView({
           </div>
 
           {/* Hub Modules Tab Bar */}
-          <div className="pt-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar border-t border-slate-800">
+          <div className="pt-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar border-t-2 border-slate-900/15">
             {[
               { id: 'STAGE', label: 'Event Stage Live', icon: Radio, count: stageEvents.filter(e => e.isLive).length + ' Live' },
               { id: 'WORLDS', label: 'Jelajahi Dunia 3D', icon: Box, count: worldsDirectory.length + ' Dunia' },
@@ -592,17 +592,17 @@ export default function AllphaHubView({
                 <button
                   key={tab.id}
                   onClick={() => setActiveHubSection(tab.id as typeof activeHubSection)}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-bold transition whitespace-nowrap shrink-0 ${
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-2xl text-xs font-black transition whitespace-nowrap shrink-0 border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white shadow-md shadow-blue-500/20'
-                      : 'bg-slate-900/60 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800'
+                      ? 'bg-sky-400 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                      : 'bg-white text-slate-800 hover:bg-slate-100 shadow-[1.5px_1.5px_0px_#0f172a]'
                   }`}
                 >
-                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-slate-950 stroke-[2.5px]' : 'text-slate-700'}`} />
                   <span>{tab.label}</span>
                   {tab.count && (
-                    <span className={`text-[9px] px-1.5 py-0.2 rounded-full font-mono ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
+                    <span className={`text-[9.5px] px-1.5 py-0.2 rounded-full font-mono font-black border ${
+                      isActive ? 'bg-white text-slate-950 border-slate-900' : 'bg-slate-200 text-slate-800 border-slate-400'
                     }`}>
                       {tab.count}
                     </span>

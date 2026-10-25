@@ -129,35 +129,35 @@ export default function CreatePostModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/80 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="w-full max-w-lg rounded-3xl bg-white shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="w-full max-w-lg rounded-3xl bg-white shadow-[6px_6px_0px_#0f172a] border-2 border-slate-900 overflow-hidden flex flex-col max-h-[92vh]">
         {/* Modal Header */}
-        <div className="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50/80">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
+        <div className="px-5 py-3.5 border-b-2 border-slate-900 flex items-center justify-between bg-[#F4F7FB]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-[#0284C7] text-white flex items-center justify-center border-2 border-slate-900 shadow-[1px_1px_0px_#0f172a]">
               <Plus className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-black text-slate-900">Pusat Pembuatan Konten (Create)</h2>
-              <p className="text-[10px] text-slate-500">Postingan, Story, Live Streaming & Stage 3D</p>
+              <h2 className="text-sm font-black text-slate-900 uppercase">Pusat Pembuatan Konten</h2>
+              <p className="text-[10px] font-bold text-slate-500">Postingan, Story, Live Streaming & Stage 3D</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full text-slate-400 hover:text-slate-800 hover:bg-slate-200 transition"
+            className="p-1.5 rounded-xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] text-slate-700 hover:bg-slate-100 transition active:translate-x-0.5 active:translate-y-0.5"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Create Mode Switcher Tabs */}
-        <div className="px-4 py-2 border-b border-slate-100 bg-white flex gap-1.5 overflow-x-auto no-scrollbar">
+        <div className="px-4 py-2.5 border-b-2 border-slate-900 bg-white flex gap-1.5 overflow-x-auto no-scrollbar">
           <button
             onClick={() => setCreateMode('FEED_POST')}
-            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-black transition border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 ${
               createMode === 'FEED_POST'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-sky-200 text-slate-900 shadow-[2px_2px_0px_#0f172a]'
+                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
             }`}
           >
             <Box className="w-3.5 h-3.5" />
@@ -166,50 +166,50 @@ export default function CreatePostModal({
 
           <button
             onClick={() => setCreateMode('STORY')}
-            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-black transition border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 ${
               createMode === 'STORY'
-                ? 'bg-rose-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-rose-200 text-slate-900 shadow-[2px_2px_0px_#0f172a]'
+                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
             }`}
           >
             <Camera className="w-3.5 h-3.5" />
-            <span>Story / Moment</span>
+            <span>Story</span>
           </button>
 
           <button
             onClick={() => setCreateMode('LIVE_STAGE')}
-            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-black transition border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 ${
               createMode === 'LIVE_STAGE'
-                ? 'bg-purple-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-purple-300 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <Radio className="w-3.5 h-3.5 animate-pulse text-amber-300" />
+            <Radio className="w-3.5 h-3.5 animate-pulse text-purple-700" />
             <span>Mulai Live Stage 3D</span>
-            <span className="text-[9px] px-1 rounded-full bg-white/20 text-white">LIVE</span>
+            <span className="text-[9px] px-1 rounded-md bg-purple-700 text-white font-bold">LIVE</span>
           </button>
 
           <button
             onClick={() => setCreateMode('LIVE_STREAMING')}
-            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-black transition border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 ${
               createMode === 'LIVE_STREAMING'
-                ? 'bg-rose-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-amber-200 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <Video className="w-3.5 h-3.5" />
+            <Video className="w-3.5 h-3.5 text-amber-700" />
             <span>Live Streaming</span>
           </button>
 
           <button
             onClick={() => setCreateMode('LIVE_COLLAB')}
-            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 ${
+            className={`shrink-0 px-3 py-1.5 rounded-xl text-xs font-black transition border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 flex items-center gap-1.5 ${
               createMode === 'LIVE_COLLAB'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-emerald-200 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
             }`}
           >
-            <Users className="w-3.5 h-3.5" />
+            <Users className="w-3.5 h-3.5 text-emerald-700" />
             <span>Live Collab</span>
           </button>
         </div>
