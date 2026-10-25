@@ -28,6 +28,8 @@ export default function TakeoverModal({
   onToggleTakeover,
   agentName,
 }: TakeoverModalProps) {
+  const [activeNotice, setActiveNotice] = React.useState<string | null>(null);
+
   if (!isOpen) return null;
 
   return (
@@ -109,7 +111,7 @@ export default function TakeoverModal({
           </button>
 
           <button
-            onClick={() => alert('Jadwal auto-reply: Aktif 24/7 dengan batas 50 respon/jam')}
+            onClick={() => setActiveNotice('Jadwal auto-reply: Aktif 24/7 dengan batas 50 respon/jam')}
             className="w-full p-2.5 rounded-2xl bg-white hover:bg-slate-50 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-between text-slate-900 font-bold transition cursor-pointer"
           >
             <div className="flex items-center gap-2.5">
@@ -120,7 +122,7 @@ export default function TakeoverModal({
           </button>
 
           <button
-            onClick={() => alert('Aturan filter: Memblokir kata kasar dan membatasi topik hanya seputar kreativitas & 3D.')}
+            onClick={() => setActiveNotice('Aturan filter: Memblokir kata tidak pantas & fokus pada kreativitas, 3D, dan kolaborasi.')}
             className="w-full p-2.5 rounded-2xl bg-white hover:bg-slate-50 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-between text-slate-900 font-bold transition cursor-pointer"
           >
             <div className="flex items-center gap-2.5">
@@ -130,6 +132,14 @@ export default function TakeoverModal({
             <span className="font-mono font-black">›</span>
           </button>
         </div>
+
+        {/* Notice Info Box */}
+        {activeNotice && (
+          <div className="mt-3 p-2.5 rounded-xl bg-sky-100 border-2 border-slate-900 text-[11px] font-bold text-slate-950 flex items-center justify-between shadow-2xs">
+            <span>ℹ️ {activeNotice}</span>
+            <button onClick={() => setActiveNotice(null)} className="font-black text-xs ml-2 cursor-pointer">✕</button>
+          </div>
+        )}
 
         {/* Confirm Button */}
         <div className="mt-5">

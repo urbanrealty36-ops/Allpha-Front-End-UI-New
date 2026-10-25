@@ -151,72 +151,72 @@ export default function SkillsChallengeHub({
 
   return (
     <div className="w-full max-w-4xl mx-auto px-3 sm:px-4 py-4 pb-28 font-sans">
-      {/* Header Banner */}
-      <div className="p-5 sm:p-6 rounded-3xl bg-[#0F172A] text-white border-2 border-slate-900 shadow-[4px_4px_0px_#0f172a] mb-5">
+      {/* Header Banner (Playful Neo-Brutalist Soft Pastel) */}
+      <div className="p-5 sm:p-6 rounded-3xl bg-amber-50 text-slate-950 border-2 border-slate-900 shadow-[4px_4px_0px_#0f172a] mb-5">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <span className="px-2.5 py-0.5 rounded-full bg-cyan-400 text-slate-950 text-[10px] font-black uppercase tracking-wider">
+              <span className="px-2.5 py-0.5 rounded-full bg-amber-300 text-slate-950 text-[10px] font-black uppercase tracking-wider border-2 border-slate-900 shadow-2xs">
                 ALLPHA HUB OFFICIAL
               </span>
-              <h1 className="text-lg sm:text-xl font-black tracking-tight text-white uppercase">
+              <h1 className="text-lg sm:text-xl font-black tracking-tight text-slate-950 uppercase">
                 Skills Challenge & AI Credits
               </h1>
             </div>
-            <p className="text-xs text-slate-300 max-w-xl leading-relaxed font-medium">
+            <p className="text-xs text-slate-700 max-w-xl leading-relaxed font-semibold">
               Tingkatkan kemampuan AI Agent Anda lewat Ebook atau Plugin. Raih reward AI Credits saat pengguna lain berkonsultasi atau membuat reels ber-brand!
             </p>
           </div>
 
           {/* Credits Summary Badge */}
-          <div className="flex items-center gap-3 bg-[#FEF08A] text-slate-950 p-3 rounded-2xl border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] shrink-0">
-            <div className="w-10 h-10 rounded-xl bg-amber-400 border-2 border-slate-900 flex items-center justify-center text-slate-950">
-              <Coins className="w-5 h-5" />
+          <div className="flex items-center gap-3 bg-white text-slate-950 p-3 rounded-2xl border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-amber-300 border-2 border-slate-900 flex items-center justify-center text-slate-950 shadow-[1.5px_1.5px_0px_#0f172a]">
+              <Coins className="w-5 h-5 stroke-[2.5px]" />
             </div>
             <div>
-              <p className="text-[10px] uppercase font-black text-slate-800">Total Reward Agent</p>
+              <p className="text-[10px] uppercase font-black text-slate-700">Total Reward Agent</p>
               <p className="text-lg font-black text-slate-950 font-mono">
-                +{agentCredits} <span className="text-xs font-bold text-slate-800">Cr</span>
+                +{agentCredits} <span className="text-xs font-bold text-slate-700">Cr</span>
               </p>
             </div>
           </div>
         </div>
 
         {/* Navigation Tabs within Hub */}
-        <div className="flex items-center gap-2 mt-5 pt-4 border-t-2 border-slate-800 text-xs font-black overflow-x-auto pb-1">
+        <div className="flex items-center gap-2 mt-5 pt-4 border-t-2 border-slate-900/15 text-xs font-black overflow-x-auto pb-1">
           <button
             onClick={() => setActiveTab('SIMULATOR')}
-            className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 ${
+            className={`px-3.5 py-2 rounded-2xl transition flex items-center gap-1.5 border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer ${
               activeTab === 'SIMULATOR'
-                ? 'bg-white text-slate-900 shadow-[2px_2px_0px_#0f172a]'
-                : 'bg-slate-800 text-slate-300 hover:text-white'
+                ? 'bg-amber-300 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                : 'bg-white text-slate-800 hover:bg-slate-100 shadow-[1.5px_1.5px_0px_#0f172a]'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <Sparkles className="w-3.5 h-3.5 text-amber-700 stroke-[2.5px]" />
             <span>Simulasi Challenge & Transfer</span>
           </button>
 
           <button
             onClick={() => setActiveTab('UPGRADE')}
-            className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 ${
+            className={`px-3.5 py-2 rounded-2xl transition flex items-center gap-1.5 border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer ${
               activeTab === 'UPGRADE'
-                ? 'bg-sky-200 text-slate-900 shadow-[2px_2px_0px_#0f172a]'
-                : 'bg-slate-800 text-slate-300 hover:text-white'
+                ? 'bg-sky-300 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                : 'bg-white text-slate-800 hover:bg-slate-100 shadow-[1.5px_1.5px_0px_#0f172a]'
             }`}
           >
-            <Upload className="w-3.5 h-3.5" />
+            <Upload className="w-3.5 h-3.5 stroke-[2.5px]" />
             <span>Upgrade Knowledge & Plugin ({knowledgeDocs.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('LEDGER')}
-            className={`px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 ${
+            className={`px-3.5 py-2 rounded-2xl transition flex items-center gap-1.5 border-2 border-slate-900 active:translate-x-0.5 active:translate-y-0.5 cursor-pointer ${
               activeTab === 'LEDGER'
-                ? 'bg-emerald-200 text-slate-900 shadow-[2px_2px_0px_#0f172a]'
-                : 'bg-slate-800 text-slate-300 hover:text-white'
+                ? 'bg-emerald-300 text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                : 'bg-white text-slate-800 hover:bg-slate-100 shadow-[1.5px_1.5px_0px_#0f172a]'
             }`}
           >
-            <Coins className="w-3.5 h-3.5" />
+            <Coins className="w-3.5 h-3.5 stroke-[2.5px]" />
             <span>Audit Buku Besar ({transactions.length})</span>
           </button>
         </div>
@@ -311,16 +311,16 @@ export default function SkillsChallengeHub({
             <button
               onClick={handleRunChallengeSimulation}
               disabled={isProcessing}
-              className="w-full py-3.5 rounded-2xl bg-[#0284C7] hover:bg-[#0369A1] disabled:bg-slate-300 text-white font-black text-xs border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-2xl bg-sky-300 hover:bg-sky-400 disabled:bg-slate-200 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
             >
               {isProcessing ? (
                 <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
+                  <RefreshCw className="w-4 h-4 animate-spin stroke-[2.5px]" />
                   <span>AI Agent Menganalisis Knowledge & Mengenerate Konten...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-yellow-300" />
+                  <Sparkles className="w-4 h-4 text-amber-700 stroke-[2.5px]" />
                   <span>Jalankan AI Agent, Kirim File ke DM & Transfer +15 AI Credits</span>
                 </>
               )}
@@ -397,7 +397,7 @@ export default function SkillsChallengeHub({
                       '12.4 MB'
                     )
                   }
-                  className="mt-3 py-2 px-3 rounded-xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5"
+                  className="mt-3 py-2 px-3 rounded-2xl bg-sky-300 hover:bg-sky-400 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
                 >
                   + Install Dokumen
                 </button>
@@ -405,8 +405,8 @@ export default function SkillsChallengeHub({
 
               <div className="p-3.5 rounded-2xl bg-purple-50 border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center gap-1.5 text-purple-700 mb-1">
-                    <Cpu className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 text-purple-900 mb-1">
+                    <Cpu className="w-4 h-4 stroke-[2.5px]" />
                     <span className="text-[10px] font-black uppercase">Plugin JSON</span>
                   </div>
                   <h4 className="text-xs font-black text-slate-900">Brand Logo Reels Generator v2.5</h4>
@@ -423,7 +423,7 @@ export default function SkillsChallengeHub({
                       '4.2 MB'
                     )
                   }
-                  className="mt-3 py-2 px-3 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5"
+                  className="mt-3 py-2 px-3 rounded-2xl bg-purple-300 hover:bg-purple-400 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
                 >
                   + Install Plugin
                 </button>
@@ -431,8 +431,8 @@ export default function SkillsChallengeHub({
 
               <div className="p-3.5 rounded-2xl bg-amber-50 border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center gap-1.5 text-amber-800 mb-1">
-                    <FileCode className="w-4 h-4" />
+                  <div className="flex items-center gap-1.5 text-amber-900 mb-1">
+                    <FileCode className="w-4 h-4 stroke-[2.5px]" />
                     <span className="text-[10px] font-black uppercase">3D Spatial Plugin</span>
                   </div>
                   <h4 className="text-xs font-black text-slate-900">Three.js WebGL Shader Pack</h4>
@@ -449,7 +449,7 @@ export default function SkillsChallengeHub({
                       '8.9 MB'
                     )
                   }
-                  className="mt-3 py-2 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5"
+                  className="mt-3 py-2 px-3 rounded-2xl bg-amber-300 hover:bg-amber-400 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
                 >
                   + Install Spatial
                 </button>

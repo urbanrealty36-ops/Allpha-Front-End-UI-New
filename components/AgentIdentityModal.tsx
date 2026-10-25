@@ -365,42 +365,42 @@ export default function AgentIdentityModal({
         </div>
       </div>
 
-      {/* MODAL INSPEKSI LEMBAR TURNAROUND 3D */}
+      {/* MODAL INSPEKSI LEMBAR TURNAROUND 3D (Playful Neo-Brutalist Soft Pastel) */}
       {inspectingAvatar && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-5 bg-black/80 backdrop-blur-md">
-          <div className="w-full max-w-2xl bg-slate-900 rounded-3xl p-4 sm:p-6 text-white border border-slate-800 space-y-4 max-h-[95vh] overflow-y-auto">
-            <div className="flex items-start justify-between">
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-5 bg-black/60 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-2xl bg-white rounded-3xl p-5 sm:p-6 text-slate-950 border-3 border-slate-900 shadow-[6px_6px_0px_#0f172a] space-y-4 max-h-[95vh] overflow-y-auto">
+            <div className="flex items-start justify-between pb-3 border-b-2 border-slate-900 bg-sky-50 -mx-5 -mt-5 p-4 rounded-t-3xl sm:-mx-6 sm:-mt-6 sm:p-5">
               <div>
-                <span className="text-[10px] font-mono text-cyan-400 font-bold">
+                <span className="text-[10px] font-mono font-black text-sky-900 bg-sky-200 px-2 py-0.5 rounded-lg border border-slate-900">
                   {inspectingAvatar.codename} • {inspectingAvatar.rarity}
                 </span>
-                <h3 className="text-base font-black text-white mt-0.5">
-                  {inspectingAvatar.name} — Lembar Turnaround 3D
+                <h3 className="text-base font-black text-slate-950 mt-1">
+                  {inspectingAvatar.name} — Lembar Turnaround 3D Multi-Angle
                 </h3>
               </div>
               <button
                 onClick={() => setInspectingAvatar(null)}
-                className="p-1 text-slate-400 hover:text-white transition"
+                className="w-8 h-8 rounded-xl bg-white border-2 border-slate-900 text-slate-950 flex items-center justify-center shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer font-black"
               >
-                <X className="w-5 h-5" />
+                ✕
               </button>
             </div>
 
-            <div className="rounded-2xl overflow-hidden border border-slate-800 bg-black">
+            <div className="rounded-2xl overflow-hidden border-2 border-slate-900 bg-slate-950 shadow-[3px_3px_0px_#0f172a]">
               <img
                 src={inspectingAvatar.turnaroundImage || inspectingAvatar.image}
                 alt={inspectingAvatar.name}
-                className="w-full object-contain max-h-[60vh] mx-auto"
+                className="w-full object-contain max-h-[55vh] mx-auto"
               />
             </div>
 
-            <div className="space-y-1.5 text-xs">
-              <p className="text-slate-300">{inspectingAvatar.style}</p>
+            <div className="space-y-2 text-xs">
+              <p className="text-slate-800 font-semibold">{inspectingAvatar.style}</p>
               <div className="flex flex-wrap gap-1.5 pt-1">
                 {inspectingAvatar.features.map((f) => (
                   <span
                     key={f}
-                    className="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-cyan-300 border border-slate-700"
+                    className="text-[10px] font-black px-2.5 py-1 rounded-xl bg-purple-100 text-purple-950 border-2 border-slate-900 shadow-2xs"
                   >
                     ✓ {f}
                   </span>
@@ -408,16 +408,16 @@ export default function AgentIdentityModal({
               </div>
             </div>
 
-            <div className="flex justify-between items-center pt-2 border-t border-slate-800">
-              <span className="text-xs text-slate-400">
-                Distrik Asal: <strong className="text-white">{inspectingAvatar.district}</strong>
+            <div className="flex justify-between items-center pt-3 border-t-2 border-slate-900">
+              <span className="text-xs font-bold text-slate-600">
+                Distrik Asal: <strong className="text-slate-950 font-black">{inspectingAvatar.district}</strong>
               </span>
               <button
                 onClick={() => {
                   setSelectedAvatarId(inspectingAvatar.id);
                   setInspectingAvatar(null);
                 }}
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-md transition"
+                className="px-5 py-2.5 rounded-2xl bg-sky-300 hover:bg-sky-400 text-slate-950 text-xs font-black border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
               >
                 Pilih Avatar Ini
               </button>

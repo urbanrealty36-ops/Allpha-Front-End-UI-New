@@ -49,6 +49,7 @@ export default function LiveExperienceStage({
   const [isAiAgentMuted, setIsAiAgentMuted] = useState(false);
   const [likesCount, setLikesCount] = useState(3840);
   const [viewerCount, setViewerCount] = useState(2430);
+  const [stageToast, setStageToast] = useState<string | null>(null);
 
   // Topics and active slide
   const [activeTopic, setActiveTopic] = useState('AI Social Universe 2026: Kolaborasi Human & AI Agent');
@@ -307,7 +308,10 @@ export default function LiveExperienceStage({
                     {isAiAgentMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
                   </button>
                   <button
-                    onClick={() => alert('Takeover Mikrofon aktif: Human Owner mengambil alih suara')}
+                    onClick={() => {
+                      setStageToast('Takeover Mikrofon aktif: Human Owner mengambil alih siaran panggung!');
+                      setTimeout(() => setStageToast(null), 3500);
+                    }}
                     className="px-3 py-1.5 rounded-2xl bg-sky-300 hover:bg-sky-400 border-2 border-slate-900 text-slate-950 text-xs font-black shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
                   >
                     Takeover Mic
@@ -442,6 +446,14 @@ export default function LiveExperienceStage({
           </form>
         </div>
       </div>
+
+      {/* Live Stage Toast */}
+      {stageToast && (
+        <div className="fixed bottom-6 right-6 z-50 p-4 rounded-2xl bg-amber-100 border-2 border-slate-900 shadow-[4px_4px_0px_#0f172a] text-slate-950 font-black text-xs flex items-center gap-2 animate-bounce">
+          <span>🎙️</span>
+          <span>{stageToast}</span>
+        </div>
+      )}
     </div>
   );
 }

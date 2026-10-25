@@ -37,6 +37,8 @@ export default function TakeoverControlView({
   const [activeTab, setActiveTab] = useState<'HUMAN' | 'AI_AGENT'>('AI_AGENT');
   const [autoReplyEnabled, setAutoReplyEnabled] = useState(!isTakeoverActive);
 
+  const [infoModal, setInfoModal] = useState<{ title: string; content: string } | null>(null);
+
   const handleSave = () => {
     if (autoReplyEnabled === isTakeoverActive) {
       onToggleTakeover();
@@ -53,7 +55,7 @@ export default function TakeoverControlView({
         <div className="flex items-center gap-3">
           <button
             onClick={onBack}
-            className="p-1.5 rounded-xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] hover:bg-slate-50 transition active:translate-x-0.5 active:translate-y-0.5"
+            className="p-1.5 rounded-xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] hover:bg-slate-50 transition active:translate-x-0.5 active:translate-y-0.5 cursor-pointer"
             aria-label="Kembali"
           >
             <ArrowLeft className="w-5 h-5 text-slate-900" />
@@ -65,10 +67,14 @@ export default function TakeoverControlView({
         </div>
 
         <button
-          onClick={() => alert('Mode Takeover memungkinkan Human Owner mengambil alih percakapan secara langsung kapan saja saat AI dinonaktifkan.')}
-          className="p-1.5 rounded-xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] text-slate-700 hover:bg-slate-50"
+          onClick={() => setInfoModal({
+            title: 'Tentang Mode Takeover',
+            content: 'Mode Takeover memungkinkan Human Owner mengambil alih percakapan secara langsung kapan saja saat AI dinonaktifkan. Anda memegang kendali penuh atas identitas dan komunikasi di seluruh platform Allpha Universe.'
+          })}
+          className="p-1.5 rounded-xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] text-slate-700 hover:bg-slate-50 cursor-pointer active:translate-x-0.5 active:translate-y-0.5"
+          title="Bantuan Mode Takeover"
         >
-          <HelpCircle className="w-5 h-5" />
+          <HelpCircle className="w-5 h-5 stroke-[2.5px]" />
         </button>
       </header>
 
@@ -239,71 +245,83 @@ export default function TakeoverControlView({
             type="button"
             onClick={() => {
               setAutoReplyEnabled(false);
-              alert('Mode Takeover langsung diaktifkan!');
+              setInfoModal({
+                title: 'Mode Takeover Aktif',
+                content: 'Mode Takeover langsung diaktifkan! Anda memegang kendali atas semua respons pesan dan komentar.'
+              });
             }}
-            className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition text-left"
+            className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition text-left cursor-pointer"
           >
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-sky-100 text-sky-700 border-2 border-slate-900 flex items-center justify-center">
-                <User className="w-4 h-4" />
+                <User className="w-4 h-4 stroke-[2.5px]" />
               </div>
               <div>
                 <h4 className="text-xs font-black text-slate-900">Ambil Alih (Takeover)</h4>
                 <p className="text-[11px] font-medium text-slate-500">Jawab pesan masuk langsung atas nama Human</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-600" />
+            <ChevronRight className="w-4 h-4 text-slate-600 stroke-[2.5px]" />
           </button>
 
           <button
             type="button"
-            onClick={() => alert('Jadwal Auto-Reply: Aktif 24/7. Anda dapat mengatur rentang waktu operasional AI.')}
-            className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition text-left"
+            onClick={() => setInfoModal({
+              title: 'Jadwal Auto-Reply AI',
+              content: 'Jadwal Auto-Reply saat ini aktif 24/7. Anda dapat mengatur rentang waktu operasional AI sesuai jam aktif yang Anda tentukan.'
+            })}
+            className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition text-left cursor-pointer"
           >
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-800 border-2 border-slate-900 flex items-center justify-center">
-                <Clock className="w-4 h-4" />
+                <Clock className="w-4 h-4 stroke-[2.5px]" />
               </div>
               <div>
                 <h4 className="text-xs font-black text-slate-900">Jadwalkan Auto-Reply</h4>
                 <p className="text-[11px] font-medium text-slate-500">Atur jam operasional aktif AI Agent</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-600" />
+            <ChevronRight className="w-4 h-4 text-slate-600 stroke-[2.5px]" />
           </button>
 
           <button
             type="button"
-            onClick={() => alert('Batasan Topik: AI dibatasi hanya menjawab seputar Kesehatan, 3D, dan Marketing.')}
-            className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition text-left"
+            onClick={() => setInfoModal({
+              title: 'Batasan Topik & Etika Respons',
+              content: 'Topik dibatasi hanya seputar bidang keahlian AI (Kesehatan, Desain 3D, dan Marketing). Menolak topik di luar parameter keamanan.'
+            })}
+            className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition text-left cursor-pointer"
           >
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-700 border-2 border-slate-900 flex items-center justify-center">
-                <SlidersHorizontal className="w-4 h-4" />
+                <SlidersHorizontal className="w-4 h-4 stroke-[2.5px]" />
               </div>
               <div>
                 <h4 className="text-xs font-black text-slate-900">Atur Batasan Topik</h4>
                 <p className="text-[11px] font-medium text-slate-500">Tentukan topik yang boleh dijawab AI</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-600" />
+            <ChevronRight className="w-4 h-4 text-slate-600 stroke-[2.5px]" />
           </button>
 
           <button
             type="button"
-            onClick={() => alert('Panduan Gaya Komunikasi: Ramah, Ringkas, menggunakan Bahasa Indonesia santun.')}
-            className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition text-left"
+            onClick={() => setInfoModal({
+              title: 'Panduan Gaya Komunikasi AI',
+              content: 'Panduan Gaya Komunikasi: Ramah, Ringkas, menggunakan Bahasa Indonesia santun, dan selalu menyertakan atribut resmi Human Owner.'
+            })}
+            className="w-full p-4 flex items-center justify-between hover:bg-slate-50 transition text-left cursor-pointer"
           >
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-xl bg-cyan-100 text-cyan-800 border-2 border-slate-900 flex items-center justify-center">
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="w-4 h-4 stroke-[2.5px]" />
               </div>
               <div>
                 <h4 className="text-xs font-black text-slate-900">Panduan Gaya Komunikasi</h4>
                 <p className="text-[11px] font-medium text-slate-500">Sesuaikan nada bicara dan etiket respons AI</p>
               </div>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-600" />
+            <ChevronRight className="w-4 h-4 text-slate-600 stroke-[2.5px]" />
           </button>
         </div>
 
@@ -312,13 +330,39 @@ export default function TakeoverControlView({
           <button
             type="button"
             onClick={handleSave}
-            className="w-full py-3.5 rounded-2xl bg-[#0284C7] hover:bg-[#0369A1] text-white font-black text-xs border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-2xl bg-sky-400 hover:bg-sky-500 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] transition active:translate-x-0.5 active:translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>Simpan Pengaturan</span>
-            <Check className="w-4 h-4" />
+            <Check className="w-4 h-4 stroke-[3px]" />
           </button>
         </div>
       </div>
+
+      {/* Info Modal Component (Neo-Brutalist Soft Pastel) */}
+      {infoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fade-in">
+          <div className="w-full max-w-sm rounded-3xl bg-white p-5 border-2 border-slate-900 shadow-[6px_6px_0px_#0f172a] space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b-2 border-slate-900 bg-sky-50 -mx-5 -mt-5 p-4 rounded-t-3xl">
+              <h3 className="font-black text-sm text-slate-950">{infoModal.title}</h3>
+              <button
+                onClick={() => setInfoModal(null)}
+                className="w-7 h-7 rounded-xl bg-white border-2 border-slate-900 flex items-center justify-center text-slate-950 font-black cursor-pointer shadow-[1px_1px_0px_#0f172a]"
+              >
+                ✕
+              </button>
+            </div>
+            <p className="text-xs text-slate-800 font-medium leading-relaxed">
+              {infoModal.content}
+            </p>
+            <button
+              onClick={() => setInfoModal(null)}
+              className="w-full py-2.5 rounded-2xl bg-sky-300 hover:bg-sky-400 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
+            >
+              Mengerti
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
