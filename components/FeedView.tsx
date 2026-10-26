@@ -34,6 +34,7 @@ interface FeedViewProps {
   onOpenCreateModal?: () => void;
   onOpenFilmAi?: (filmId?: string) => void;
   onOpenMessages?: () => void;
+  onOpenStoryViewer?: (index: number) => void;
 }
 
 export default function FeedView({
@@ -49,10 +50,17 @@ export default function FeedView({
   onOpenCreateModal,
   onOpenFilmAi,
   onOpenMessages,
+  onOpenStoryViewer,
 }: FeedViewProps) {
   const [feedFilter, setFeedFilter] = useState<'FOR_YOU' | 'FOLLOWING' | 'AI_AGENTS'>('FOR_YOU');
   const [commentInput, setCommentInput] = useState<{ [postId: string]: string }>({});
   const [expandedCommentsPostId, setExpandedCommentsPostId] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+
+  const showFeedToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3000);
+  };
 
   // Stories data matching reference image
   const stories = [
@@ -173,12 +181,15 @@ export default function FeedView({
       {/* 2. STORIES / AVATARS HORIZONTAL REEL (Sesuai Gambar Referensi)            */}
       {/* ========================================================================= */}
       <div className="flex items-center gap-3.5 overflow-x-auto no-scrollbar py-2 px-1">
-        {stories.map((story) => (
+        {stories.map((story, idx) => (
           <div
             key={story.id}
             onClick={() => {
               if (story.isAdd && onOpenCreateModal) {
                 onOpenCreateModal();
+              } else if (onOpenStoryViewer) {
+                const storyIndex = Math.max(0, idx - 1);
+                onOpenStoryViewer(storyIndex);
               } else if (story.isLive && onOpenLiveStage) {
                 onOpenLiveStage();
               } else if (story.id === 's-3d-world') {
@@ -456,7 +467,7 @@ export default function FeedView({
 
                   {/* Repost Button */}
                   <button
-                    onClick={() => alert(`Postingan "${post.content.slice(0, 30)}..." berhasil di-repost ke feed Anda!`)}
+                    onClick={() => showFeedToast(`Postingan "${post.content.slice(0, 30)}..." berhasil di-repost ke feed Anda!`)}
                     className="flex items-center gap-1.5 hover:text-emerald-600 transition cursor-pointer"
                   >
                     <Repeat2 className="w-4.5 h-4.5 text-slate-700 hover:text-emerald-600" />
@@ -465,7 +476,12 @@ export default function FeedView({
 
                   {/* Share Button */}
                   <button
-                    onClick={() => alert('Tautan postingan berhasil disalin ke clipboard!')}
+                    onClick={() => {
+                      if (navigator.clipboard) {
+                        navigator.clipboard.writeText(window.location.href);
+                      }
+                      showFeedToast('Tautan postingan berhasil disalin ke clipboard!');
+                    }}
                     className="hover:text-slate-900 transition cursor-pointer"
                   >
                     <Share2 className="w-4.5 h-4.5 text-slate-700" />
@@ -557,6 +573,13 @@ export default function FeedView({
         })}
       </div>
 
+      {/* Feed Toast Alert */}
+      {toastMsg && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-2xl bg-slate-900 text-white text-xs font-bold border-2 border-slate-700 shadow-[3px_3px_0px_#000] flex items-center gap-2">
+          <span>✨</span>
+          <span>{toastMsg}</span>
+        </div>
+      )}
     </div>
   );
 }

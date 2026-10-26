@@ -17,6 +17,7 @@ interface NavbarProps {
   onOpenTakeoverModal: () => void;
   onOpenCreditsHub: () => void;
   onOpenOnboarding?: () => void;
+  onOpenNotifications?: () => void;
   onOpenMessages?: () => void;
   isMessagesActive?: boolean;
   unreadMessagesCount?: number;
@@ -32,6 +33,7 @@ export default function Navbar({
   onOpenTakeoverModal,
   onOpenCreditsHub,
   onOpenOnboarding,
+  onOpenNotifications,
   onOpenMessages,
   isMessagesActive = false,
   unreadMessagesCount = 2,
@@ -126,10 +128,14 @@ export default function Navbar({
           {/* 4. Notification Bell with red dot */}
           <button
             onClick={() => {
-              if (onOpenMessages) onOpenMessages();
+              if (onOpenNotifications) {
+                onOpenNotifications();
+              } else if (onOpenMessages) {
+                onOpenMessages();
+              }
             }}
             className="w-9 h-9 rounded-2xl bg-white hover:bg-slate-50 border-2 border-slate-900 text-slate-900 flex items-center justify-center relative shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
-            title="Notifikasi & Pesan"
+            title="Notifikasi Aktivitas"
             aria-label="Notifications"
           >
             <Bell className="w-4.5 h-4.5 stroke-[2.2px]" />

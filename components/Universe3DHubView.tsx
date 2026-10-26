@@ -234,6 +234,12 @@ export default function Universe3DHubView({
   // Portal Loading State
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingTipIndex, setLoadingTipIndex] = useState(0);
+  const [hubToast, setHubToast] = useState<string | null>(null);
+
+  const showHubToast = (msg: string) => {
+    setHubToast(msg);
+    setTimeout(() => setHubToast(null), 3500);
+  };
 
   const PORTAL_TIPS = [
     'Tip: Gunakan joystick sentuh di kiri bawah untuk melangkah ke segala penjuru.',
@@ -1064,7 +1070,7 @@ export default function Universe3DHubView({
                     <div className="flex items-center justify-between pt-1">
                       <span className="text-slate-400 text-[11px]">Host: {ev.host}</span>
                       <button
-                        onClick={() => alert(`RSVP Event "${ev.title}" berhasil dicatat!`)}
+                        onClick={() => showHubToast(`RSVP Event "${ev.title}" berhasil dicatat!`)}
                         className="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-300 font-semibold text-[11px]"
                       >
                         Ikuti / RSVP
@@ -1329,6 +1335,12 @@ export default function Universe3DHubView({
         </div>
       )}
 
+      {/* Floating Hub Toast */}
+      {hubToast && (
+        <div className="fixed top-18 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-2xl bg-slate-900/95 text-white text-xs font-bold border-2 border-slate-700 shadow-xl backdrop-blur-md">
+          <span>✨ {hubToast}</span>
+        </div>
+      )}
     </div>
   );
 }

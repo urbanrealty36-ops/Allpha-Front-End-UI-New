@@ -61,6 +61,12 @@ export default function ReelsView({
   const [isMuted, setIsMuted] = useState(true);
   const [reelsFilter, setReelsFilter] = useState<'FOR_YOU' | 'FOLLOWING' | 'FILM_AI'>('FOR_YOU');
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [reelsToast, setReelsToast] = useState<string | null>(null);
+
+  const showReelsToast = (msg: string) => {
+    setReelsToast(msg);
+    setTimeout(() => setReelsToast(null), 3000);
+  };
 
   // Reels items dataset (including active Live Stage streaming and Film AI trailers!)
   const reelsList: ReelItem[] = [
@@ -341,7 +347,7 @@ export default function ReelsView({
 
         {/* Comment Button */}
         <button
-          onClick={() => alert(`Membuka komentar untuk: "${currentReel.title}"`)}
+          onClick={() => showReelsToast(`Membuka komentar untuk: "${currentReel.title}"`)}
           className="flex flex-col items-center gap-1 group active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
         >
           <div className="w-12 h-12 rounded-2xl bg-white hover:bg-slate-100 border-2 border-slate-900 text-slate-900 flex items-center justify-center transition shadow-[2px_2px_0px_#0f172a]">
@@ -357,8 +363,8 @@ export default function ReelsView({
           onClick={() => {
             if (navigator.clipboard) {
               navigator.clipboard.writeText(window.location.href);
-              alert('Tautan Reels disalin ke papan klip!');
             }
+            showReelsToast('Tautan Reels disalin ke papan klip!');
           }}
           className="flex flex-col items-center gap-1 group active:translate-x-0.5 active:translate-y-0.5 transition cursor-pointer"
           title="Salin Tautan"
@@ -505,6 +511,13 @@ export default function ReelsView({
             <ChevronDown className="w-3.5 h-3.5" />
           </button>
         </div>
+
+        {/* Floating Toast */}
+        {reelsToast && (
+          <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-2xl bg-slate-900/90 text-white text-xs font-bold border-2 border-slate-700 shadow-xl backdrop-blur-md">
+            <span>✨ {reelsToast}</span>
+          </div>
+        )}
       </div>
     </div>
   );

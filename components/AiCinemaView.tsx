@@ -593,7 +593,7 @@ export default function AiCinemaView({
                 </span>
               </div>
               <p className="text-xs font-semibold text-slate-700 mt-0.5">
-                Wadah resmi Produser & Kreator Film AI. Tonton Drama Pendek (C-Drama, K-Drama, Sci-Fi) dengan bagi hasil 70% ke kreator.
+                Wadah resmi Produser & Kreator Film AI. Tonton Drama Pendek (C-Drama, K-Drama, Sci-Fi) dengan bagi hasil 90% ke kreator.
               </p>
             </div>
           </div>
@@ -630,7 +630,7 @@ export default function AiCinemaView({
           <div className="flex items-center gap-2 font-medium">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border border-slate-900 shrink-0" />
             <span>
-              <strong className="font-black text-slate-950">Model Monetisasi Kreator:</strong> 70% dari seluruh royalti langganan & pembelian episode otomatis ditransfer ke Produser.
+              <strong className="font-black text-slate-950">Model Monetisasi Kreator:</strong> 90% dari seluruh royalti langganan & pembelian episode otomatis ditransfer ke Produser (Platform Fee 10%).
             </span>
           </div>
           <span className="text-[11px] font-mono text-amber-900 font-black shrink-0 px-2.5 py-0.5 rounded-full bg-amber-100 border border-amber-300">
@@ -660,7 +660,7 @@ export default function AiCinemaView({
             <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
               <span className="px-3 py-1 rounded-full bg-emerald-100 border-2 border-slate-900 text-emerald-950 font-black flex items-center gap-1.5 shadow-2xs">
                 <Coins className="w-3.5 h-3.5 text-emerald-800" />
-                Bagi Hasil 70% Royalti Kreator
+                Bagi Hasil 90% Royalti Kreator (Platform Fee 10%)
               </span>
               <span className="px-3 py-1 rounded-full bg-sky-100 border-2 border-slate-900 text-sky-950 font-black flex items-center gap-1.5 shadow-2xs">
                 <Tv className="w-3.5 h-3.5 text-sky-800" />
@@ -782,7 +782,7 @@ export default function AiCinemaView({
                 </span>
               </h3>
               <p className="text-xs text-slate-500">
-                Kelola status verifikasi dari Team Allpha, tontonan penonton, dan royalti 70%.
+                Kelola status verifikasi dari Team Allpha, tontonan penonton, dan royalti 90%.
               </p>
             </div>
 
@@ -831,7 +831,7 @@ export default function AiCinemaView({
                 {/* Earnings & Actions */}
                 <div className="pt-2.5 border-t-2 border-slate-100 flex items-center justify-between text-xs">
                   <div className="space-y-0.5">
-                    <span className="text-[10px] font-bold text-slate-500">Total Royalti (70%):</span>
+                    <span className="text-[10px] font-bold text-slate-500">Total Royalti (90%):</span>
                     <p className="font-mono font-black text-amber-900">+{film.creatorMonthlyEarningsCredits} Cr</p>
                   </div>
 
@@ -981,7 +981,7 @@ export default function AiCinemaView({
 
                     {/* Profit Royalty Badge */}
                     <div className="p-2 rounded-xl bg-amber-100 border border-slate-900 flex items-center justify-between text-[10px] text-amber-950">
-                      <span className="font-bold">Royalti Kreator (70%):</span>
+                      <span className="font-bold">Royalti Kreator (90%):</span>
                       <span className="font-mono font-black">
                         +{movie.creatorMonthlyEarningsCredits.toLocaleString('id-ID')} Cr/bln
                       </span>
@@ -1329,7 +1329,7 @@ export default function AiCinemaView({
                 <span>Publish & Verifikasi oleh Team Allpha</span>
               </div>
               <p>
-                Setelah menekan tombol di bawah, film AI Anda akan masuk ke antrean verifikasi Team Allpha. Setelah terverifikasi, film akan otomatis tampil di katalog dan dapat ditonton oleh seluruh pengguna Allpha, serta mendatangkan <strong>70% royalti AI Credits</strong> langsung ke dompet kreator Anda.
+                Setelah menekan tombol di bawah, film AI Anda akan masuk ke antrean verifikasi Team Allpha. Setelah terverifikasi, film akan otomatis tampil di katalog dan dapat ditonton oleh seluruh pengguna Allpha, serta mendatangkan <strong>90% royalti AI Credits</strong> langsung ke dompet kreator Anda (Bagi hasil 90% Kreator / 10% Platform).
               </p>
             </div>
 
@@ -1409,7 +1409,7 @@ export default function AiCinemaView({
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5px]" />
-                  <span>Sistem Royalti 70% Terhubung ke Dompet Anda</span>
+                  <span>Sistem Royalti 90% Terhubung ke Dompet Anda</span>
                 </div>
               </div>
             </div>
@@ -1733,7 +1733,7 @@ export default function AiCinemaView({
                 'Buka ribuan episode Drama Pendek AI (C-Drama & K-Drama) tanpa iklan',
                 'Resolusi 4K Ultra HD 60 FPS dengan audio spatial 3D',
                 'Akses premiere episode baru 24 jam lebih awal',
-                '70% biaya langganan disalurkan langsung sebagai royalti untuk Produser Film AI',
+                '90% biaya langganan disalurkan langsung sebagai royalti untuk Produser Film AI (Platform Fee 10%)',
                 'Bisa diakses dari Feed, Reels, dan 3D Universe Cinema District',
               ].map((benefit, i) => (
                 <div key={i} className="flex items-start gap-2">

@@ -111,6 +111,12 @@ export default function Universe3DExperience({
     { id: 'q4', title: 'Sapa 1 Teman atau AI Agent di District', current: 1, target: 1, xp: 150, credits: 20, done: true },
   ]);
 
+  const [expToast, setExpToast] = useState<string | null>(null);
+  const showExpToast = (msg: string) => {
+    setExpToast(msg);
+    setTimeout(() => setExpToast(null), 3200);
+  };
+
   // Three.js instances ref
   const sceneRef = useRef<THREE.Scene | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
@@ -1011,19 +1017,19 @@ export default function Universe3DExperience({
               {/* Interaction Buttons */}
               <div className="grid grid-cols-4 gap-1 mt-2.5 pt-2 border-t border-slate-800/80 text-[10px]">
                 <button
-                  onClick={() => alert(`Anda melambaikan tangan menyapa ${nearbyEncounter.name}!`)}
+                  onClick={() => showExpToast(`Anda melambaikan tangan menyapa ${nearbyEncounter.name}!`)}
                   className="py-1 rounded-lg bg-blue-600 hover:bg-blue-500 font-bold transition text-center"
                 >
                   Sapa 👋
                 </button>
                 <button
-                  onClick={() => alert(`Membuka chat pribadi dengan ${nearbyEncounter.name}`)}
+                  onClick={() => showExpToast(`Membuka obrolan dengan ${nearbyEncounter.name}`)}
                   className="py-1 rounded-lg bg-slate-800 hover:bg-slate-700 font-medium transition text-center"
                 >
                   Chat 💬
                 </button>
                 <button
-                  onClick={() => alert(`Menampilkan profil lengkap ${nearbyEncounter.name}`)}
+                  onClick={() => showExpToast(`Profil: ${nearbyEncounter.name} (${nearbyEncounter.type})`)}
                   className="py-1 rounded-lg bg-slate-800 hover:bg-slate-700 font-medium transition text-center"
                 >
                   Profil 👤
@@ -1447,7 +1453,7 @@ export default function Universe3DExperience({
                     <p className="text-amber-400 font-bold font-mono mt-1">{item.price}</p>
                   </div>
                   <button
-                    onClick={() => alert(`Aset "${item.name}" berhasil dicoba pada preview avatar!`)}
+                    onClick={() => showExpToast(`Aset "${item.name}" berhasil dicoba pada preview avatar!`)}
                     className="w-full py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs transition shadow"
                   >
                     Beli & Pasang di 3D
@@ -1563,13 +1569,13 @@ export default function Universe3DExperience({
                   </div>
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() => alert(`Menyapa ${p.name}!`)}
+                      onClick={() => showExpToast(`Menyapa ${p.name}!`)}
                       className="px-3 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 font-bold transition text-xs"
                     >
                       Sapa
                     </button>
                     <button
-                      onClick={() => alert(`Membuka sesi obrolan dengan ${p.name}`)}
+                      onClick={() => showExpToast(`Membuka obrolan dengan ${p.name}`)}
                       className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 font-semibold transition text-xs"
                     >
                       Chat
@@ -1579,6 +1585,13 @@ export default function Universe3DExperience({
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Floating In-World Toast */}
+      {expToast && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-2xl bg-slate-900/95 text-white text-xs font-bold border-2 border-slate-700 shadow-xl backdrop-blur-md">
+          <span>✨ {expToast}</span>
         </div>
       )}
     </div>

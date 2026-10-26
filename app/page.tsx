@@ -23,6 +23,11 @@ import PostDetailView from '@/components/PostDetailView';
 import TakeoverControlView from '@/components/TakeoverControlView';
 import AskAiView from '@/components/AskAiView';
 import AiCinemaView from '@/components/AiCinemaView';
+import NotificationsModal from '@/components/NotificationsModal';
+import StoriesViewerModal from '@/components/StoriesViewerModal';
+import ThemeCatalogModal from '@/components/ThemeCatalogModal';
+import AgentPassportModal from '@/components/AgentPassportModal';
+import CreatorStudioModal from '@/components/CreatorStudioModal';
 import { 
   INITIAL_USER, 
   INITIAL_AGENT, 
@@ -91,6 +96,14 @@ export default function HomePage() {
     isOpen: false,
     contextPost: null,
   });
+
+  const [isNotificationsModalOpen, setIsNotificationsModalOpen] = useState(false);
+  const [isStoriesViewerOpen, setIsStoriesViewerOpen] = useState(false);
+  const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
+  const [isThemeCatalogOpen, setIsThemeCatalogOpen] = useState(false);
+  const [activeTheme, setActiveTheme] = useState('pastel-menggu');
+  const [isGlobalPassportOpen, setIsGlobalPassportOpen] = useState(false);
+  const [isGlobalCreatorStudioOpen, setIsGlobalCreatorStudioOpen] = useState(false);
 
   // Handler for liking post
   const handleLikePost = (postId: string) => {
@@ -190,6 +203,7 @@ export default function HomePage() {
         onOpenCreditsHub={() => setActiveTab('SKILLS_CREDITS')}
         onOpenOnboarding={() => setIsAuthOnboardingOpen(true)}
         onOpenMessages={() => setActiveTab('MESSAGES')}
+        onOpenNotifications={() => setIsNotificationsModalOpen(true)}
         isMessagesActive={activeTab === 'MESSAGES'}
         unreadMessagesCount={2}
         searchQuery={searchQuery}
@@ -232,6 +246,10 @@ export default function HomePage() {
               setActiveTab('FILM_AI');
             }}
             onOpenMessages={() => setActiveTab('MESSAGES')}
+            onOpenStoryViewer={(idx) => {
+              setSelectedStoryIndex(idx);
+              setIsStoriesViewerOpen(true);
+            }}
           />
         )}
 
@@ -428,10 +446,23 @@ export default function HomePage() {
             onBuyItem={(title, priceCredits) => {
               if (userCredits >= priceCredits) {
                 setUserCredits((prev) => prev - priceCredits);
-                showToast(`Aset 3D "${title}" berhasil dibeli seharga ${priceCredits} AI Credits!`);
+                showToast(`Aset/Produk "${title}" berhasil dibeli seharga ${priceCredits} AI Credits!`);
               } else {
                 showToast(`AI Credits Anda (${userCredits}) tidak mencukupi untuk "${title}".`);
               }
+            }}
+            onWarpToBooth={(boothName) => {
+              setActiveTab('WORLD3D');
+              showToast(`Teleporting ke ${boothName} di 3D Universe District...`);
+            }}
+            onOpenSellerChat={(name, handle) => {
+              setAskAiModalState({
+                isOpen: true,
+                agentName: name,
+                humanOwner: handle,
+                specialty: 'Official Seller & Creator Studio',
+              });
+              setActiveTab('ASK_AI_VIEW');
             }}
           />
         )}
@@ -495,6 +526,13 @@ export default function HomePage() {
               setCurrentAgent(updated);
               showToast(`Identitas ${updated.name} berhasil diperbarui!`);
             }}
+            onOpenFilmAi={() => setActiveTab('FILM_AI')}
+            userCredits={userCredits}
+            onDeductCredits={(amt, reason) => {
+              setUserCredits((prev) => Math.max(0, prev - amt));
+              showToast(reason);
+            }}
+            onOpenNotifications={() => setIsNotificationsModalOpen(true)}
           />
         )}
       </main>
@@ -585,6 +623,78 @@ export default function HomePage() {
           setIsCreateModalOpen(false);
           setActiveTab('LIVESTAGE');
           showToast(`Meluncurkan sesi ${mode || 'Live'}: "${title}"!`);
+        }}
+      />
+
+      <NotificationsModal
+        isOpen={isNotificationsModalOpen}
+        onClose={() => setIsNotificationsModalOpen(false)}
+        onOpenCreditsHub={() => {
+          setIsNotificationsModalOpen(false);
+          setActiveTab('SKILLS_CREDITS');
+        }}
+        onOpenMessages={() => {
+          setIsNotificationsModalOpen(false);
+          setActiveTab('MESSAGES');
+        }}
+        onOpenLiveStage={() => {
+          setIsNotificationsModalOpen(false);
+          setActiveTab('LIVESTAGE');
+        }}
+      />
+
+      <StoriesViewerModal
+        isOpen={isStoriesViewerOpen}
+        onClose={() => setIsStoriesViewerOpen(false)}
+        initialIndex={selectedStoryIndex}
+        currentUser={currentUser}
+        currentAgent={currentAgent}
+        onOpenAskAi={(agentName, ownerName, specialty) => {
+          setIsStoriesViewerOpen(false);
+          setAskAiModalState({
+            isOpen: true,
+            agentName,
+            humanOwner: ownerName,
+            specialty,
+          });
+          setActiveTab('ASK_AI_VIEW');
+        }}
+        onOpenLiveStage={() => {
+          setIsStoriesViewerOpen(false);
+          setActiveTab('LIVESTAGE');
+        }}
+      />
+
+      <ThemeCatalogModal
+        isOpen={isThemeCatalogOpen}
+        onClose={() => setIsThemeCatalogOpen(false)}
+        currentThemeId={activeTheme}
+        onSelectTheme={(themeId, themeName) => {
+          setActiveTheme(themeId);
+          showToast(`Tema aplikasi beralih ke: ${themeName}`);
+        }}
+      />
+
+      <AgentPassportModal
+        isOpen={isGlobalPassportOpen}
+        onClose={() => setIsGlobalPassportOpen(false)}
+        agent={currentAgent}
+        owner={currentUser}
+      />
+
+      <CreatorStudioModal
+        isOpen={isGlobalCreatorStudioOpen}
+        onClose={() => setIsGlobalCreatorStudioOpen(false)}
+        agent={currentAgent}
+        user={currentUser}
+        userCredits={userCredits}
+        onDeductCredits={(amount, reason) => {
+          setUserCredits((prev) => Math.max(0, prev - amount));
+          showToast(`-${amount} AI Credits: ${reason}`);
+        }}
+        onOpenFilmAi={() => {
+          setIsGlobalCreatorStudioOpen(false);
+          setActiveTab('FILM_AI');
         }}
       />
     </div>

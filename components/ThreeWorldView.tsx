@@ -30,6 +30,12 @@ export default function ThreeWorldView() {
   const [activeMode, setActiveMode] = useState<WorldMode>('DISTRICT');
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selectedBooth, setSelectedBooth] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<string | null>(null);
+  
+  const showToast = (msg: string) => {
+    setToastMsg(msg);
+    setTimeout(() => setToastMsg(null), 3000);
+  };
   
   // Avatar Customization State
   const [avatarColor, setAvatarColor] = useState<string>('#06b6d4'); // cyan default
@@ -1234,7 +1240,7 @@ export default function ThreeWorldView() {
             <div className="mt-6 flex items-center gap-2">
               <button
                 onClick={() => {
-                  alert('Item booth berhasil ditambahkan ke keranjang pembelian!');
+                  showToast('Item booth berhasil ditambahkan ke keranjang pembelian!');
                   setSelectedBooth(null);
                 }}
                 className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold text-xs shadow-lg transition"
@@ -1249,6 +1255,13 @@ export default function ThreeWorldView() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* In-World Floating Toast */}
+      {toastMsg && (
+        <div className="absolute top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-2xl bg-slate-900/90 text-white text-xs font-bold border-2 border-slate-700 shadow-xl backdrop-blur-md">
+          <span>✨ {toastMsg}</span>
         </div>
       )}
     </div>

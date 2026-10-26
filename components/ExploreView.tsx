@@ -216,12 +216,14 @@ interface ExploreViewProps {
   onOpenCreditsHub?: () => void;
   onOpenLiveStage?: () => void;
   onOpenFilmAi?: (filmId?: string) => void;
+  onOpenMarketplace?: () => void;
+  onOpenStoreAndBoothModal?: () => void;
   userCredits?: number;
   agentCredits?: number;
   onLikePost?: (postId: string) => void;
 }
 
-type SearchTab = 'ALL' | 'ACCOUNTS' | 'POSTS' | 'HASHTAGS' | 'PRD_HUB';
+type SearchTab = 'ALL' | 'MARKETPLACE' | 'ACCOUNTS' | 'POSTS' | 'HASHTAGS' | 'PRD_HUB';
 
 export default function ExploreView({ 
   posts = INITIAL_POSTS,
@@ -231,6 +233,8 @@ export default function ExploreView({
   onOpenCreditsHub,
   onOpenLiveStage,
   onOpenFilmAi,
+  onOpenMarketplace,
+  onOpenStoreAndBoothModal,
   userCredits = 250,
   agentCredits = 480,
   onLikePost,
@@ -458,6 +462,7 @@ export default function ExploreView({
         <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
           {[
             { id: 'ALL' as SearchTab, label: 'Semua', count: isSearching ? (filteredAccounts.length + filteredPosts.length + filteredHashtags.length) : undefined },
+            { id: 'MARKETPLACE' as SearchTab, label: '🛍️ Marketplace & Booth 3D', badge: 'Toko' },
             { id: 'ACCOUNTS' as SearchTab, label: '👥 Akun (Human & AI)', count: filteredAccounts.length },
             { id: 'POSTS' as SearchTab, label: '📝 Postingan & Caption', count: filteredPosts.length },
             { id: 'HASHTAGS' as SearchTab, label: '# Hashtags', count: filteredHashtags.length },
@@ -531,6 +536,151 @@ export default function ExploreView({
                     </span>
                   )}
                 </button>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ======================================================== */}
+        {/* SECTION A.2: MARKETPLACE & 3D BOOTH SPOTLIGHT (JELAJAHI) */}
+        {/* ======================================================== */}
+        {(activeSearchTab === 'ALL' || activeSearchTab === 'MARKETPLACE') && (
+          <section className="space-y-3.5">
+            <div className="p-4 sm:p-5 rounded-3xl bg-[#FEF08A] border-2 border-slate-900 shadow-[3px_3px_0px_#0f172a] space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="w-7 h-7 rounded-xl bg-white border-2 border-slate-900 flex items-center justify-center shadow-[1.5px_1.5px_0px_#0f172a]">
+                      <ShoppingBag className="w-3.5 h-3.5 text-slate-950 stroke-[2.5px]" />
+                    </span>
+                    <h2 className="text-sm sm:text-base font-black text-slate-950 tracking-tight">
+                      Marketplace & Stan Booth 3D Spatial
+                    </h2>
+                  </div>
+                  <p className="text-[11.5px] font-semibold text-slate-800">
+                    Beli aset 3D, companion AI Agent, merchandise fisik & kunjungi stan pameran di distrik 3D
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 flex-wrap">
+                  {onOpenStoreAndBoothModal && (
+                    <button
+                      onClick={onOpenStoreAndBoothModal}
+                      className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition flex items-center gap-1 cursor-pointer"
+                    >
+                      <Store className="w-3.5 h-3.5 text-slate-900 stroke-[2.5px]" />
+                      <span>Buat Toko & Booth</span>
+                    </button>
+                  )}
+                  {onOpenMarketplace && (
+                    <button
+                      onClick={onOpenMarketplace}
+                      className="px-3.5 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-black text-xs border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] active:translate-x-0.5 active:translate-y-0.5 transition flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Buka Marketplace</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Guarantees Strip */}
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar text-[10px] font-black text-slate-900 pt-0.5">
+                <span className="px-2 py-0.5 rounded-lg bg-white/80 border border-slate-900 shrink-0">
+                  ✨ 85% Royalti Seller
+                </span>
+                <span className="px-2 py-0.5 rounded-lg bg-white/80 border border-slate-900 shrink-0">
+                  📦 Ekspedisi JNE / SiCepat / J&T
+                </span>
+                <span className="px-2 py-0.5 rounded-lg bg-white/80 border border-slate-900 shrink-0">
+                  💳 Midtrans QRIS & VA
+                </span>
+                <span className="px-2 py-0.5 rounded-lg bg-white/80 border border-slate-900 shrink-0">
+                  🎪 Warp Pad 3D Districts
+                </span>
+              </div>
+            </div>
+
+            {/* Trending Items Grid in Explore */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              {[
+                {
+                  id: 'exp-m-1',
+                  name: 'Procedural Cyber City Pack',
+                  type: 'DIGITAL',
+                  price: 'Rp 275.000',
+                  credits: 185,
+                  seller: 'Luna 3D Lab',
+                  image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=300&q=80',
+                  badge: 'Aset 3D',
+                  booth: 'Crystal City',
+                },
+                {
+                  id: 'exp-m-2',
+                  name: 'Kaos Allpha Universe 2026',
+                  type: 'PHYSICAL',
+                  price: 'Rp 185.000',
+                  credits: 120,
+                  seller: 'Official Store',
+                  image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=300&q=80',
+                  badge: 'Merch Fisik',
+                  booth: 'Central Plaza',
+                },
+                {
+                  id: 'exp-m-3',
+                  name: 'TechNova Smart Shader GLSL',
+                  type: 'DIGITAL',
+                  price: 'Rp 320.000',
+                  credits: 215,
+                  seller: 'Mika Tanaka',
+                  image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=300&q=80',
+                  badge: 'WebGPU',
+                  booth: 'Neo Tokyo',
+                },
+                {
+                  id: 'exp-m-4',
+                  name: 'Cyberpunk LED Helmet Pro',
+                  type: 'PHYSICAL',
+                  price: 'Rp 1.450.000',
+                  credits: 980,
+                  seller: 'RoboGear Corp',
+                  image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=300&q=80',
+                  badge: 'Hardware',
+                  booth: 'Mars Oasis',
+                },
+              ].map((item) => (
+                <div
+                  key={item.id}
+                  className="p-2.5 rounded-2xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] space-y-1.5 flex flex-col justify-between"
+                >
+                  <div className="space-y-1.5">
+                    <div className="relative h-24 rounded-xl overflow-hidden border border-slate-900">
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      <span className="absolute top-1 left-1 px-1.5 py-0.2 rounded font-mono text-[8px] font-black bg-white/90 border border-slate-900 text-slate-950">
+                        {item.type}
+                      </span>
+                    </div>
+
+                    <h4 className="font-black text-xs text-slate-950 line-clamp-1 leading-snug">{item.name}</h4>
+                    <p className="text-[10px] font-semibold text-slate-500 line-clamp-1">{item.seller}</p>
+                  </div>
+
+                  <div className="pt-1.5 border-t border-slate-100 flex items-center justify-between">
+                    <div>
+                      <p className="font-mono font-black text-emerald-700 text-[11px] leading-tight">{item.price}</p>
+                      <span className="font-mono text-[9px] text-amber-900 font-bold block">{item.credits} Cr</span>
+                    </div>
+
+                    {onOpenMarketplace && (
+                      <button
+                        onClick={onOpenMarketplace}
+                        className="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] border border-slate-900 cursor-pointer"
+                      >
+                        Beli
+                      </button>
+                    )}
+                  </div>
+                </div>
               ))}
             </div>
           </section>
@@ -813,6 +963,8 @@ export default function ExploreView({
               onOpenWorld3D={() => onOpenWorld3D()}
               onOpenFilmAi={onOpenFilmAi}
               onOpenLiveExperienceStage={onOpenLiveStage}
+              onOpenMarketplace={onOpenMarketplace}
+              onOpenStoreAndBoothModal={onOpenStoreAndBoothModal}
               userCredits={userCredits}
               agentCredits={agentCredits}
             />
