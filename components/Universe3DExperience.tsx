@@ -52,6 +52,7 @@ import {
   downloadGLBBlob,
   MENGGU_PALETTE 
 } from '@/lib/menggu3dEngine';
+import Menggu3DViewerModal, { MengguViewerItem } from './Menggu3DViewerModal';
 
 export type UniverseSubView = 
   | 'IN_WORLD'           // 7. Tampilan Dalam Dunia 3D
@@ -129,6 +130,7 @@ export default function Universe3DExperience({
 
   const [expToast, setExpToast] = useState<string | null>(null);
   const [isExportingGLB, setIsExportingGLB] = useState<boolean>(false);
+  const [inspectMengguItem, setInspectMengguItem] = useState<MengguViewerItem | null>(null);
 
   const showExpToast = (msg: string) => {
     setExpToast(msg);
@@ -1122,6 +1124,20 @@ export default function Universe3DExperience({
                 >
                   🛍️ Booth
                 </button>
+                <button
+                  type="button"
+                  onClick={() => setInspectMengguItem({
+                    id: 'landmark-citadel',
+                    name: 'Crystal Citadel & AI Spire',
+                    categoryTag: '3. District & Landmark',
+                    description: 'Pusat komputasi AI & observatorium Crystal City.',
+                    builderType: 'citadel',
+                  })}
+                  className="px-2.5 py-1 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-[10px] font-black transition shrink-0 cursor-pointer flex items-center gap-1"
+                >
+                  <Box className="w-3 h-3 text-cyan-400" />
+                  <span>Inspektor GLB</span>
+                </button>
               </div>
 
               <button
@@ -1768,6 +1784,18 @@ export default function Universe3DExperience({
         <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-2xl bg-slate-900/95 text-white text-xs font-bold border-2 border-slate-700 shadow-xl backdrop-blur-md">
           <span>✨ {expToast}</span>
         </div>
+      )}
+
+      {/* 3D Menggu Art Modal Inspector & GLB Exporter */}
+      {inspectMengguItem && (
+        <Menggu3DViewerModal
+          item={inspectMengguItem}
+          onClose={() => setInspectMengguItem(null)}
+          onWarpToUniverse={() => {
+            setInspectMengguItem(null);
+            handleTourCamera('CITADEL');
+          }}
+        />
       )}
     </div>
   );

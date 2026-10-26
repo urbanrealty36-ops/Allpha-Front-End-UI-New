@@ -28,7 +28,8 @@ import {
   createMengguBillboardAds, 
   createMengguTenantBooth, 
   createMengguAvatar, 
-  createCanonicalModelByCategory 
+  createCanonicalModelByCategory,
+  getMengguModelByType 
 } from '@/lib/menggu3dEngine';
 
 export interface MengguViewerItem {
@@ -181,9 +182,9 @@ export default function Menggu3DViewerModal({
       camera.position.set(8, 6, 8);
       controls.target.set(0, 2, 0);
     } else {
-      modelGroup = createMengguCitadelTower();
-      camera.position.set(24, 22, 24);
-      controls.target.set(0, 16, 0);
+      modelGroup = getMengguModelByType(spec.id);
+      camera.position.set(12, 10, 12);
+      controls.target.set(0, 3, 0);
     }
 
     scene.add(modelGroup);

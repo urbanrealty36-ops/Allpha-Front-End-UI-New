@@ -22,9 +22,16 @@ import {
   Star,
   Zap,
   Globe2,
-  Download
+  Download,
+  Loader2
 } from 'lucide-react';
 import Menggu3DViewerModal, { MengguViewerItem } from './Menggu3DViewerModal';
+import { 
+  generateMengguAssetGLB, 
+  downloadGLBBlob, 
+  getMengguModelByType,
+  MENGGU_PALETTE 
+} from '@/lib/menggu3dEngine';
 
 export interface MengguAssetHighlight {
   id: string;
@@ -364,14 +371,57 @@ export default function Menggu3DUniverseGallery({
   onApplyTheme
 }: Menggu3DUniverseGalleryProps) {
   const [selectedAsset, setSelectedAsset] = useState<MengguAssetHighlight | null>(null);
-  const [activeSubTab, setActiveSubTab] = useState<'HIGHLIGHTS' | 'CANONICAL_14'>('HIGHLIGHTS');
+  const [activeSubTab, setActiveSubTab] = useState<'HIGHLIGHTS' | 'CANONICAL_14' | 'GLB_STUDIO'>('HIGHLIGHTS');
   const [selectedCategory, setSelectedCategory] = useState<CanonicalCategory3D | null>(null);
   const [viewerModalItem, setViewerModalItem] = useState<MengguViewerItem | null>(null);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
+  // GLB Generator Studio state
+  const [generatingAssetId, setGeneratingAssetId] = useState<string | null>(null);
+  const [batchProgress, setBatchProgress] = useState<{ current: number; total: number; name: string } | null>(null);
+  const [studioSelectedKey, setStudioSelectedKey] = useState<string>('district-spatial');
+  const [studioColorTheme, setStudioColorTheme] = useState<string>('pastel');
+
   const showToast = (msg: string) => {
     setToastMsg(msg);
-    setTimeout(() => setToastMsg(null), 3000);
+    setTimeout(() => setToastMsg(null), 3500);
+  };
+
+  const handleInstantDownloadGLB = async (keyOrCategory: string | number, defaultName?: string) => {
+    const assetKey = String(keyOrCategory);
+    setGeneratingAssetId(assetKey);
+    showToast(`Membuat & mengompresi aset 3D GLB Menggu...`);
+    try {
+      const result = await generateMengguAssetGLB(keyOrCategory, defaultName);
+      downloadGLBBlob(result.blob, result.filename);
+      showToast(`Sukses! Aset 3D "${result.filename}" (${result.sizeFormatted}) berhasil diunduh.`);
+    } catch (err) {
+      console.error('Error generating GLB:', err);
+      showToast('Gagal membuat file GLB. Silakan coba kembali.');
+    } finally {
+      setGeneratingAssetId(null);
+    }
+  };
+
+  const handleBatchDownloadAll14 = async () => {
+    showToast('Memulai ekspor batch 14 Kategori Theme 3D Menggu Art...');
+    setBatchProgress({ current: 0, total: 14, name: 'Menyiapkan...' });
+
+    for (let i = 1; i <= 14; i++) {
+      const cat = CANONICAL_14_CATEGORIES_3D.find((c) => c.id === i);
+      const catName = cat ? cat.name : `Kategori_${i}`;
+      setBatchProgress({ current: i, total: 14, name: catName });
+      try {
+        const result = await generateMengguAssetGLB(i, `allpha_canonical_${i}_${catName.toLowerCase().replace(/[^a-z0-9]/g, '_')}.glb`);
+        downloadGLBBlob(result.blob, result.filename);
+        await new Promise((r) => setTimeout(r, 650));
+      } catch (err) {
+        console.error(`Error in batch item ${i}:`, err);
+      }
+    }
+
+    setBatchProgress(null);
+    showToast('Semua 14 aset 3D GLB kategori berhasil di-generate & diunduh!');
   };
 
   const open3DViewerForAsset = (asset: MengguAssetHighlight) => {
@@ -415,9 +465,32 @@ export default function Menggu3DUniverseGallery({
     <div className="space-y-6">
       {/* Toast Notification */}
       {toastMsg && (
-        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-60 px-4 py-2 rounded-full bg-slate-900 text-white text-xs font-bold shadow-2xl border-2 border-slate-700 flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
-          <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+        <div className="fixed top-5 left-1/2 -translate-x-1/2 z-60 px-4 py-2.5 rounded-full bg-slate-900 text-white text-xs font-black shadow-2xl border-2 border-slate-700 flex items-center gap-2 animate-in fade-in slide-in-from-top-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
           <span>{toastMsg}</span>
+        </div>
+      )}
+
+      {/* Batch Progress Banner if running */}
+      {batchProgress && (
+        <div className="p-4 rounded-3xl bg-slate-900 border-2 border-cyan-400 text-white shadow-2xl flex items-center justify-between gap-4 animate-in fade-in">
+          <div className="flex items-center gap-3">
+            <Loader2 className="w-5 h-5 text-cyan-400 animate-spin shrink-0" />
+            <div>
+              <h4 className="text-xs font-black text-cyan-300">
+                Batch Generator 14 Kategori GLB ({batchProgress.current} / {batchProgress.total})
+              </h4>
+              <p className="text-[11px] text-slate-300">
+                Sedang mengompresi: <strong>{batchProgress.name}</strong>
+              </p>
+            </div>
+          </div>
+          <div className="w-24 sm:w-36 bg-slate-800 h-2.5 rounded-full overflow-hidden border border-slate-700 shrink-0">
+            <div
+              className="bg-gradient-to-r from-cyan-400 to-emerald-400 h-full transition-all duration-300"
+              style={{ width: `${(batchProgress.current / batchProgress.total) * 100}%` }}
+            />
+          </div>
         </div>
       )}
 
@@ -433,6 +506,9 @@ export default function Menggu3DUniverseGallery({
               <span className="px-2.5 py-0.5 rounded-full bg-[#BAE6FD] border border-slate-900 text-[10px] font-mono font-bold">
                 PRD Sec 53 • 14 Kategori
               </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-[#BBF7D0] border border-slate-900 text-[10px] font-mono font-bold text-emerald-950">
+                GLTF 2.0 / GLB Binary
+              </span>
             </div>
             
             <h2 className="text-xl sm:text-2xl font-black tracking-tight leading-tight">
@@ -440,7 +516,7 @@ export default function Menggu3DUniverseGallery({
             </h2>
             
             <p className="text-xs sm:text-sm font-semibold text-slate-800 leading-relaxed">
-              Koleksi aset arsitektur spatial bertema clay pastel Menggu: distrik kota bertingkat, menara Crystal Citadel, AI Plaza air mancur hologram, curved videotron billboard, dan stan booth toko 3D.
+              Koleksi aset arsitektur spatial bertema clay pastel Menggu: distrik kota bertingkat, menara Crystal Citadel, AI Plaza air mancur hologram, curved videotron billboard, stan booth toko 3D, dan generator aset GLB siap ekspor.
             </p>
           </div>
 
@@ -455,7 +531,7 @@ export default function Menggu3DUniverseGallery({
               }`}
             >
               <Building2 className="w-4 h-4" />
-              <span>5 Landmark & Distrik</span>
+              <span>Landmark & Distrik</span>
             </button>
 
             <button
@@ -468,6 +544,18 @@ export default function Menggu3DUniverseGallery({
             >
               <Layers className="w-4 h-4" />
               <span>14 Kategori Theme 3D</span>
+            </button>
+
+            <button
+              onClick={() => setActiveSubTab('GLB_STUDIO')}
+              className={`px-4 py-2.5 rounded-2xl font-black text-xs border-2 border-slate-900 transition cursor-pointer flex items-center justify-center gap-1.5 active:translate-x-0.5 active:translate-y-0.5 ${
+                activeSubTab === 'GLB_STUDIO'
+                  ? 'bg-slate-950 text-cyan-300 shadow-[2px_2px_0px_#0f172a]'
+                  : 'bg-white hover:bg-slate-100 text-slate-900'
+              }`}
+            >
+              <Box className="w-4 h-4 text-cyan-500" />
+              <span>⚡ Studio Generator GLB</span>
             </button>
           </div>
         </div>
@@ -547,6 +635,24 @@ export default function Menggu3DUniverseGallery({
                   <div className="pt-2 border-t border-slate-200 flex items-center justify-between gap-1.5 flex-wrap">
                     <button
                       type="button"
+                      disabled={generatingAssetId === asset.id}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleInstantDownloadGLB(asset.id, `${asset.id}.glb`);
+                      }}
+                      className="px-2.5 py-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-[10.5px] border border-slate-900 shadow-2xs transition flex items-center gap-1 active:scale-95 cursor-pointer disabled:opacity-50"
+                      title="Download file binary 3D GLB"
+                    >
+                      {generatingAssetId === asset.id ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Download className="w-3 h-3 stroke-[2.5px]" />
+                      )}
+                      <span>{generatingAssetId === asset.id ? 'Packing...' : 'Unduh GLB'}</span>
+                    </button>
+
+                    <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
                         open3DViewerForAsset(asset);
@@ -554,7 +660,7 @@ export default function Menggu3DUniverseGallery({
                       className="px-2.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-black text-[10.5px] border border-slate-900 shadow-2xs transition flex items-center gap-1 active:scale-95 cursor-pointer"
                     >
                       <Box className="w-3 h-3 text-cyan-300" />
-                      <span>3D Preview & GLB</span>
+                      <span>3D Preview</span>
                     </button>
                     
                     <button
@@ -582,12 +688,33 @@ export default function Menggu3DUniverseGallery({
       {/* ===================================================================== */}
       {activeSubTab === 'CANONICAL_14' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 bg-slate-900/90 border-2 border-slate-800 p-3.5 rounded-3xl text-white">
             <div className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-emerald-400 border border-slate-900" />
-              <h3 className="text-sm font-black text-white">14 Kategori Kanonikal Aset 3D (PRD Section 53)</h3>
+              <div>
+                <h3 className="text-sm font-black text-white">14 Kategori Kanonikal Aset 3D (PRD Section 53)</h3>
+                <span className="text-[11px] font-bold text-slate-400">Total 3,900+ model siap generate ke format GLTF 2.0 / GLB</span>
+              </div>
             </div>
-            <span className="text-xs font-bold text-slate-400">Total 3,900+ Aset 3D Siap Pakai</span>
+
+            <button
+              type="button"
+              disabled={Boolean(batchProgress)}
+              onClick={handleBatchDownloadAll14}
+              className="px-4 py-2 rounded-2xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 disabled:opacity-50 shrink-0"
+            >
+              {batchProgress ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  <span>Mengekspor ({batchProgress.current}/14)...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-3.5 h-3.5 stroke-[2.5px]" />
+                  <span>Unduh Semua 14 Kategori (.GLB)</span>
+                </>
+              )}
+            </button>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -627,18 +754,38 @@ export default function Menggu3DUniverseGallery({
                 </div>
 
                 {/* Samples and Model Count */}
-                <div className="pt-2 border-t border-slate-200 flex items-center justify-between gap-1 text-xs">
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      open3DViewerForCanonical(cat);
-                    }}
-                    className="px-2.5 py-1 rounded-xl bg-[#FEF08A] hover:bg-amber-300 text-slate-950 font-black text-[10px] border border-slate-900 shadow-2xs flex items-center gap-1 active:scale-95 cursor-pointer"
-                  >
-                    <Box className="w-3 h-3 text-slate-950" />
-                    <span>3D & GLB</span>
-                  </button>
+                <div className="pt-2 border-t border-slate-200 flex items-center justify-between gap-1 text-xs flex-wrap">
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      type="button"
+                      disabled={generatingAssetId === `cat-${cat.id}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleInstantDownloadGLB(cat.id, `canonical_cat_${cat.id}_${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}.glb`);
+                      }}
+                      className="px-2.5 py-1.5 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-[10px] border border-slate-900 shadow-2xs flex items-center gap-1 active:scale-95 cursor-pointer disabled:opacity-50"
+                      title="Download format 3D GLB binary"
+                    >
+                      {generatingAssetId === String(cat.id) ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Download className="w-3 h-3 stroke-[2.5px]" />
+                      )}
+                      <span>GLB</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        open3DViewerForCanonical(cat);
+                      }}
+                      className="px-2.5 py-1.5 rounded-xl bg-[#FEF08A] hover:bg-amber-300 text-slate-950 font-black text-[10px] border border-slate-900 shadow-2xs flex items-center gap-1 active:scale-95 cursor-pointer"
+                    >
+                      <Box className="w-3 h-3 text-slate-950" />
+                      <span>Preview 3D</span>
+                    </button>
+                  </div>
 
                   <span className="text-xs font-black text-blue-600 flex items-center gap-1 group-hover:translate-x-0.5 transition">
                     <span>Detail</span>
@@ -647,6 +794,171 @@ export default function Menggu3DUniverseGallery({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ===================================================================== */}
+      {/* VIEW C: STUDIO GENERATOR ASET 3D GLB SPATIAL INTERAKTIF               */}
+      {/* ===================================================================== */}
+      {activeSubTab === 'GLB_STUDIO' && (
+        <div className="space-y-5">
+          <div className="p-5 rounded-3xl bg-slate-900 border-3 border-slate-800 text-white shadow-2xl space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span className="text-[10px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                  INTERACTIVE 3D MENGGU ART STUDIO
+                </span>
+                <h3 className="text-lg sm:text-xl font-black text-white mt-0.5">
+                  Generator Aset 3D GLB Spatial Allpha Universe
+                </h3>
+                <p className="text-xs text-slate-300 mt-1">
+                  Generate dan unduh file binary 3D (.GLB) procedural Menggu Art siap impor ke Blender, Unreal Engine, Unity, Three.js, atau pasang di booth toko Crystal City.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  disabled={Boolean(batchProgress)}
+                  onClick={handleBatchDownloadAll14}
+                  className="px-3.5 py-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-xs border border-cyan-300 shadow-md flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Batch Export 14 Kategori</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Step 1: Select Model Preset */}
+            <div className="space-y-2 pt-2 border-t border-slate-800">
+              <label className="text-xs font-black text-slate-300 flex items-center gap-1.5">
+                <Building2 className="w-4 h-4 text-cyan-400" />
+                <span>1. Pilih Aset 3D Menggu yang Ingin di-Generate:</span>
+              </label>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
+                {[
+                  { id: 'district-spatial', label: 'Metropolis District', icon: '🏙️' },
+                  { id: 'landmark-citadel', label: 'Crystal Citadel', icon: '🗼' },
+                  { id: 'plaza-fountain', label: 'AI Plaza Fountain', icon: '⛲' },
+                  { id: 'billboard-videotron', label: 'Curved Videotron', icon: '📺' },
+                  { id: 'booth-tenant', label: 'Modular Booth', icon: '🛍️' },
+                  { id: 'avatar-menggu', label: 'Articulated Avatar', icon: '🧑‍🚀' },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setStudioSelectedKey(item.id)}
+                    className={`p-2.5 rounded-2xl border-2 font-black text-xs flex flex-col items-center justify-center gap-1 transition cursor-pointer text-center ${
+                      studioSelectedKey === item.id
+                        ? 'bg-[#FEF08A] text-slate-950 border-amber-400 shadow-md scale-[1.02]'
+                        : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-750'
+                    }`}
+                  >
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="truncate w-full leading-tight">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              {/* 14 Canonical Category Quick Chips */}
+              <div className="pt-2">
+                <span className="text-[11px] font-bold text-slate-400 block mb-1.5">
+                  Atau pilih dari 14 Kategori Kanonikal (PRD Sec 53):
+                </span>
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-2 no-scrollbar">
+                  {CANONICAL_14_CATEGORIES_3D.map((c) => (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => setStudioSelectedKey(`cat-${c.id}`)}
+                      className={`px-2.5 py-1 rounded-xl text-[10.5px] font-bold whitespace-nowrap border transition cursor-pointer flex items-center gap-1 shrink-0 ${
+                        studioSelectedKey === `cat-${c.id}`
+                          ? 'bg-cyan-400 text-slate-950 border-cyan-300 font-black shadow-xs'
+                          : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
+                      }`}
+                    >
+                      <span>{c.icon}</span>
+                      <span>#{c.id} {c.name.split(' ')[0]}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2: Live Specification & Action Banner */}
+            <div className="p-4 rounded-2xl bg-slate-950/80 border border-slate-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 font-mono text-[10px] font-bold uppercase border border-cyan-500/40">
+                    ASET AKTIF: {studioSelectedKey.toUpperCase()}
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-mono">
+                    Binary GLTF 2.0 (.GLB)
+                  </span>
+                </div>
+                <h4 className="font-black text-sm text-white">
+                  Siap generate aset 3D spatial berbasis Three.js PBR Menggu Art
+                </h4>
+                <p className="text-[11px] text-slate-400">
+                  Kompatibel dengan semua web viewer, Spatial Metaverse, Blender, dan WebXR.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 flex-wrap">
+                <button
+                  type="button"
+                  disabled={generatingAssetId === studioSelectedKey}
+                  onClick={() => {
+                    const isCat = studioSelectedKey.startsWith('cat-');
+                    const target = isCat ? parseInt(studioSelectedKey.replace('cat-', ''), 10) : studioSelectedKey;
+                    handleInstantDownloadGLB(target, `${studioSelectedKey}_menggu.glb`);
+                  }}
+                  className="flex-1 sm:flex-none px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 font-black text-xs text-slate-950 border border-cyan-300 shadow-[0_0_15px_rgba(34,211,238,0.3)] cursor-pointer flex items-center justify-center gap-1.5 transition-all active:scale-95 disabled:opacity-50"
+                >
+                  {generatingAssetId === studioSelectedKey ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Packing GLB...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-3.5 h-3.5 stroke-[2.5px]" />
+                      <span>Generate & Unduh (.GLB)</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    const isCat = studioSelectedKey.startsWith('cat-');
+                    if (isCat) {
+                      const id = parseInt(studioSelectedKey.replace('cat-', ''), 10);
+                      const cat = CANONICAL_14_CATEGORIES_3D.find((c) => c.id === id);
+                      if (cat) open3DViewerForCanonical(cat);
+                    } else {
+                      const asset = MENGGU_SPATIAL_ASSETS.find((a) => a.id === studioSelectedKey);
+                      if (asset) open3DViewerForAsset(asset);
+                      else {
+                        setViewerModalItem({
+                          id: studioSelectedKey,
+                          name: studioSelectedKey,
+                          categoryTag: '3D Menggu Art',
+                          description: 'Model 3D Menggu Art procedural.',
+                        });
+                      }
+                    }
+                  }}
+                  className="flex-1 sm:flex-none px-3.5 py-2.5 rounded-xl bg-[#FEF08A] hover:bg-amber-300 font-black text-xs text-slate-950 border border-amber-300 shadow-md cursor-pointer flex items-center justify-center gap-1.5 transition-all active:scale-95"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                  <span>Inspektor 3D</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

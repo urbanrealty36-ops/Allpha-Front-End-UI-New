@@ -37,10 +37,14 @@ import {
   Tv,
   Box,
   Eye,
-  Maximize2
+  Maximize2,
+  Download,
+  Loader2
 } from 'lucide-react';
 import Universe3DExperience from './Universe3DExperience';
 import Menggu3DUniverseGallery from './Menggu3DUniverseGallery';
+import Menggu3DViewerModal, { MengguViewerItem } from './Menggu3DViewerModal';
+import { generateMengguAssetGLB, downloadGLBBlob } from '@/lib/menggu3dEngine';
 
 export type UniverseFlowStep = 
   | 'SPLASH'          // Screen 1: Splash 3D Universe (Onboarding / Pendahuluan)
@@ -241,10 +245,27 @@ export default function Universe3DHubView({
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [loadingTipIndex, setLoadingTipIndex] = useState(0);
   const [hubToast, setHubToast] = useState<string | null>(null);
+  const [hubViewerModalItem, setHubViewerModalItem] = useState<MengguViewerItem | null>(null);
+  const [hubGeneratingAssetId, setHubGeneratingAssetId] = useState<string | null>(null);
 
   const showHubToast = (msg: string) => {
     setHubToast(msg);
     setTimeout(() => setHubToast(null), 3500);
+  };
+
+  const handleHubDownloadGLB = async (keyOrCat: string | number, name: string) => {
+    setHubGeneratingAssetId(String(keyOrCat));
+    showHubToast('Membuat & mengompresi aset 3D GLB Menggu...');
+    try {
+      const res = await generateMengguAssetGLB(keyOrCat, name);
+      downloadGLBBlob(res.blob, res.filename);
+      showHubToast(`Aset 3D "${res.filename}" (${res.sizeFormatted}) berhasil diunduh!`);
+    } catch (err) {
+      console.error(err);
+      showHubToast('Gagal membuat file GLB. Silakan coba kembali.');
+    } finally {
+      setHubGeneratingAssetId(null);
+    }
   };
 
   const PORTAL_TIPS = [
@@ -600,6 +621,238 @@ export default function Universe3DHubView({
                       <Play className="w-3.5 h-3.5 fill-slate-950" />
                       <span>Masuk ke Dunia 3D</span>
                     </button>
+                  </div>
+                </div>
+
+                {/* INTERACTIVE 3D MENGGU ART & GLB GENERATOR CAROUSEL */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-black text-white flex items-center gap-1.5">
+                        <Sparkles className="w-4 h-4 text-amber-400" />
+                        <span>Koleksi Aset 3D GLB Spatial Menggu Art</span>
+                      </h3>
+                      <p className="text-[11px] text-slate-400">
+                        Generate & unduh file 3D .GLB binary langsung ke perangkat
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setHubNavTab('Menggu3D')}
+                      className="text-xs font-black text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Lihat Semua 14 Kategori</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Horizontal Scrollable Cards */}
+                  <div className="flex gap-3 overflow-x-auto pb-3 pt-1 no-scrollbar">
+                    {[
+                      {
+                        id: 'district-spatial',
+                        name: 'Metropolis Spatial District',
+                        sub: 'Jalur Monorail & Blok Kota',
+                        tag: '3D District',
+                        icon: '🏙️',
+                        polys: '38.4K',
+                        target: 'Central Hub',
+                        badge: 'DISTRIK 3D',
+                        color: 'bg-[#FEF08A] text-slate-950',
+                        description: 'Blok kota metropolitan lengkap dengan rel monorail elevated melayang, bubble pods, dan pedestrian bridge.',
+                      },
+                      {
+                        id: 'landmark-citadel',
+                        name: 'Crystal Citadel & Spire',
+                        sub: 'Pusat Komputasi AI & Observatorium',
+                        tag: 'Landmark',
+                        icon: '🗼',
+                        polys: '42.1K',
+                        target: 'Business District',
+                        badge: 'LANDMARK 3D',
+                        color: 'bg-[#DDD6FE] text-purple-950',
+                        description: 'Pencakar langit futuristik dengan menara kristal pendaran kuantum, helix ramp, dan armada drone kurir.',
+                      },
+                      {
+                        id: 'plaza-fountain',
+                        name: 'AI Plaza & Fountain',
+                        sub: 'Air Mancur Lotus & Bot Concierge',
+                        tag: 'Plaza & Fountain',
+                        icon: '⛲',
+                        polys: '34.6K',
+                        target: 'AI Plaza',
+                        badge: 'PLAZA & TAMAN',
+                        color: 'bg-[#BAE6FD] text-sky-950',
+                        description: 'Alun-alun terbuka dengan air mancur lotus melayang, bangku pastel melengkung, dan robot AI concierge.',
+                      },
+                      {
+                        id: 'billboard-videotron',
+                        name: 'Curved Videotron Ads 3D',
+                        sub: 'Layar Hologram Kota & Siaran Live',
+                        tag: 'Billboard Ads',
+                        icon: '📺',
+                        polys: '18.2K',
+                        target: 'Creator Hub',
+                        badge: 'BILLBOARD 3D',
+                        color: 'bg-[#FECDD3] text-rose-950',
+                        description: 'Layar videotron melengkung raksasa dengan canvas dinamis animasi neon untuk siaran langsung dan iklan brand.',
+                      },
+                      {
+                        id: 'booth-tenant',
+                        name: 'Interactive Tenant Booth',
+                        sub: 'Stan Toko Modular & Showcase Gem',
+                        tag: 'Booth & Kios',
+                        icon: '🛍️',
+                        polys: '26.8K',
+                        target: '3D Marketplace Avenue',
+                        badge: 'BOOTH TOKO',
+                        color: 'bg-[#BBF7D0] text-emerald-950',
+                        description: 'Paviliun toko spatial dengan kanopi melengkung, neon sign brand, meja kasir, dan etalase kristal berputar.',
+                      },
+                      {
+                        id: 'avatar-menggu',
+                        name: 'Articulated Avatar 3D',
+                        sub: 'Karakter Humanoid & Companion',
+                        tag: 'Avatar 3D',
+                        icon: '🧑‍🚀',
+                        polys: '24.2K',
+                        target: 'Central Hub',
+                        badge: 'AVATAR RIGGED',
+                        color: 'bg-[#FEF08A] text-amber-950',
+                        description: 'Model avatar 3D bertulang (rigged) bergaya streetwear pastel clay dengan visor kaca dan jet backpack.',
+                      },
+                      {
+                        id: 'canonical-1',
+                        canonicalId: 1,
+                        name: 'Universe & Galaxy Stargate',
+                        sub: 'Planetarium & Cincin Orbit',
+                        tag: 'Kategori #1',
+                        icon: '🌌',
+                        polys: '22.0K',
+                        target: 'Central Hub',
+                        badge: 'KOSMIK',
+                        color: 'bg-[#DDD6FE] text-indigo-950',
+                        description: 'Planetarium kubah kosmik dengan dua cincin orbit miring berputar dan moonlet satelit.',
+                      },
+                      {
+                        id: 'canonical-5',
+                        canonicalId: 5,
+                        name: 'Live Experience Stage',
+                        sub: 'Studio Podcast & Presentasi',
+                        tag: 'Kategori #5',
+                        icon: '🎙️',
+                        polys: '28.5K',
+                        target: 'Live Stage Arena',
+                        badge: 'LIVE STAGE',
+                        color: 'bg-[#FECDD3] text-rose-950',
+                        description: 'Panggung live podcast melingkar dengan layar lengkung emissive, mikrofon studio, dan podium presentasi.',
+                      },
+                      {
+                        id: 'canonical-8',
+                        canonicalId: 8,
+                        name: 'Spatial Warp Portal Gate',
+                        sub: 'Gerbang Teleportasi & Beacon',
+                        tag: 'Kategori #8',
+                        icon: '🌀',
+                        polys: '19.4K',
+                        target: 'Central Hub',
+                        badge: 'WARP GATE',
+                        color: 'bg-[#BAE6FD] text-cyan-950',
+                        description: 'Gerbang portal warp torus dengan pilar suar pemandu laser dan pusaran energi kuantum.',
+                      },
+                      {
+                        id: 'canonical-13',
+                        canonicalId: 13,
+                        name: '90% Creator Film Trophy',
+                        sub: 'Trofi Emas & Kristal AI Credit',
+                        tag: 'Kategori #13',
+                        icon: '🏆',
+                        polys: '21.0K',
+                        target: 'Business District',
+                        badge: 'REWARD & TROFI',
+                        color: 'bg-[#FEF08A] text-amber-950',
+                        description: 'Piala emas kreator 90% royalti film Allpha dengan kristal dodecahedron AI Credit melayang bercahaya.',
+                      },
+                    ].map((item) => (
+                      <div
+                        key={item.id}
+                        className="w-56 shrink-0 rounded-2xl bg-slate-900 border-2 border-slate-800 p-3 flex flex-col justify-between space-y-2.5 shadow-xl hover:border-cyan-500/50 transition text-white"
+                      >
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-2xl">{item.icon}</span>
+                            <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase border border-slate-900 ${item.color}`}>
+                              {item.badge}
+                            </span>
+                          </div>
+
+                          <div>
+                            <h4 className="font-black text-xs text-white leading-tight truncate">
+                              {item.name}
+                            </h4>
+                            <p className="text-[10px] text-slate-400 line-clamp-1 mt-0.5">
+                              {item.sub}
+                            </p>
+                          </div>
+
+                          <div className="flex items-center gap-2 text-[10px] font-mono text-slate-400 pt-0.5">
+                            <span className="text-cyan-400 font-bold">GLTF/GLB</span>
+                            <span>•</span>
+                            <span>{item.polys}</span>
+                          </div>
+                        </div>
+
+                        {/* Card Actions */}
+                        <div className="pt-2 border-t border-slate-800 flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            disabled={hubGeneratingAssetId === item.id}
+                            onClick={() => {
+                              const target = item.canonicalId || item.id;
+                              handleHubDownloadGLB(target, `${item.id}_menggu.glb`);
+                            }}
+                            className="flex-1 py-1.5 px-2 rounded-xl bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-black text-[10px] border border-cyan-300 flex items-center justify-center gap-1 cursor-pointer transition active:scale-95 disabled:opacity-50"
+                            title="Unduh 3D (.GLB)"
+                          >
+                            {hubGeneratingAssetId === item.id ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <Download className="w-3 h-3 stroke-[2.5px]" />
+                            )}
+                            <span>{hubGeneratingAssetId === item.id ? 'Packing' : 'Unduh GLB'}</span>
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setHubViewerModalItem({
+                                id: item.id,
+                                name: item.name,
+                                categoryTag: item.tag,
+                                categoryNumber: item.canonicalId,
+                                canonicalId: item.canonicalId,
+                                description: item.description,
+                                targetDistrict: item.target,
+                              });
+                            }}
+                            className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center justify-center cursor-pointer transition"
+                            title="Inspeksi 3D Interaktif"
+                          >
+                            <Eye className="w-3.5 h-3.5 text-cyan-400" />
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => handleLaunchPortal(WORLDS_DATA[0], item.target)}
+                            className="p-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 border border-amber-300 flex items-center justify-center cursor-pointer transition"
+                            title={`Kunjungi ${item.target} di 3D`}
+                          >
+                            <Play className="w-3.5 h-3.5 fill-slate-950" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -1397,6 +1650,15 @@ export default function Universe3DHubView({
         <div className="fixed top-18 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-2xl bg-slate-900/95 text-white text-xs font-bold border-2 border-slate-700 shadow-xl backdrop-blur-md">
           <span>✨ {hubToast}</span>
         </div>
+      )}
+
+      {/* 3D Menggu Art Modal Inspector & GLB Exporter */}
+      {hubViewerModalItem && (
+        <Menggu3DViewerModal
+          item={hubViewerModalItem}
+          onClose={() => setHubViewerModalItem(null)}
+          onWarpToUniverse={(dName) => handleLaunchPortal(WORLDS_DATA[0], dName)}
+        />
       )}
     </div>
   );

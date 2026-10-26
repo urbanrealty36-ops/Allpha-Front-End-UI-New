@@ -9,8 +9,10 @@ export const MENGGU_PALETTE = {
   butterYellow: 0xfef08a,
   softMint: 0xbbf7d0,
   lavenderLilac: 0xddd6fe,
+  lilacLavender: 0xddd6fe,
   skyBlue: 0xbae6fd,
   peachCoral: 0xfecdd3,
+  coralPeach: 0xfecdd3,
   quartzCyan: 0x22d3ee,
   warmWhite: 0xf8fafc,
   charcoalSlate: 0x1e293b,
@@ -457,7 +459,10 @@ export function createMengguPlazaFountain(): THREE.Group {
 // ============================================================================
 // 4. FLOATING CURVED BILLBOARD ADS 3D & VIDEOTRON
 // ============================================================================
-export function createMengguBillboardAds(): THREE.Group {
+export function createMengguBillboardAds(
+  title = 'MENGGU 3D ART UNIVERSE',
+  subtitle = 'Live Videotron • 14 Canonical Themes • GLB Spatial'
+): THREE.Group {
   const group = new THREE.Group();
   group.name = 'MengguCurvedBillboardAds';
 
@@ -506,12 +511,12 @@ export function createMengguBillboardAds(): THREE.Group {
     // Headline
     ctx.fillStyle = '#ffffff';
     ctx.font = 'bold 64px system-ui, sans-serif';
-    ctx.fillText('MENGGU 3D ART UNIVERSE', 50, 200);
+    ctx.fillText(title, 50, 200);
 
     // Subtitle
     ctx.fillStyle = '#bae6fd';
     ctx.font = '36px system-ui, sans-serif';
-    ctx.fillText('Live Videotron • 14 Canonical Themes • GLB Spatial', 50, 260);
+    ctx.fillText(subtitle, 50, 260);
 
     // Metric Badges
     ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
@@ -574,14 +579,28 @@ export function createMengguBillboardAds(): THREE.Group {
 // ============================================================================
 // 5. MODULAR 3D TENANT BOOTH (Retail, Brand Exhibition, Digital Fashion)
 // ============================================================================
-export function createMengguTenantBooth(config?: {
-  name?: string;
-  category?: string;
-  themeColor?: number;
-}): THREE.Group {
-  const brandName = config?.name ?? 'MENGGU BOUTIQUE';
-  const categoryName = config?.category ?? 'Digital Fashion 3D';
-  const accentColor = config?.themeColor ?? MENGGU_PALETTE.peachCoral;
+export function createMengguTenantBooth(
+  configOrName?: {
+    name?: string;
+    category?: string;
+    themeColor?: number;
+  } | string,
+  maybeColor?: number,
+  maybeCategory?: string
+): THREE.Group {
+  let brandName = 'MENGGU BOUTIQUE';
+  let categoryName = 'Digital Fashion 3D';
+  let accentColor = MENGGU_PALETTE.peachCoral;
+
+  if (typeof configOrName === 'string') {
+    brandName = configOrName;
+    if (maybeColor !== undefined) accentColor = maybeColor;
+    if (maybeCategory !== undefined) categoryName = maybeCategory;
+  } else if (configOrName) {
+    brandName = configOrName.name ?? brandName;
+    categoryName = configOrName.category ?? categoryName;
+    accentColor = configOrName.themeColor ?? accentColor;
+  }
 
   const group = new THREE.Group();
   group.name = `MengguBooth_${brandName.replace(/\s+/g, '_')}`;
@@ -819,122 +838,280 @@ export function createCanonicalModelByCategory(categoryId: number): THREE.Group 
   group.name = `CanonicalThemeCategory_${categoryId}`;
 
   switch (categoryId) {
-    case 1: // Fashion & Wearables
+    case 1: // 1. Universe & Galaxy (Cosmic & Orbital Elements)
       {
-        const podium = new THREE.Mesh(
-          new THREE.CylinderGeometry(2.5, 2.7, 0.4, 24),
-          createMengguMaterial(MENGGU_PALETTE.warmWhite)
+        // Central Celestial Planet (Soft Lavender Quartz)
+        const planet = new THREE.Mesh(
+          new THREE.SphereGeometry(1.6, 24, 24),
+          createMengguQuartzMaterial(MENGGU_PALETTE.lavenderLilac, 0.9)
         );
-        group.add(podium);
-        const jacket = new THREE.Mesh(
-          new THREE.CapsuleGeometry(1.1, 1.8, 16, 20),
-          createMengguMaterial(MENGGU_PALETTE.butterYellow, 0.3)
-        );
-        jacket.position.y = 2.2;
-        group.add(jacket);
-        // Collar & lapels
-        const collar = new THREE.Mesh(
-          new THREE.TorusGeometry(1.0, 0.25, 12, 24, Math.PI),
-          createMengguMaterial(MENGGU_PALETTE.lavenderLilac)
-        );
-        collar.position.set(0, 3.2, 0.2);
-        group.add(collar);
-      }
-      break;
+        planet.position.y = 2.6;
+        group.add(planet);
 
-    case 2: // AI Pets & Companions
-      {
-        // Robotic Shiba / Kitty Pet
-        const body = new THREE.Mesh(
-          new THREE.CapsuleGeometry(0.9, 1.4, 16, 16),
-          createMengguMaterial(MENGGU_PALETTE.butterYellow)
+        // Primary Orbital Ring (Butter Yellow)
+        const ring1 = new THREE.Mesh(
+          new THREE.TorusGeometry(2.7, 0.12, 12, 48),
+          createMengguMaterial(MENGGU_PALETTE.butterYellow, 0.25, 0.1)
         );
-        body.rotation.z = Math.PI / 2;
-        body.position.y = 1.3;
-        group.add(body);
-        const head = new THREE.Mesh(
-          new THREE.SphereGeometry(0.9, 16, 16),
-          createMengguMaterial(MENGGU_PALETTE.warmWhite)
-        );
-        head.position.set(1.1, 2.2, 0);
-        group.add(head);
-        // Pointy ears
-        const earL = new THREE.Mesh(
-          new THREE.ConeGeometry(0.35, 0.7, 12),
-          createMengguMaterial(MENGGU_PALETTE.peachCoral)
-        );
-        earL.position.set(1.1, 3.1, -0.45);
-        const earR = earL.clone();
-        earR.position.z = 0.45;
-        group.add(earL, earR);
-        // Visor eyes
-        const eyeVisor = new THREE.Mesh(
-          new THREE.BoxGeometry(0.2, 0.3, 0.9),
+        ring1.position.y = 2.6;
+        ring1.rotation.x = Math.PI / 3;
+        group.add(ring1);
+
+        // Secondary Orbital Ring (Quartz Cyan)
+        const ring2 = new THREE.Mesh(
+          new THREE.TorusGeometry(3.3, 0.08, 12, 48),
           new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.quartzCyan })
         );
-        eyeVisor.position.set(1.9, 2.2, 0);
-        group.add(eyeVisor);
+        ring2.position.y = 2.6;
+        ring2.rotation.y = Math.PI / 4;
+        group.add(ring2);
+
+        // Orbiting Moonlet
+        const moon = new THREE.Mesh(
+          new THREE.SphereGeometry(0.35, 16, 16),
+          createMengguMaterial(MENGGU_PALETTE.peachCoral, 0.3)
+        );
+        moon.position.set(2.4, 3.2, 1.2);
+        group.add(moon);
+
+        // Cosmic Base Pedestal
+        const base = new THREE.Mesh(
+          new THREE.CylinderGeometry(2.2, 2.6, 0.5, 24),
+          createMengguMaterial(MENGGU_PALETTE.charcoalSlate, 0.4, 0.1)
+        );
+        base.position.y = 0.25;
+        group.add(base);
       }
       break;
 
-    case 3: // District & Architecture
+    case 2: // 2. World & Environment (Terrain, Atmosphere & Sky)
+      {
+        // Floating Clay Island with Terraced Contour Base
+        const island = new THREE.Mesh(
+          new THREE.CylinderGeometry(3.2, 1.8, 1.0, 24),
+          createMengguMaterial(MENGGU_PALETTE.softMint, 0.5, 0.05)
+        );
+        island.position.y = 0.8;
+        group.add(island);
+
+        // Biophilic Crystal Tree Trunk
+        const trunk = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.3, 0.45, 2.2, 12),
+          createMengguMaterial(0x78716c, 0.6)
+        );
+        trunk.position.set(-0.6, 2.1, -0.4);
+        group.add(trunk);
+
+        // Tree Foliage Canopies (Puffy Menggu Pastel Spheres)
+        const canopy1 = new THREE.Mesh(
+          new THREE.SphereGeometry(1.4, 16, 16),
+          createMengguMaterial(MENGGU_PALETTE.softMint, 0.35)
+        );
+        canopy1.position.set(-0.6, 3.5, -0.4);
+        const canopy2 = new THREE.Mesh(
+          new THREE.SphereGeometry(0.9, 14, 14),
+          createMengguMaterial(MENGGU_PALETTE.peachCoral, 0.35)
+        );
+        canopy2.position.set(0.2, 3.9, -0.2);
+        group.add(canopy1, canopy2);
+
+        // Floating Volumetric Cloud Puff
+        const cloud = new THREE.Mesh(
+          new THREE.CapsuleGeometry(0.5, 1.4, 12, 16),
+          createMengguMaterial(MENGGU_PALETTE.warmWhite, 0.2, 0.0)
+        );
+        cloud.rotation.z = Math.PI / 2;
+        cloud.position.set(1.2, 3.2, 1.0);
+        group.add(cloud);
+      }
+      break;
+
+    case 3: // 3. District & Landmark (City Blocks, Towers & Plazas)
       return createMengguCitadelTower();
 
-    case 4: // Vehicles & Flycraft
+    case 4: // 4. Booth & Tenant (Shops, Kiosks & Pavilions)
+      return createMengguTenantBooth({ name: 'ALLPHA BOOTH', category: 'Official 3D Store' });
+
+    case 5: // 5. Live Experience Stage (Stages, Studios & Arenas)
       {
-        // Hover Speeder Pod
-        const speederBody = new THREE.Mesh(
-          new THREE.CapsuleGeometry(1.2, 3.6, 16, 24),
-          createMengguMaterial(MENGGU_PALETTE.skyBlue, 0.25, 0.1)
+        // Stage Circular Podium
+        const stage = new THREE.Mesh(
+          new THREE.CylinderGeometry(4.2, 4.5, 0.6, 32),
+          createMengguMaterial(MENGGU_PALETTE.charcoalSlate, 0.3, 0.1)
         );
-        speederBody.rotation.z = Math.PI / 2;
-        speederBody.position.y = 1.6;
-        group.add(speederBody);
+        stage.position.y = 0.3;
+        group.add(stage);
 
-        const cockpit = new THREE.Mesh(
-          new THREE.SphereGeometry(1.1, 16, 16),
-          createMengguQuartzMaterial(MENGGU_PALETTE.quartzCyan, 0.8)
+        // Neon Glowing Stage Edge Ring
+        const stageGlow = new THREE.Mesh(
+          new THREE.TorusGeometry(4.3, 0.08, 8, 32),
+          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.neonRose })
         );
-        cockpit.scale.set(1.4, 0.8, 0.8);
-        cockpit.position.set(0.4, 2.2, 0);
-        group.add(cockpit);
+        stageGlow.rotation.x = Math.PI / 2;
+        stageGlow.position.y = 0.61;
+        group.add(stageGlow);
 
-        // Swept Wings
-        const wingL = new THREE.Mesh(
-          new THREE.BoxGeometry(1.8, 0.15, 2.4),
-          createMengguMaterial(MENGGU_PALETTE.butterYellow)
+        // Curved Backdrop Presentation Screen Frame
+        const screenArc = new THREE.Mesh(
+          new THREE.CylinderGeometry(3.6, 3.6, 2.6, 24, 1, true, -Math.PI / 3, (Math.PI * 2) / 3),
+          createMengguMaterial(MENGGU_PALETTE.lavenderLilac, 0.35)
         );
-        wingL.position.set(-0.6, 1.5, -2.0);
-        const wingR = wingL.clone();
-        wingR.position.z = 2.0;
-        group.add(wingL, wingR);
+        screenArc.position.set(0, 2.0, -1.8);
+        group.add(screenArc);
+
+        // Emissive Screen Surface
+        const innerScreen = new THREE.Mesh(
+          new THREE.CylinderGeometry(3.55, 3.55, 2.3, 24, 1, true, -Math.PI / 3 + 0.04, (Math.PI * 2) / 3 - 0.08),
+          new THREE.MeshBasicMaterial({ color: 0x0284c7 })
+        );
+        innerScreen.position.set(0, 2.0, -1.8);
+        group.add(innerScreen);
+
+        // Speaker Podium
+        const podium = new THREE.Mesh(
+          new THREE.BoxGeometry(1.2, 1.8, 0.8),
+          createMengguMaterial(MENGGU_PALETTE.warmWhite, 0.3)
+        );
+        podium.position.set(0, 1.3, 0.8);
+        group.add(podium);
+
+        // Studio Microphone
+        const micStem = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.04, 0.04, 0.9, 8),
+          createMengguMaterial(0x94a3b8)
+        );
+        micStem.position.set(0.3, 2.4, 0.8);
+        const micHead = new THREE.Mesh(
+          new THREE.SphereGeometry(0.12, 12, 12),
+          createMengguMaterial(MENGGU_PALETTE.goldAccent)
+        );
+        micHead.position.set(0.3, 2.85, 0.8);
+        group.add(micStem, micHead);
       }
       break;
 
-    case 5: // Cybernetic Gear & Exosuits
+    case 6: // 6. AI Character & Animation (Rigged Agents & Skeletal Bots)
       {
-        // Cybernetic Power Gauntlet
-        const foreArm = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.9, 0.7, 2.6, 16),
-          createMengguMaterial(MENGGU_PALETTE.charcoalSlate, 0.3, 0.2)
+        // Friendly Menggu AI Concierge Bot
+        const botBody = new THREE.Mesh(
+          new THREE.CapsuleGeometry(0.7, 1.2, 16, 16),
+          createMengguMaterial(MENGGU_PALETTE.warmWhite, 0.3, 0.05)
         );
-        foreArm.position.y = 1.6;
-        group.add(foreArm);
+        botBody.position.y = 1.6;
+        group.add(botBody);
 
-        // Power Core Rings
-        for (let i = 0; i < 3; i++) {
-          const ring = new THREE.Mesh(
-            new THREE.TorusGeometry(0.95, 0.12, 8, 20),
-            new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.quartzCyan })
+        // Cyan Glowing Visor
+        const visor = new THREE.Mesh(
+          new THREE.BoxGeometry(0.9, 0.45, 0.3),
+          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.deepNavy })
+        );
+        visor.position.set(0, 2.0, 0.6);
+        group.add(visor);
+
+        // Glowing Eyes
+        const eyeL = new THREE.Mesh(
+          new THREE.SphereGeometry(0.09, 8, 8),
+          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.quartzCyan })
+        );
+        eyeL.position.set(-0.22, 2.0, 0.76);
+        const eyeR = eyeL.clone();
+        eyeR.position.x = 0.22;
+        group.add(eyeL, eyeR);
+
+        // Halo Ring Antenna
+        const halo = new THREE.Mesh(
+          new THREE.TorusGeometry(0.65, 0.08, 8, 24),
+          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.butterYellow })
+        );
+        halo.rotation.x = Math.PI / 2;
+        halo.position.y = 2.75;
+        group.add(halo);
+
+        // Waving Hand
+        const armL = new THREE.Mesh(
+          new THREE.CapsuleGeometry(0.18, 0.6, 8, 8),
+          createMengguMaterial(MENGGU_PALETTE.butterYellow)
+        );
+        armL.position.set(-0.9, 1.8, 0);
+        armL.rotation.z = 0.8;
+        group.add(armL);
+      }
+      break;
+
+    case 7: // 7. Human Avatar & Uniform (Bases, Streetwear & Outfits)
+      return createMengguAvatar({ suitColor: MENGGU_PALETTE.butterYellow, visorColor: MENGGU_PALETTE.quartzCyan });
+
+    case 8: // 8. Portal & Navigation (Warp Gates & Beacons)
+      {
+        // Stepping Base Platform
+        const pad = new THREE.Mesh(
+          new THREE.CylinderGeometry(3.0, 3.4, 0.4, 24),
+          createMengguMaterial(MENGGU_PALETTE.charcoalSlate, 0.3)
+        );
+        pad.position.y = 0.2;
+        group.add(pad);
+
+        // Grand Torus Warp Portal Ring (Vertical Gate)
+        const portalRing = new THREE.Mesh(
+          new THREE.TorusGeometry(2.6, 0.35, 16, 48),
+          createMengguMaterial(MENGGU_PALETTE.lavenderLilac, 0.3, 0.1)
+        );
+        portalRing.position.set(0, 3.2, 0);
+        group.add(portalRing);
+
+        // Swirling Energy Vortex Disc
+        const vortex = new THREE.Mesh(
+          new THREE.CircleGeometry(2.3, 32),
+          createMengguQuartzMaterial(MENGGU_PALETTE.quartzCyan, 0.75)
+        );
+        vortex.position.set(0, 3.2, 0);
+        group.add(vortex);
+
+        // Guidance Beacon Pylons (Left & Right)
+        const pylonGeo = new THREE.CylinderGeometry(0.2, 0.25, 3.8, 12);
+        const pylonMat = createMengguMaterial(MENGGU_PALETTE.butterYellow, 0.3);
+        const p1 = new THREE.Mesh(pylonGeo, pylonMat);
+        p1.position.set(-2.8, 1.9, 0);
+        const p2 = p1.clone();
+        p2.position.x = 2.8;
+        group.add(p1, p2);
+      }
+      break;
+
+    case 9: // 9. Spatial FX & Visual Effects (Particles, Auras & Energy)
+      {
+        // Central Möbius Energy Knot
+        const torusKnot = new THREE.Mesh(
+          new THREE.TorusKnotGeometry(1.3, 0.38, 64, 16, 2, 3),
+          createMengguQuartzMaterial(MENGGU_PALETTE.peachCoral, 0.85)
+        );
+        torusKnot.position.y = 2.6;
+        group.add(torusKnot);
+
+        // Orbiting Particle Energy Ring
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(2.5, 0.08, 8, 32),
+          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.quartzCyan })
+        );
+        ring.position.y = 2.6;
+        ring.rotation.x = Math.PI / 3;
+        group.add(ring);
+
+        // Sparkle Particles around knot
+        for (let i = 0; i < 14; i++) {
+          const sp = new THREE.Mesh(
+            new THREE.SphereGeometry(0.14, 8, 8),
+            new THREE.MeshBasicMaterial({ color: i % 2 === 0 ? MENGGU_PALETTE.butterYellow : MENGGU_PALETTE.quartzCyan })
           );
-          ring.rotation.x = Math.PI / 2;
-          ring.position.y = 0.8 + i * 0.7;
-          group.add(ring);
+          const rad = 1.8 + Math.random() * 1.5;
+          const ang = (i / 14) * Math.PI * 2;
+          sp.position.set(Math.cos(ang) * rad, 1.2 + Math.random() * 2.8, Math.sin(ang) * rad);
+          group.add(sp);
         }
       }
       break;
 
-    case 6: // Furniture & Interior
+    case 10: // 10. Interior & Furniture (Chairs, Desks & Props)
       {
         // Futuristic Bubble Egg Lounge Chair
         const pod = new THREE.Mesh(
@@ -942,208 +1119,198 @@ export function createCanonicalModelByCategory(categoryId: number): THREE.Group 
           createMengguMaterial(MENGGU_PALETTE.lavenderLilac, 0.3)
         );
         pod.rotation.x = Math.PI / 4;
-        pod.position.y = 1.8;
+        pod.position.set(-1.2, 1.8, 0);
         group.add(pod);
 
         const cushion = new THREE.Mesh(
-          new THREE.SphereGeometry(1.3, 16, 16),
+          new THREE.SphereGeometry(1.2, 16, 16),
           createMengguMaterial(MENGGU_PALETTE.butterYellow, 0.4)
         );
-        cushion.position.set(0, 1.4, 0.4);
+        cushion.position.set(-1.2, 1.4, 0.4);
         group.add(cushion);
 
-        const leg = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.2, 0.9, 1.2, 16),
-          createMengguMaterial(0xffffff, 0.2, 0.3)
+        // Floating Studio Hologram Desk
+        const desk = new THREE.Mesh(
+          new THREE.BoxGeometry(2.8, 0.15, 1.4),
+          createMengguMaterial(MENGGU_PALETTE.warmWhite, 0.25, 0.1)
         );
-        leg.position.y = 0.6;
-        group.add(leg);
+        desk.position.set(1.4, 1.2, 0);
+        group.add(desk);
+
+        // Ambient Orb Lamp
+        const lamp = new THREE.Mesh(
+          new THREE.SphereGeometry(0.4, 16, 16),
+          createMengguQuartzMaterial(MENGGU_PALETTE.peachCoral, 0.9)
+        );
+        lamp.position.set(2.2, 1.7, 0.3);
+        group.add(lamp);
       }
       break;
 
-    case 7: // Weapons & Energy Props
+    case 11: // 11. UI Props & Holograms (Panels, HUD & Videotrons)
+      return createMengguBillboardAds();
+
+    case 12: // 12. Interactive Objects (Switches, Triggers & Pointers)
       {
-        // Holographic Beam Wand / Scepter
-        const staff = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.18, 0.25, 4.2, 16),
-          createMengguMaterial(MENGGU_PALETTE.warmWhite, 0.3, 0.1)
-        );
-        staff.position.y = 2.1;
-        group.add(staff);
-
-        const orb = new THREE.Mesh(
-          new THREE.SphereGeometry(0.7, 16, 16),
-          createMengguQuartzMaterial(MENGGU_PALETTE.quartzCyan, 0.8)
-        );
-        orb.position.y = 4.4;
-        group.add(orb);
-
-        const ring = new THREE.Mesh(
-          new THREE.TorusGeometry(1.1, 0.1, 8, 24),
-          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.goldAccent })
-        );
-        ring.position.y = 4.4;
-        group.add(ring);
-      }
-      break;
-
-    case 8: // Art & Hologram Statues
-      {
-        // Abstract Möbius Holographic Sculpture
-        const torusKnot = new THREE.Mesh(
-          new THREE.TorusKnotGeometry(1.2, 0.35, 64, 16, 2, 3),
-          createMengguQuartzMaterial(MENGGU_PALETTE.peachCoral, 0.85)
-        );
-        torusKnot.position.y = 2.5;
-        group.add(torusKnot);
-
+        // Interactive Control Terminal Pedestal
         const pedestal = new THREE.Mesh(
-          new THREE.CylinderGeometry(1.5, 1.8, 0.8, 16),
+          new THREE.CylinderGeometry(1.0, 1.3, 1.8, 8),
           createMengguMaterial(MENGGU_PALETTE.charcoalSlate, 0.3, 0.1)
         );
-        pedestal.position.y = 0.4;
+        pedestal.position.y = 0.9;
         group.add(pedestal);
+
+        // Floating Hologram Touch Orb
+        const touchOrb = new THREE.Mesh(
+          new THREE.SphereGeometry(0.65, 20, 20),
+          createMengguQuartzMaterial(MENGGU_PALETTE.quartzCyan, 0.85)
+        );
+        touchOrb.position.y = 2.4;
+        group.add(touchOrb);
+
+        // Halo Switch Ring
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(0.9, 0.08, 8, 24),
+          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.butterYellow })
+        );
+        ring.position.y = 2.4;
+        ring.rotation.x = Math.PI / 2;
+        group.add(ring);
+
+        // Laser Pointer Beam Emitter
+        const beam = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.04, 0.04, 2.4, 8),
+          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.neonRose })
+        );
+        beam.position.set(0, 3.8, 0);
+        group.add(beam);
       }
       break;
 
-    case 9: // Electronics & Gadgets
+    case 13: // 13. Collectibles & Rewards (Trophies, Crystals & Badges)
       {
-        // Holo Communicator Deck
-        const deck = new THREE.Mesh(
-          new THREE.BoxGeometry(2.4, 0.3, 1.6),
-          createMengguMaterial(MENGGU_PALETTE.charcoalSlate, 0.3, 0.1)
+        // Stepped Trophy Base
+        const base1 = new THREE.Mesh(
+          new THREE.BoxGeometry(2.4, 0.4, 2.4),
+          createMengguMaterial(MENGGU_PALETTE.charcoalSlate, 0.4)
         );
-        deck.position.y = 0.6;
-        group.add(deck);
+        base1.position.y = 0.2;
+        const base2 = new THREE.Mesh(
+          new THREE.BoxGeometry(1.8, 0.4, 1.8),
+          createMengguMaterial(MENGGU_PALETTE.charcoalSlate, 0.3)
+        );
+        base2.position.y = 0.6;
+        group.add(base1, base2);
 
-        const holoCone = new THREE.Mesh(
-          new THREE.ConeGeometry(1.4, 2.2, 24, 1, true),
-          createMengguQuartzMaterial(MENGGU_PALETTE.quartzCyan, 0.5)
+        // Golden Trophy Stem & Laurel Wings
+        const stem = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.3, 0.5, 1.4, 16),
+          createMengguMaterial(MENGGU_PALETTE.goldAccent, 0.2, 0.6)
         );
-        holoCone.position.y = 1.9;
-        holoCone.rotation.x = Math.PI;
-        group.add(holoCone);
+        stem.position.y = 1.4;
+        group.add(stem);
+
+        // Golden Wing Arches
+        const wingL = new THREE.Mesh(
+          new THREE.TorusGeometry(1.0, 0.15, 12, 24, Math.PI),
+          createMengguMaterial(MENGGU_PALETTE.goldAccent, 0.2, 0.5)
+        );
+        wingL.position.set(-0.7, 2.4, 0);
+        wingL.rotation.z = -Math.PI / 6;
+        const wingR = wingL.clone();
+        wingR.position.x = 0.7;
+        wingR.rotation.z = Math.PI / 6;
+        group.add(wingL, wingR);
+
+        // Floating Quantum AI Credit Crystal (Radially glowing Dodecahedron)
+        const crystal = new THREE.Mesh(
+          new THREE.DodecahedronGeometry(0.85),
+          createMengguQuartzMaterial(MENGGU_PALETTE.quartzCyan, 0.9)
+        );
+        crystal.position.y = 2.6;
+        group.add(crystal);
       }
       break;
 
-    case 10: // Nature & Flora
-      {
-        // Biophilic Crystal Tree with Soft Foliage
-        const trunk = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.35, 0.6, 2.8, 12),
-          createMengguMaterial(0x78716c)
-        );
-        trunk.position.y = 1.4;
-        group.add(trunk);
-
-        const mainBall = new THREE.Mesh(
-          new THREE.SphereGeometry(1.7, 16, 16),
-          createMengguMaterial(MENGGU_PALETTE.softMint, 0.35)
-        );
-        mainBall.position.y = 3.6;
-        const subBall = new THREE.Mesh(
-          new THREE.SphereGeometry(1.1, 14, 14),
-          createMengguMaterial(MENGGU_PALETTE.peachCoral, 0.35)
-        );
-        subBall.position.set(0.8, 4.3, 0.4);
-        group.add(mainBall, subBall);
-      }
-      break;
-
-    case 11: // Food & Culinary 3D
-      {
-        // Cyber Bento Box & Boba Tea
-        const cup = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.65, 0.5, 1.8, 20),
-          createMengguQuartzMaterial(MENGGU_PALETTE.butterYellow, 0.7)
-        );
-        cup.position.set(0, 1.1, 0);
-        group.add(cup);
-
-        const straw = new THREE.Mesh(
-          new THREE.CylinderGeometry(0.08, 0.08, 2.4, 12),
-          createMengguMaterial(MENGGU_PALETTE.neonRose)
-        );
-        straw.position.set(0.15, 1.8, 0);
-        straw.rotation.z = -0.2;
-        group.add(straw);
-      }
-      break;
-
-    case 12: // Music & Sound Instruments
-      {
-        // Synth Keytar & Holographic Waves
-        const keytar = new THREE.Mesh(
-          new THREE.BoxGeometry(3.2, 0.4, 0.9),
-          createMengguMaterial(MENGGU_PALETTE.lavenderLilac, 0.3)
-        );
-        keytar.position.set(0, 1.8, 0);
-        keytar.rotation.z = -0.3;
-        group.add(keytar);
-
-        const neck = new THREE.Mesh(
-          new THREE.BoxGeometry(1.6, 0.25, 0.4),
-          createMengguMaterial(MENGGU_PALETTE.charcoalSlate)
-        );
-        neck.position.set(2.2, 2.5, 0);
-        neck.rotation.z = -0.3;
-        group.add(neck);
-      }
-      break;
-
-    case 13: // Sports & Recreation
-      {
-        // Anti-Gravity Hoverboard
-        const deck = new THREE.Mesh(
-          new THREE.BoxGeometry(3.6, 0.2, 1.1),
-          createMengguMaterial(MENGGU_PALETTE.skyBlue, 0.25, 0.08)
-        );
-        deck.position.y = 1.0;
-        group.add(deck);
-
-        const magL = new THREE.Mesh(
-          new THREE.TorusGeometry(0.45, 0.1, 8, 20),
-          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.goldAccent })
-        );
-        magL.rotation.x = Math.PI / 2;
-        magL.position.set(-1.1, 0.7, 0);
-        const magR = magL.clone();
-        magR.position.x = 1.1;
-        group.add(magL, magR);
-      }
-      break;
-
-    case 14: // Space & Celestial Relics
+    case 14: // 14. Materials, Lighting & Theme FX (PBR Shaders & Atmospheres)
     default:
       {
-        // Floating Chrono Artifact with Orbiting Rings
-        const core = new THREE.Mesh(
-          new THREE.DodecahedronGeometry(1.2),
-          createMengguQuartzMaterial(MENGGU_PALETTE.goldAccent, 0.9)
+        // Central Multi-Faceted Shader Preview Sphere
+        const sphere = new THREE.Mesh(
+          new THREE.IcosahedronGeometry(1.6, 2),
+          createMengguQuartzMaterial(MENGGU_PALETTE.quartzCyan, 0.85)
         );
-        core.position.y = 2.4;
-        group.add(core);
+        sphere.position.y = 2.4;
+        group.add(sphere);
 
-        const ring1 = new THREE.Mesh(
-          new THREE.TorusGeometry(2.0, 0.1, 8, 32),
-          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.quartzCyan })
+        // Three Concentric Palette Preview Rings (Butter, Mint, Lavender)
+        const r1 = new THREE.Mesh(
+          new THREE.TorusGeometry(2.3, 0.1, 8, 32),
+          createMengguMaterial(MENGGU_PALETTE.butterYellow)
         );
-        ring1.position.y = 2.4;
-        ring1.rotation.x = Math.PI / 3;
+        r1.position.y = 2.4;
+        r1.rotation.x = Math.PI / 3;
 
-        const ring2 = new THREE.Mesh(
-          new THREE.TorusGeometry(2.4, 0.08, 8, 32),
-          new THREE.MeshBasicMaterial({ color: MENGGU_PALETTE.lavenderLilac })
+        const r2 = new THREE.Mesh(
+          new THREE.TorusGeometry(2.7, 0.09, 8, 32),
+          createMengguMaterial(MENGGU_PALETTE.softMint)
         );
-        ring2.position.y = 2.4;
-        ring2.rotation.y = Math.PI / 4;
+        r2.position.y = 2.4;
+        r2.rotation.y = Math.PI / 4;
 
-        group.add(ring1, ring2);
+        const r3 = new THREE.Mesh(
+          new THREE.TorusGeometry(3.1, 0.08, 8, 32),
+          createMengguMaterial(MENGGU_PALETTE.lavenderLilac)
+        );
+        r3.position.y = 2.4;
+        r3.rotation.z = Math.PI / 4;
+
+        group.add(r1, r2, r3);
       }
       break;
   }
 
   return group;
+}
+
+/**
+ * Universal resolver to instantiate any 3D Menggu Art model by ID, category, or builder type
+ */
+export function getMengguModelByType(keyOrCategory: string | number): THREE.Group {
+  if (typeof keyOrCategory === 'number') {
+    return createCanonicalModelByCategory(keyOrCategory);
+  }
+
+  const key = keyOrCategory.toLowerCase();
+  if (key.includes('district') || key === 'spatial') {
+    return createMengguDistrict();
+  }
+  if (key.includes('citadel') || key.includes('landmark') || key.includes('spire') || key.includes('tower')) {
+    return createMengguCitadelTower();
+  }
+  if (key.includes('plaza') || key.includes('fountain')) {
+    return createMengguPlazaFountain();
+  }
+  if (key.includes('billboard') || key.includes('videotron') || key.includes('ads')) {
+    return createMengguBillboardAds();
+  }
+  if (key.includes('booth') || key.includes('tenant') || key.includes('kiosk')) {
+    return createMengguTenantBooth({ name: 'MENGGU SPATIAL', category: 'Official Booth 3D' });
+  }
+  if (key.includes('avatar') || key.includes('companion') || key.includes('human')) {
+    return createMengguAvatar();
+  }
+
+  // Check if starts with canonical-X
+  const numMatch = key.match(/\d+/);
+  if (numMatch) {
+    const parsedId = parseInt(numMatch[0], 10);
+    if (parsedId >= 1 && parsedId <= 14) {
+      return createCanonicalModelByCategory(parsedId);
+    }
+  }
+
+  return createCanonicalModelByCategory(1);
 }
 
 // ============================================================================
@@ -1189,4 +1356,42 @@ export function downloadGLBBlob(blob: Blob, filename = 'menggu_asset.glb') {
   link.click();
   document.body.removeChild(link);
   setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+export interface GeneratedGLBResult {
+  blob: Blob;
+  url: string;
+  filename: string;
+  sizeBytes: number;
+  sizeFormatted: string;
+}
+
+/**
+ * High-level one-step 3D GLB Asset Generator from 3D Menggu Art
+ */
+export async function generateMengguAssetGLB(
+  keyOrCategory: string | number,
+  customFilename?: string
+): Promise<GeneratedGLBResult> {
+  const model = getMengguModelByType(keyOrCategory);
+  const name =
+    customFilename ||
+    (typeof keyOrCategory === 'number'
+      ? `canonical_category_${keyOrCategory}_menggu.glb`
+      : `${keyOrCategory}_menggu.glb`);
+  const blob = await exportObjectToGLB(model, name);
+  const url = URL.createObjectURL(blob);
+  const sizeBytes = blob.size;
+  const sizeFormatted =
+    sizeBytes > 1024 * 1024
+      ? `${(sizeBytes / (1024 * 1024)).toFixed(2)} MB`
+      : `${(sizeBytes / 1024).toFixed(1)} KB`;
+
+  return {
+    blob,
+    url,
+    filename: name,
+    sizeBytes,
+    sizeFormatted,
+  };
 }
