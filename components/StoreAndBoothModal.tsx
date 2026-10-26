@@ -212,8 +212,8 @@ export default function StoreAndBoothModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200 font-sans">
-      <div className="w-full max-w-2xl bg-white rounded-3xl border-2 border-slate-900 shadow-[6px_6px_0px_#0f172a] overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/75 backdrop-blur-sm animate-in fade-in duration-200 font-sans">
+      <div className="w-full max-w-2xl bg-white rounded-3xl border-2 border-slate-900 shadow-[6px_6px_0px_#0f172a] overflow-hidden flex flex-col h-[92dvh] sm:h-auto sm:max-h-[88vh]">
         
         {/* Floating Toast Notification */}
         {toastMsg && (
@@ -224,21 +224,21 @@ export default function StoreAndBoothModal({
         )}
 
         {/* Modal Header (Neo-Brutalist Soft Pastel Menggu) */}
-        <div className="p-4 sm:p-5 bg-[#FEF08A] border-b-2 border-slate-900 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] flex items-center justify-center text-slate-900">
-              <Store className="w-6 h-6 stroke-[2.5px]" />
+        <div className="shrink-0 p-3.5 sm:p-5 bg-[#FEF08A] border-b-2 border-slate-900 flex items-center justify-between">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
+            <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-white border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] flex items-center justify-center text-slate-900 shrink-0">
+              <Store className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.5px]" />
             </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-black text-slate-950 tracking-tight">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h2 className="text-sm sm:text-lg font-black text-slate-950 tracking-tight leading-tight">
                   Buat Toko & Booth 3D Spatial
                 </h2>
-                <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-200 border border-slate-900 text-emerald-950 uppercase shadow-2xs">
+                <span className="text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-200 border border-slate-900 text-emerald-950 uppercase shadow-2xs">
                   {config.isBoothLiveIn3D ? '🟢 BOOTH LIVE' : '⚪ DRAFT'}
                 </span>
               </div>
-              <p className="text-xs font-semibold text-slate-800">
+              <p className="text-[11px] sm:text-xs font-semibold text-slate-800 line-clamp-1 sm:line-clamp-none mt-0.5">
                 Atur nama brand, etalase produk digital/fisik, dan booth 3D Anda di Allpha Districts
               </p>
             </div>
@@ -246,14 +246,14 @@ export default function StoreAndBoothModal({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-xl bg-white hover:bg-slate-100 border-2 border-slate-900 flex items-center justify-center text-slate-900 cursor-pointer transition shadow-[1.5px_1.5px_0px_#0f172a]"
+            className="w-8 h-8 rounded-xl bg-white hover:bg-slate-100 border-2 border-slate-900 flex items-center justify-center text-slate-900 cursor-pointer transition shadow-[1.5px_1.5px_0px_#0f172a] shrink-0 ml-2"
           >
             <X className="w-4 h-4 stroke-[2.5px]" />
           </button>
         </div>
 
         {/* Navigation Tabs (Neo-Brutal Pill Tabs) */}
-        <div className="flex border-b-2 border-slate-900 bg-slate-50 px-3 sm:px-4 pt-2 gap-1.5 overflow-x-auto no-scrollbar">
+        <div className="shrink-0 z-10 flex border-b-2 border-slate-900 bg-slate-100 px-3 sm:px-4 py-2 gap-1.5 overflow-x-auto no-scrollbar">
           {[
             { id: 'BRAND', label: '🏬 Brand & Toko' },
             { id: 'BOOTH_3D', label: '🎪 Booth 3D Spatial' },
@@ -265,10 +265,10 @@ export default function StoreAndBoothModal({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3.5 py-2 text-xs font-black rounded-t-xl border-t-2 border-x-2 transition-all cursor-pointer whitespace-nowrap ${
+                className={`px-3 py-1.5 sm:px-3.5 sm:py-2 text-[11px] sm:text-xs font-black rounded-xl border-2 border-slate-900 transition-all cursor-pointer whitespace-nowrap active:translate-x-0.5 active:translate-y-0.5 ${
                   isActive
-                    ? 'bg-white border-slate-900 text-slate-950 -mb-[2px] shadow-[2px_-2px_0px_#0f172a]'
-                    : 'bg-slate-100 border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                    ? 'bg-white text-slate-950 shadow-[2px_2px_0px_#0f172a]'
+                    : 'bg-slate-200 hover:bg-slate-300 text-slate-700 shadow-none'
                 }`}
               >
                 {tab.label}
@@ -278,7 +278,7 @@ export default function StoreAndBoothModal({
         </div>
 
         {/* Modal Body / Tab Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+        <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain p-3.5 sm:p-5 space-y-4 pb-14 sm:pb-8">
           
           {/* ============================================================ */}
           {/* TAB 1: INFORMASI BRAND & TOKO                                */}
@@ -723,7 +723,7 @@ export default function StoreAndBoothModal({
         </div>
 
         {/* Modal Footer Actions */}
-        <div className="p-3.5 sm:p-4 border-t-2 border-slate-900 bg-slate-50 flex items-center justify-between gap-3">
+        <div className="shrink-0 p-3.5 sm:p-4 border-t-2 border-slate-900 bg-slate-50 flex items-center justify-between gap-3 z-10">
           <div className="text-[11px] font-bold text-slate-600 hidden sm:block">
             Terhubung ke AI Agent: <strong className="text-slate-950">{currentAgent.name}</strong>
           </div>
@@ -752,9 +752,9 @@ export default function StoreAndBoothModal({
       {/* SUB-MODAL: TAMBAH PRODUK BARU                                */}
       {/* ============================================================ */}
       {isAddingProduct && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-150">
-          <div className="w-full max-w-md bg-white rounded-3xl border-2 border-slate-900 shadow-[6px_6px_0px_#0f172a] p-5 space-y-4 text-xs">
-            <div className="flex items-center justify-between pb-2 border-b-2 border-slate-100">
+        <div className="fixed inset-0 z-60 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in zoom-in-95 duration-150">
+          <div className="w-full max-w-md bg-white rounded-3xl border-2 border-slate-900 shadow-[6px_6px_0px_#0f172a] p-4 sm:p-5 space-y-3.5 text-xs max-h-[92dvh] flex flex-col">
+            <div className="shrink-0 flex items-center justify-between pb-2 border-b-2 border-slate-100">
               <h3 className="font-black text-sm text-slate-950">Tambah Produk ke Toko & Booth</h3>
               <button
                 onClick={() => setIsAddingProduct(false)}
@@ -764,7 +764,7 @@ export default function StoreAndBoothModal({
               </button>
             </div>
 
-            <form onSubmit={handleCreateProduct} className="space-y-3">
+            <form onSubmit={handleCreateProduct} className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-1 pb-4">
               <div>
                 <label className="block font-black text-slate-900 mb-1">Nama Produk</label>
                 <input

@@ -986,6 +986,28 @@ export default function ProfileView({
                 <ChevronRight className="w-4 h-4 text-slate-400" />
               </button>
 
+              {/* TOKO MARKETPLACE & BOOTH 3D SPATIAL */}
+              <button
+                onClick={() => {
+                  setIsSettingsOpen(false);
+                  if (onOpenStoreAndBooth) {
+                    onOpenStoreAndBooth();
+                  } else {
+                    setIsStoreAndBoothModalOpen(true);
+                  }
+                }}
+                className="w-full py-3 px-3.5 flex items-center justify-between bg-emerald-50 hover:bg-emerald-100 border-2 border-slate-900 shadow-[2px_2px_0px_#0f172a] rounded-2xl transition active:translate-x-0.5 active:translate-y-0.5 text-left cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  <Store className="w-4.5 h-4.5 text-emerald-800 stroke-[2.5px]" />
+                  <div>
+                    <p className="font-black text-slate-900">Buat Toko Marketplace & Booth 3D</p>
+                    <p className="text-[11px] font-bold text-slate-600">Atur nama brand, etalase produk digital/fisik, & stan pameran 3D distrik</p>
+                  </div>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </button>
+
               {/* 6. SETTING BIO, AVATAR, BIDANG & SKILLS */}
               <button
                 onClick={() => {

@@ -48,7 +48,8 @@ import {
   Repeat2,
   Film,
   Flame,
-  ArrowRight
+  ArrowRight,
+  Store
 } from 'lucide-react';
 import { 
   SKILL_BLUEPRINTS_SAMPLE, 

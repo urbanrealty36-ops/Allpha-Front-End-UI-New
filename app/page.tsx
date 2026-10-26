@@ -19,6 +19,7 @@ import AskAiModal from '@/components/AskAiModal';
 import GenerateModal from '@/components/GenerateModal';
 import CreatePostModal from '@/components/CreatePostModal';
 import AuthOnboardingFlow from '@/components/AuthOnboardingFlow';
+import AuthOnboardingPage from '@/components/AuthOnboardingPage';
 import PostDetailView from '@/components/PostDetailView';
 import TakeoverControlView from '@/components/TakeoverControlView';
 import AskAiView from '@/components/AskAiView';
@@ -28,6 +29,7 @@ import StoriesViewerModal from '@/components/StoriesViewerModal';
 import ThemeCatalogModal from '@/components/ThemeCatalogModal';
 import AgentPassportModal from '@/components/AgentPassportModal';
 import CreatorStudioModal from '@/components/CreatorStudioModal';
+import StoreAndBoothModal from '@/components/StoreAndBoothModal';
 import { 
   INITIAL_USER, 
   INITIAL_AGENT, 
@@ -104,6 +106,15 @@ export default function HomePage() {
   const [activeTheme, setActiveTheme] = useState('pastel-menggu');
   const [isGlobalPassportOpen, setIsGlobalPassportOpen] = useState(false);
   const [isGlobalCreatorStudioOpen, setIsGlobalCreatorStudioOpen] = useState(false);
+  const [isStoreAndBoothModalOpen, setIsStoreAndBoothModalOpen] = useState(false);
+
+  // Live stage active session config (topic, document slides, attached catalog products)
+  const [liveSessionConfig, setLiveSessionConfig] = useState<{
+    topic?: string;
+    template?: string;
+    slides?: any[];
+    products?: any[];
+  }>({});
 
   // Handler for liking post
   const handleLikePost = (postId: string) => {
@@ -201,14 +212,16 @@ export default function HomePage() {
         isTakeoverActive={isTakeoverActive}
         onOpenTakeoverModal={() => setActiveTab('TAKEOVER_CONTROL')}
         onOpenCreditsHub={() => setActiveTab('SKILLS_CREDITS')}
-        onOpenOnboarding={() => setIsAuthOnboardingOpen(true)}
+        onOpenOnboarding={() => setActiveTab('ONBOARDING_PAGE')}
+        onOpenOnboardingPage={() => setActiveTab('ONBOARDING_PAGE')}
         onOpenMessages={() => setActiveTab('MESSAGES')}
         onOpenNotifications={() => setIsNotificationsModalOpen(true)}
+        onOpenStoreAndBoothModal={() => setIsStoreAndBoothModalOpen(true)}
         isMessagesActive={activeTab === 'MESSAGES'}
         unreadMessagesCount={2}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        isHidden={activeTab === 'WORLD3D' || activeTab === 'REELS'}
+        isHidden={activeTab === 'WORLD3D' || activeTab === 'REELS' || activeTab === 'ONBOARDING_PAGE'}
       />
 
       {/* Main Content Area based on Tab */}
@@ -337,6 +350,8 @@ export default function HomePage() {
             }}
             onOpenWorld3D={() => setActiveTab('WORLD3D')}
             onOpenCreditsHub={() => setActiveTab('SKILLS_CREDITS')}
+            onOpenMarketplace={() => setActiveTab('MARKETPLACE')}
+            onOpenStoreAndBoothModal={() => setIsStoreAndBoothModalOpen(true)}
             onOpenFilmAi={(filmId) => {
               if (filmId) setSelectedFilmId(filmId);
               setActiveTab('FILM_AI');
@@ -422,6 +437,15 @@ export default function HomePage() {
             onBackToFeed={() => setActiveTab('FEED')}
             userCredits={userCredits}
             agentCredits={agentCredits}
+            initialTopic={liveSessionConfig.topic}
+            initialSlides={liveSessionConfig.slides}
+            initialAttachedProducts={liveSessionConfig.products}
+            onOpenStoreAndBoothModal={() => setIsStoreAndBoothModalOpen(true)}
+            onOpenMarketplace={() => setActiveTab('MARKETPLACE')}
+            onDeductCredits={(amt, reason) => {
+              setUserCredits((prev) => Math.max(0, prev - amt));
+              showToast(reason);
+            }}
           />
         )}
 
@@ -533,6 +557,22 @@ export default function HomePage() {
               showToast(reason);
             }}
             onOpenNotifications={() => setIsNotificationsModalOpen(true)}
+            onOpenStoreAndBooth={() => setIsStoreAndBoothModalOpen(true)}
+          />
+        )}
+
+        {activeTab === 'ONBOARDING_PAGE' && (
+          <AuthOnboardingPage
+            onEnterApp={() => setActiveTab('FEED')}
+            currentUser={currentUser}
+            currentAgent={currentAgent}
+            onCompleteAuth={(updatedUser, updatedAgent, bonus) => {
+              setCurrentUser(updatedUser);
+              setCurrentAgent(updatedAgent);
+              setUserCredits((prev) => prev + bonus);
+              showToast(`Identitas & AI Agent ${updatedAgent.name} aktif! +${bonus} AI Credits diterima.`);
+              setActiveTab('FEED');
+            }}
           />
         )}
       </main>
@@ -619,10 +659,16 @@ export default function HomePage() {
         humanUser={currentUser}
         agentProfile={currentAgent}
         onCreatePost={handleCreatePost}
-        onLaunchLiveStage={(title, mode) => {
+        onLaunchLiveStage={(title, mode, customSlides, attachedProducts) => {
           setIsCreateModalOpen(false);
+          setLiveSessionConfig({
+            topic: title,
+            template: mode,
+            slides: customSlides,
+            products: attachedProducts,
+          });
           setActiveTab('LIVESTAGE');
-          showToast(`Meluncurkan sesi ${mode || 'Live'}: "${title}"!`);
+          showToast(`Meluncurkan sesi ${mode || 'Live'}: "${title}" dengan dokumen presentasi & etalase tersemat!`);
         }}
       />
 
@@ -695,6 +741,22 @@ export default function HomePage() {
         onOpenFilmAi={() => {
           setIsGlobalCreatorStudioOpen(false);
           setActiveTab('FILM_AI');
+        }}
+      />
+
+      {/* Toko Marketplace & 3D Spatial Booth Customizer Modal */}
+      <StoreAndBoothModal
+        isOpen={isStoreAndBoothModalOpen}
+        onClose={() => setIsStoreAndBoothModalOpen(false)}
+        currentUser={currentUser}
+        currentAgent={currentAgent}
+        onSaveStore={(config) => {
+          showToast(`Toko & Booth 3D "${config.brandName}" berhasil disimpan & aktif di distrik 3D!`);
+        }}
+        onWarpToBooth={(boothName) => {
+          setIsStoreAndBoothModalOpen(false);
+          setActiveTab('WORLD3D');
+          showToast(`Teleportasi avatar ke stan booth ${boothName}...`);
         }}
       />
     </div>

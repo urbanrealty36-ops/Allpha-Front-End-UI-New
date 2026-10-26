@@ -430,7 +430,7 @@ export default function AllphaHubView({
       category: 'FILM_AI_REVENUE',
       amount: 140,
       type: 'INCOME',
-      split: '70% Kreator (98 Cr) • 30% AI Treasury (42 Cr)',
+      split: '90% Kreator (126 Cr) • 10% Platform & AI Treasury (14 Cr)',
       status: 'SETTLED',
       refCode: 'REF-CINEMA-9821',
     },
