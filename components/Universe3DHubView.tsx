@@ -32,9 +32,15 @@ import {
   Briefcase,
   Gamepad2,
   Trees,
-  Cpu
+  Cpu,
+  Building2,
+  Tv,
+  Box,
+  Eye,
+  Maximize2
 } from 'lucide-react';
 import Universe3DExperience from './Universe3DExperience';
+import Menggu3DUniverseGallery from './Menggu3DUniverseGallery';
 
 export type UniverseFlowStep = 
   | 'SPLASH'          // Screen 1: Splash 3D Universe (Onboarding / Pendahuluan)
@@ -226,7 +232,7 @@ export default function Universe3DHubView({
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategoryFilter, setActiveCategoryFilter] = useState<string>('Semua');
-  const [hubNavTab, setHubNavTab] = useState<'Galaxy' | 'Worlds' | 'Districts' | 'Events'>('Worlds');
+  const [hubNavTab, setHubNavTab] = useState<'Galaxy' | 'Worlds' | 'Districts' | 'Events' | 'Menggu3D'>('Worlds');
 
   // World Detail internal sub-tab
   const [worldDetailTab, setWorldDetailTab] = useState<'Tentang' | 'District' | 'Event' | 'Galeri'>('Tentang');
@@ -502,10 +508,11 @@ export default function Universe3DHubView({
             {/* Quick Nav Chips: Galaxy, Worlds, Districts, Events */}
             <div className="px-4 pb-2.5 flex items-center gap-2 overflow-x-auto no-scrollbar">
               {[
-                { id: 'Galaxy', icon: '🌌', label: 'Galaxy' },
+                { id: 'Menggu3D', icon: '🎨', label: '3D Menggu Art & 14 Kategori' },
                 { id: 'Worlds', icon: '🪐', label: 'Worlds' },
                 { id: 'Districts', icon: '🏙️', label: 'Districts' },
                 { id: 'Events', icon: '📅', label: 'Events' },
+                { id: 'Galaxy', icon: '🌌', label: 'Galaxy' },
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -518,9 +525,9 @@ export default function Universe3DHubView({
                       setCurrentStep('WORLDS');
                     }
                   }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition flex items-center gap-1.5 cursor-pointer ${
                     hubNavTab === tab.id
-                      ? 'bg-cyan-600 text-white shadow-xs'
+                      ? 'bg-[#FEF08A] text-slate-950 font-black shadow-xs'
                       : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'
                   }`}
                 >
@@ -547,9 +554,15 @@ export default function Universe3DHubView({
 
           {/* Main Content Area */}
           <div className="p-4 space-y-6 pb-24">
-            
-            {/* FEATURED WORLD HERO CARD: Crystal City */}
-            <div className="relative rounded-3xl overflow-hidden border border-cyan-500/40 bg-gradient-to-br from-slate-900 to-indigo-950 p-5 shadow-2xl">
+            {hubNavTab === 'Menggu3D' ? (
+              <Menggu3DUniverseGallery
+                onWarpToDistrict={(district) => handleLaunchPortal(WORLDS_DATA[0], district)}
+                onApplyTheme={(theme) => showHubToast(`Tema 3D "${theme}" berhasil diaktifkan!`)}
+              />
+            ) : (
+              <>
+                {/* FEATURED WORLD HERO CARD: Crystal City */}
+                <div className="relative rounded-3xl overflow-hidden border border-cyan-500/40 bg-gradient-to-br from-slate-900 to-indigo-950 p-5 shadow-2xl">
               <div 
                 className="absolute inset-0 bg-cover bg-center opacity-25 mix-blend-screen pointer-events-none"
                 style={{ backgroundImage: `url(${WORLDS_DATA[0].coverImage})` }}

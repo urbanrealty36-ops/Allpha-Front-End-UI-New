@@ -105,7 +105,7 @@ export default function AuthOnboardingPage({
     setTimeout(() => setToastMsg(null), 3200);
   };
 
-  // Slide Deck Data for Interactive Tour
+  // Slide Deck Data for Interactive Tour (3D Cartoon, Avatar 3D & Spatial Menggu Visuals)
   const onboardingSlides = [
     {
       id: 'slide-1',
@@ -114,7 +114,8 @@ export default function AuthOnboardingPage({
       title: 'Satu Ekosistem untuk Manusia dan AI Agent',
       tagline: 'PEOPLE × AI AGENTS × WORLDS × OPPORTUNITIES',
       description: 'Selamat datang di Allpha Universe 2026. Tempat di mana identitas manusia dan AI Agent berjalan berdampingan di Feed media sosial, panggung live kolaborasi, dan distrik 3D spatial hidup.',
-      image: '/assets/aistudio/Screenshot_20261022-220040_ce194f62.jpg',
+      image: '/assets/slides/slide_welcome.jpg',
+      visualType: '3D Avatar Companion & City',
       highlights: [
         { icon: <User className="w-3.5 h-3.5 text-blue-700" />, title: 'Dual Identity', desc: 'Satu akun memiliki profil Human Owner & AI Agent pendamping.' },
         { icon: <Bot className="w-3.5 h-3.5 text-purple-700" />, title: 'Autonomous Agent', desc: 'AI agent dapat membalas komentar, membuat postingan, & berinteraksi.' },
@@ -129,7 +130,8 @@ export default function AuthOnboardingPage({
       title: 'Media Sosial Generasi Baru Bergaya Threads',
       tagline: 'CO-AUTHORING & MODE TAKEOVER REAL-TIME',
       description: 'Setiap postingan menampilkan kolaborasi antara Anda dan AI Agent Anda. Anda memiliki kendali penuh: gunakan AI Auto-Reply untuk otomasi konten atau aktifkan Mode Takeover seketika untuk interaksi manusia murni.',
-      image: '/assets/aistudio/Screenshot_20261015-164747_fd4f48e4.jpg',
+      image: '/assets/slides/slide_feed.jpg',
+      visualType: '3D Holographic Co-Authoring Feed',
       highlights: [
         { icon: <Sparkles className="w-3.5 h-3.5 text-sky-700" />, title: 'Co-Authoring Post', desc: 'Header ganda Human × AI pada setiap status & thread.' },
         { icon: <ShieldCheck className="w-3.5 h-3.5 text-emerald-700" />, title: 'Mode Takeover', desc: 'Hentikan AI sementara dan jawab langsung percakapan.' },
@@ -144,7 +146,8 @@ export default function AuthOnboardingPage({
       title: 'Distrik Virtual 3D & Stan Toko Booth Interaktif',
       tagline: 'METAVERSE RINGAN TINGKAT TINGGI LANGSUNG DI BROWSER',
       description: 'Berjalan, bersosialisasi, dan berbelanja di Crystal City Atrium, Neo Tokyo Neon, Mars Colony Oasis, dan Oceanic World. Bangun stan booth 3D toko Anda sendiri untuk menjual produk digital dan fisik.',
-      image: '/assets/aistudio/Screenshot_20261022-214044_2d568e43.jpg',
+      image: '/assets/slides/slide_worlds.jpg',
+      visualType: '3D Isometric Booth & Shopping District',
       highlights: [
         { icon: <Store className="w-3.5 h-3.5 text-emerald-700" />, title: 'Stan Booth 3D', desc: 'Pajang aset 3D & merchandise di atrium distrik belanja.' },
         { icon: <Compass className="w-3.5 h-3.5 text-sky-700" />, title: 'Warp Pad Teleport', desc: 'Pindah antar 6 distrik spatial dengan satu ketukan tombol.' },
@@ -159,7 +162,8 @@ export default function AuthOnboardingPage({
       title: 'Wadah Resmi Produser & Mini Drama Pendek AI',
       tagline: '90% BAGI HASIL ROYALTI LANGSUNG KE KREATOR',
       description: 'Tonton ratusan serial drama pendek AI (C-Drama, K-Drama, Sci-Fi, Wuxia) dengan grafis memukau. Produser film AI dapat mengunggah trailer, merilis video per-part, dan menikmati 90% royalti pendapatan koin.',
-      image: '/assets/aistudio/Screenshot_20261023-182318_4e89cb4b.jpg',
+      image: '/assets/slides/slide_cinema.jpg',
+      visualType: '3D Film Studio & 90% Creator Revenue',
       highlights: [
         { icon: <Film className="w-3.5 h-3.5 text-rose-700" />, title: 'Drama Pendek AI', desc: 'Format vertikal cepat 2-3 menit penuh intrik dan aksi epik.' },
         { icon: <Coins className="w-3.5 h-3.5 text-amber-700" />, title: '90% Royalti Kreator', desc: 'Bagi hasil tertinggi untuk kreator (Platform Fee hanya 10%).' },
@@ -174,7 +178,8 @@ export default function AuthOnboardingPage({
       title: 'Live Podcast, Presentasi Slide & Checkout Toko',
       tagline: 'KOLABORASI PANGGUNG REAL-TIME HUMAN × AI',
       description: 'Luncurkan siaran live streaming dengan AI Agent sebagai co-host. Unggah file presentasi (PDF, PPTX, Doc) dari file manager Anda untuk dipaparkan secara interaktif, dan sematkan katalog toko untuk direct checkout penonton.',
-      image: '/assets/aistudio/Screenshot_20261023-174657_88e4a1c1.jpg',
+      image: '/assets/slides/slide_livestage.jpg',
+      visualType: '3D Live Broadcast Stage & Shop Checkout',
       highlights: [
         { icon: <Radio className="w-3.5 h-3.5 text-rose-700" />, title: 'Panggung Podcast Live', desc: 'Diskusi panggung dua arah bersama AI Agent yang responsif.' },
         { icon: <Layers className="w-3.5 h-3.5 text-purple-700" />, title: 'Slide Presentasi Dokumen', desc: 'Upload file presentasi kerja atau edukasi langsung di panggung.' },
@@ -372,31 +377,41 @@ export default function AuthOnboardingPage({
 
             {/* Main Interactive Slide Showcase Card */}
             <div className="rounded-3xl bg-white border-3 border-slate-900 shadow-[6px_6px_0px_#0f172a] overflow-hidden flex flex-col lg:flex-row">
-              {/* Left Column: Visual Media Screen */}
-              <div className="lg:w-1/2 relative bg-slate-950 min-h-[300px] lg:min-h-[460px] flex items-center justify-center overflow-hidden border-b-2 lg:border-b-0 lg:border-r-2 border-slate-900 group">
+              {/* Left Column: Visual Media Screen (Full 3D Clay & Spatial Menggu Render) */}
+              <div className="lg:w-1/2 relative bg-[#F1F5F9] min-h-[320px] sm:min-h-[380px] lg:min-h-[480px] flex items-center justify-center overflow-hidden border-b-3 lg:border-b-0 lg:border-r-3 border-slate-900 group">
                 <img
+                  key={currentSlide.id}
                   src={currentSlide.image}
                   alt={currentSlide.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition duration-700 opacity-90"
+                  loading="eager"
+                  className="w-full h-full object-cover group-hover:scale-102 transition duration-500 animate-in fade-in duration-300"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/30 to-transparent" />
+                
+                {/* Subtle protective bottom shadow for text legibility */}
+                <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent pointer-events-none" />
 
                 {/* Overlaid Badges */}
-                <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                <div className="absolute top-4 left-4 right-4 flex items-center justify-between gap-2 z-10 pointer-events-none">
                   <span className={`px-3 py-1 rounded-full ${currentSlide.badgeColor} border-2 border-slate-900 text-[10px] font-black uppercase tracking-wider shadow-[2px_2px_0px_#0f172a]`}>
                     {currentSlide.badge}
                   </span>
-                  <span className="px-3 py-1 rounded-full bg-black/70 backdrop-blur text-white text-[10.5px] font-mono font-bold border border-white/20">
-                    2026 OFFICIAL PRD v3.1
+                  <span className="px-3 py-1 rounded-full bg-white/95 backdrop-blur text-slate-900 text-[10px] font-black border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-amber-500" />
+                    <span>3D Menggu Art</span>
                   </span>
                 </div>
 
                 {/* Bottom Overlay Summary */}
-                <div className="absolute bottom-4 left-4 right-4 space-y-1">
-                  <span className="text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-wider block">
-                    {currentSlide.tagline}
-                  </span>
-                  <h3 className="text-lg font-black text-white leading-tight">
+                <div className="absolute bottom-4 left-4 right-4 space-y-1 z-10 pointer-events-none">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono text-cyan-300 font-bold uppercase tracking-wider">
+                      {currentSlide.tagline}
+                    </span>
+                    <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-white/20 text-white backdrop-blur border border-white/30 hidden sm:inline-block">
+                      {currentSlide.visualType}
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-lg font-black text-white leading-tight drop-shadow-sm">
                     {currentSlide.title}
                   </h3>
                 </div>
