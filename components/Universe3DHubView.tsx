@@ -561,6 +561,48 @@ export default function Universe3DHubView({
               />
             ) : (
               <>
+                {/* 3D MENGGU ART SPATIAL HERO CARD */}
+                <div className="relative rounded-3xl overflow-hidden border-2 border-slate-900 bg-[#FEF08A] text-slate-950 p-5 shadow-[5px_5px_0px_#0f172a] space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="px-2.5 py-0.5 rounded-full bg-white border border-slate-900 text-[10px] font-black uppercase tracking-wider shadow-2xs flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-amber-600" />
+                      3D MENGGU ART SPATIAL
+                    </span>
+                    <span className="text-[10px] font-mono font-bold bg-[#DDD6FE] text-purple-950 px-2.5 py-0.5 rounded-full border border-slate-900">
+                      14 Kategori Theme 3D
+                    </span>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg sm:text-xl font-black">
+                      Metropolis Spatial District & Generator Aset 3D GLB
+                    </h3>
+                    <p className="text-xs font-semibold text-slate-800 mt-1">
+                      Dunia virtual 3D Menggu Art dengan monorail bubble pods melayang, menara Crystal Citadel, AI Plaza fountain, billboard videotron, booth 3D, avatar rigged, dan 14 kategori aset GLB siap generate & unduh.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2 pt-1 flex-wrap">
+                    <button
+                      type="button"
+                      onClick={() => setHubNavTab('Menggu3D')}
+                      className="px-4 py-2 rounded-xl bg-slate-950 hover:bg-slate-800 text-white font-black text-xs border border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] flex items-center gap-1.5 cursor-pointer active:scale-95"
+                    >
+                      <Layers className="w-3.5 h-3.5 text-cyan-300" />
+                      <span>Buka Galeri & Generator GLB</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleLaunchPortal(WORLDS_DATA[0], 'Central Hub')}
+                      className="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-950 font-black text-xs border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#0f172a] flex items-center gap-1.5 cursor-pointer active:scale-95"
+                    >
+                      <Play className="w-3.5 h-3.5 fill-slate-950" />
+                      <span>Masuk ke Dunia 3D</span>
+                    </button>
+                  </div>
+                </div>
+
                 {/* FEATURED WORLD HERO CARD: Crystal City */}
                 <div className="relative rounded-3xl overflow-hidden border border-cyan-500/40 bg-gradient-to-br from-slate-900 to-indigo-950 p-5 shadow-2xl">
               <div 
@@ -737,6 +779,8 @@ export default function Universe3DHubView({
                 Kustomisasi
               </button>
             </div>
+              </>
+            )}
           </div>
         </div>
       )}
